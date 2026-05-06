@@ -16,7 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+LOGIN_URL = 'login'
 # Application definition
 
 INSTALLED_APPS = [
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'Inventory.apps.InventoryConfig',
     'Cashier.apps.CashierConfig',
+    'Greeting.apps.GreetingConfig',
 ]
 
 MIDDLEWARE = [

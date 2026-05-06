@@ -20,8 +20,6 @@ class OrderItem(models.Model):
     The individual lines on the receipt (e.g., 2x Classic Burger)
     """
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    # Because Burger and Beverages inherit from Product, 
-    # this ForeignKey can point to either one!
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.IntegerField(default=1)
 
