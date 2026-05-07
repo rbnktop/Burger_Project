@@ -1,6 +1,6 @@
 from django import forms
 from .models import Stock, Recipe, RecipeRequirements, Burger, Beverage
-
+from django.forms import inlineformset_factory
 
 class StockForm(forms.ModelForm):
     class Meta:
@@ -33,3 +33,23 @@ class StockForm(forms.ModelForm):
             }),
         }
 
+class RecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome da Receita'}),
+        }
+
+# This creates a set of forms for RecipeRequirements linked to one Recipe
+RecipeRequirementFormSet = inlineformset_factory(
+    Recipe, 
+    RecipeRequirements,
+    fields=['ingredient', 'amount'],
+    extra=4,
+    can_delete=True,
+    widgets={
+        'ingredient': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Cebola'}),
+        'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0.0'}),
+    }
+)

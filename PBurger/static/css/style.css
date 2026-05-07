@@ -124,19 +124,45 @@ body {
 
 .glass-card .btn {
     display: inline-flex;
-    line-height: 1;
     align-items: center;
     justify-content: center;
-    padding: 0.6rem 1rem; /* Adjusts the 'forehead' and 'chin' equally */
-    line-height: 1; 
-    height: 27px; /* Forces a consistent height */
+    padding-top: 0;
+    line-height: 0;
+    height: 30px; 
+    text-transform: lowercase;         
+    border-radius: 18px;               
+    padding: 0 15px;      
 
+    transition: all 0.3s ease;
+    
+}
+
+.btn-sm {
+
+    font-size: 0.90rem;
 }
 
 .glass-hr {
     border: 0;
     height: 1px;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.35));
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.25));
     margin: 10px 0;
     opacity: 0.6;
+}
+.delete-row-btn {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    line-height: 1;
+    flex-shrink: 0; 
+    border: 1px solid #dc3545;
+    background: transparent;
+}
+
+.delete-row-btn:hover {
+    background-color: rgba(220, 53, 69, 0.2);
+    transform: scale(1.1);
+    display: block;
 }

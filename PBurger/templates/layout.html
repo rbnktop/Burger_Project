@@ -28,6 +28,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'stock:inventario' %}">Stock</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'stock:receita' %}">Receitas</a>
+                    </li>
 
                     {% if user.is_authenticated %}
                         <li class="nav-item">

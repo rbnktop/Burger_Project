@@ -14,14 +14,14 @@ class Stock(models.Model):
 
     name = models.CharField(max_length=32, unique=True)
     quantity = models.FloatField(validators=[MinValueValidator(0.01)])
+    unit = models.CharField(max_length=8, choices=UNIT_CHOICES)
     price = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
         validators=[MinValueValidator(0.01)])
-    unit = models.CharField(max_length=8, choices=UNIT_CHOICES)
 
     def __str__(self):
-        return f" Item: {self.name} Qtd: {self.quantity}{self.unit}"
+        return f"{self.name} - {self.quantity}{self.unit}"
     
 
 class Recipe(models.Model):
