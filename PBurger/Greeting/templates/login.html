@@ -2,28 +2,58 @@
 {% block title %} Login {% endblock %}
 {% block content %} 
 
-
 <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
     <div class="col-md-4 col-lg-3">
         <div class="glass-card " > 
             <h2 class="text-center text-white mb-4">Login</h2>
-            <form method="POST">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white small py-2 mb-2">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+            
+            <form method="POST" novalidate>
                 {% csrf_token %}
-                {{ form.non_field_errors }}
+              
+                {% if form.errors %}
+                    <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white small p-3 mb-3" style="border-radius: 10px;">
+                        <ul class="mb-0 ps-3">
+                            {% for field, error_list in form.errors.items %}
+                                {% for error in error_list %}
+                                    {# This hides the technical '__all__' name and just shows the message #}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+
                 {% for field in form %}
-                    <div class="mb-1">
-                        <label class="form-label">{{ field.label }}</label>
-                        {{ field }} {% for error in field.errors %}
-                            <p class="text-danger small">{{ error }}</p>
-                        {% endfor %}
+                    <div class="mb-3">
+                        <label class="form-label text-white">{{ field.label }}</label>
+                        {{ field }} 
+
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="text-danger small mt-1 mb-0"><strong>* {{ error }}</strong></p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 {% endfor %}
+
                 <div class="d-flex justify-content-center mt-4">
                 <button type="submit" class="btn btn-primary mt-3" style="border-radius: 15px;">
                     Confirmar
                 </button>
                 </div>
+
             </form>
+
         </div>
     </div>
 </div>

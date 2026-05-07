@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Q
 
@@ -15,8 +15,7 @@ def list_stock_view(request):
     stock = stock.order_by("name")
     return render(request, "stock/stock_list.html", {"stock": stock})
 
-
-@permission_required("Inventory.add_product", raise_exception=True)
+@login_required
 def create_stock_item_view(request):
     form = StockForm()
     if request.method == "POST":
@@ -26,8 +25,7 @@ def create_stock_item_view(request):
             return redirect("stock:inventario")
     return render(request, "stock/stock_form.html", {"form": form})
 
-
-@permission_required("Inventory.add_product", raise_exception=True)
+@login_required
 def update_stock_item_view(request, stock_id):
     item = Stock.objects.get(id=stock_id)
     form = StockForm(instance=item)
@@ -39,8 +37,7 @@ def update_stock_item_view(request, stock_id):
             return redirect("stock:inventario")
     return render(request, "stock/stock_form.html", {"form": form})
 
-
-@permission_required("Inventory.add_product", raise_exception=True)
+@login_required
 def delete_stock_item_view(request, stock_id):
     item = Stock.objects.get(id=stock_id)
 
@@ -61,12 +58,13 @@ def list_recipe_view(request):
     recipe = recipe.order_by("name")
     return render(request, "recipe/recipe_list.html", {"recipe": recipe})
 
-
-@permission_required("Inventory.add_product", raise_exception=True)
+@login_required
 def update_recipe_view(request, recipe_id):
     item = Recipe.objects.get(id=recipe_id)
+    
     form = RecipeForm(instance=item)
     formset = RecipeRequirementFormSet(instance=item)
+
     if request.method == "POST":
         form = StockForm(request.POST, instance=item)
         formset = RecipeRequirementFormSet(request.POST, instance=item)
@@ -84,8 +82,7 @@ def update_recipe_view(request, recipe_id):
         request, "recipe/recipe_form.html", {"form": form, "formset": formset}
     )
 
-
-@permission_required("Inventory.add_product", raise_exception=True)
+@login_required
 def create_recipe_view(request):
     if request.method == "POST":
         form = RecipeForm(request.POST)
@@ -104,12 +101,11 @@ def create_recipe_view(request):
         request, "recipe/recipe_form.html", {"form": form, "formset": formset}
     )
 
-
-@permission_required("Inventory.add_product", raise_exception=True)
+@login_required
 def delete_recipe_view(request, stock_id):
     item = Recipe.objects.get(id=stock_id)
 
     if request.method == "POST":
         item.delete()
         return redirect("stock:receita")
-    return render(request, "stock/confirm_delete_recipe.html", {"item": item})
+    return render(request, "recipe/confirm_delete_recipe.html", {"item": item})
