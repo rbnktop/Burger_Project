@@ -1,0 +1,142 @@
+
+@view-transition {
+  navigation: auto;
+}
+
+body {
+    /* Path to your image */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.50), rgba(0,0,0,0.5)), url('../images/background.jpg');
+    
+    /* These three lines ensure the image covers the whole screen nicely */
+    background-size: cover;         
+    background-position: center;     
+    background-attachment: fixed;    
+    background-repeat: no-repeat;    
+    
+    /* Optional: fallback color */
+    background-color: #f8f9fa;
+}
+
+
+.navbar {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Semi-transparent line */
+    border-top: none;
+    border-left: none;
+    border-right: none;
+
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px; 
+    
+    /* Shadow to make it pop from the wallpaper */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+.navbar-brand {
+    color: white;
+    text-emphasis-color: #987c0d ;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+/* .container { */
+    /* background-color: transparent !important; */
+    /* padding: 90px; */
+/* } */
+.glass-card .mt-3 {
+    margin-top: auto !important; /* Pushes the button row to the bottom */
+}
+.glass-card {
+    margin-top: auto !important; /* Pushes the button row to the bottom */
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Adds a shadow so white text pops against light parts of the image */
+    /* min-height: 250px; */
+}
+
+/* Styles all inputs, textareas, and selects inside a glass card */
+.glass-card input, 
+.glass-card select, 
+.glass-card textarea {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    color: white; /* Text color inside input */
+    outline: none;
+    transition: 0.3s;
+}
+
+.glass-card select, 
+.glass-card input {
+    width: 100%;
+    /* Reduced top/bottom padding to 5px to remove the forehead */
+    padding: 5px 15px !important; 
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    outline: none;
+    height: 38px; /* Force a consistent height */
+    line-height: 1; /* Ensures text stays in the middle */
+}
+
+/* Change style when the user clicks inside the box */
+.glass-card input:focus {
+    background: rgba(255, 255, 255, 0.15) !important; 
+    border-color: #0d6efd !important;
+    outline: 0 !important;
+    box-shadow: 0 0 12px rgba(13, 110, 253, 0.8) !important;
+    border-radius: 50px;
+    color: white !important; /* Ensure typing stays white */
+}
+
+/* Fix for the yellow "autofill" color in Chrome */
+.glass-card input:-webkit-autofill {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0 30px #2c2c2c inset !important;
+    
+}
+
+.glass-card label {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+    text-shadow: 1px 1px 2px rgba(0,0,0,5);
+}
+
+.glass-card .d-flex a + a {
+    margin-left: 10px;
+}
+
+.glass-card .btn {
+    display: inline-flex;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1rem; /* Adjusts the 'forehead' and 'chin' equally */
+    line-height: 1; 
+    height: 27px; /* Forces a consistent height */
+
+}
+
+.glass-hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.35));
+    margin: 10px 0;
+    opacity: 0.6;
+}

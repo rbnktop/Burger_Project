@@ -1,0 +1,41 @@
+{% extends "layout.html"%}
+{% block title %} Inventario {% endblock %}
+{% block content %} 
+
+<div class="container mt-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+        <h2 class="text-white">Inventário</h2>
+        <a href="{% url 'stock:criar' %}" class="btn btn-primary px-4 py-2" style="border-radius: 20px;">
+            + Adicionar Item
+        </a>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+    {% for item in stock %}
+        <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
+            <div class="glass-card p-3 w-100">
+                <h5 class="text-capitalize mb-2">{{ item.name }}</h5>
+                <hr class="glass-hr">
+                
+                <div class="mb-3">
+                    <small class="text-white-50 d-block">Quantidade:</small>
+                    <span>{{ item.quantity }}{{ item.unit }}</span>
+                </div>
+                <div class="mb-3">
+                    <small class="text-white-50 d-block">Valor:</small>
+                    <span>R${{ item.price }} </span>
+                </div>
+                <hr class="glass-hr">
+                <div class="mt-auto d-flex justify-content-end">
+                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-warning btn-sm mr-2">editar</a>
+                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger btn-sm">apagar</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+</div>
+
+{% endblock  %}

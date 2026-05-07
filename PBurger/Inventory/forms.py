@@ -1,6 +1,3 @@
-from functools import Placeholder
-from os import name
-
 from django import forms
 from .models import Stock, Recipe, RecipeRequirements, Burger, Beverage
 
@@ -12,16 +9,27 @@ class StockForm(forms.ModelForm):
         labels = {
             'name' : 'Nome Produto', 
             'quantity' : 'Quantidade',
+            'unit' : 'Unidade de Medida',
             'price' : 'Preço',
-            'unit' : 'Unidade de Medida'
         }
         widgets = {
             'name': forms.TextInput(attrs={
-                'placeholder': 'Cebola'
+                'placeholder': 'Cebola',
+                'class': 'form-control',
             }),
             'quantity' : forms.NumberInput(attrs={
-                'placeholder': '20'
+                'class': 'form-control',
+                'placeholder': '20',
+                'min': '0.01', 
             }),
-            'unit': forms.ChoiceField(choices=Stock.UNIT_CHOICES),
-            # 'price': forms.FloatField(),
+            'unit': forms.Select(attrs={
+                'class':'Unit_Choices',
+                'class': 'form-control',
+            }),
+            'price': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'placeholder': '2.50',    
+                'min': '0.5',              
+            }),
         }
+

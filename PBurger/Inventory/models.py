@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 class Stock(models.Model):
     """
@@ -12,8 +13,11 @@ class Stock(models.Model):
     ]
 
     name = models.CharField(max_length=32, unique=True)
-    quantity = models.FloatField()
-    price = models.FloatField()
+    quantity = models.FloatField(validators=[MinValueValidator(0.01)])
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        validators=[MinValueValidator(0.01)])
     unit = models.CharField(max_length=8, choices=UNIT_CHOICES)
 
     def __str__(self):

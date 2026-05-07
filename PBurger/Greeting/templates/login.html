@@ -1,14 +1,30 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <form method="POST">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button type="submit">Log In</button>
-</form>
-</body>
-</html>
+{% extends "layout.html"%}
+{% block title %} Login {% endblock %}
+{% block content %} 
+
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-4 col-lg-3">
+        <div class="glass-card " > 
+            <h2 class="text-center text-white mb-4">Login</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-1">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }} {% for error in field.errors %}
+                            <p class="text-danger small">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-primary mt-3" style="border-radius: 15px;">
+                    Confirmar
+                </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

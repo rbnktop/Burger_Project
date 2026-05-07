@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <title>Aoba</title>
-</head>
-<body>
-    <p1> hi </p1>
+{% extends "layout.html"%}
+{% block title %} Home {% endblock %}
+{% block content %} 
+{% load static %}
+
+<div class="container d-flex justify-content-center align-items-center" >
     
-</form>
-</body>
-</html>
+<div class="card glass-card p-4">
+    <img src="{% static 'images/cat.jpg' %}"> 
+    <img src="{% static 'images/bong.jpg' %}" class="mt-5"> 
+</div>
+</div>
+
+{% endblock %}
