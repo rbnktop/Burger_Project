@@ -6,17 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Inventory', '0001_initial'),
+        ("Inventory", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Beverages',
-            new_name='Beverage',
+            old_name="Beverages",
+            new_name="Beverage",
         ),
         migrations.AlterField(
-            model_name='stock',
-            name='unit',
-            field=models.CharField(choices=[('g', 'Gramas'), ('ml', 'Mililitros'), ('un', 'Unidades/Fatias')], max_length=8),
+            model_name="stock",
+            name="unit",
+            field=models.CharField(
+                choices=[
+                    ("g", "Gramas"),
+                    ("ml", "Mililitros"),
+                    ("un", "Unidades/Fatias"),
+                ],
+                max_length=8,
+            ),
         ),
     ]

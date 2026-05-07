@@ -1,25 +1,27 @@
 
-@view-transition {
-  navigation: auto;
+html, body, * {
+    -ms-overflow-style: none !important;  
+    scrollbar-width: none !important;     
+}
+
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    display: none !important;
 }
 
 body {
-    /* Path to your image */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.50), rgba(0,0,0,0.5)), url('../images/background.jpg');
-    
-    /* These three lines ensure the image covers the whole screen nicely */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0,0,0,0.05)), url('../images/background.jpg');
     background-size: cover;         
     background-position: center;     
     background-attachment: fixed;    
-    background-repeat: no-repeat;    
-    
-    /* Optional: fallback color */
-    background-color: #f8f9fa;
+    background-repeat: no-repeat; 
 }
 
-
+body.loaded { display: block; }
 .navbar {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Semi-transparent line */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
     border-top: none;
     border-left: none;
     border-right: none;
@@ -30,8 +32,6 @@ body {
 
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 25px; 
-    
-    /* Shadow to make it pop from the wallpaper */
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 .navbar-brand {
@@ -39,15 +39,12 @@ body {
     text-emphasis-color: #987c0d ;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
-/* .container { */
-    /* background-color: transparent !important; */
-    /* padding: 90px; */
-/* } */
+
 .glass-card .mt-3 {
-    margin-top: auto !important; /* Pushes the button row to the bottom */
+    margin-top: auto !important;
 }
 .glass-card {
-    margin-top: auto !important; /* Pushes the button row to the bottom */
+    margin-top: auto !important;
     background: rgba(255, 255, 255, 0.1); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -59,21 +56,21 @@ body {
     flex-direction: column;
     justify-content: space-between;
     color: #ffffff !important;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Adds a shadow so white text pops against light parts of the image */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
     /* min-height: 250px; */
 }
 
-/* Styles all inputs, textareas, and selects inside a glass card */
+
 .glass-card input, 
 .glass-card select, 
 .glass-card textarea {
     width: 100%;
     padding: 10px 15px;
     margin-bottom: 15px;
-    background: rgba(255, 255, 255, 0.1); /* Semi-transparent */
+    background: rgba(255, 255, 255, 0.1); 
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
-    color: white; /* Text color inside input */
+    color: white;
     outline: none;
     transition: 0.3s;
 }
@@ -81,7 +78,6 @@ body {
 .glass-card select, 
 .glass-card input {
     width: 100%;
-    /* Reduced top/bottom padding to 5px to remove the forehead */
     padding: 5px 15px !important; 
     margin-bottom: 15px;
     background: rgba(255, 255, 255, 0.1);
@@ -89,21 +85,20 @@ body {
     border-radius: 10px;
     color: white;
     outline: none;
-    height: 38px; /* Force a consistent height */
-    line-height: 1; /* Ensures text stays in the middle */
+    height: 38px; 
+    line-height: 1;
 }
 
-/* Change style when the user clicks inside the box */
 .glass-card input:focus {
     background: rgba(255, 255, 255, 0.15) !important; 
     border-color: #0d6efd !important;
     outline: 0 !important;
     box-shadow: 0 0 12px rgba(13, 110, 253, 0.8) !important;
     border-radius: 50px;
-    color: white !important; /* Ensure typing stays white */
+    color: white !important; 
 }
 
-/* Fix for the yellow "autofill" color in Chrome */
+
 .glass-card input:-webkit-autofill {
     -webkit-text-fill-color: white !important;
     -webkit-box-shadow: 0 0 0 30px #2c2c2c inset !important;
@@ -122,25 +117,38 @@ body {
     margin-left: 10px;
 }
 
+.btn-outline-success {
+    display: inline-flex;
+    align-items: center;
+    justify-content: baseline;
+    padding-top: 1;
+    line-height: 1;
+    height: 31px; 
+    text-transform: lowercase;         
+    border-radius: 22px;               
+    padding-inline: 20px;
+    transition: all 0.6s ease;
+
+}
+
 .glass-card .btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding-top: 0;
-    line-height: 0;
-    height: 30px; 
+    justify-content: baseline;
+    padding-top: 1;
+    line-height: 1;
+    height: 31px; 
     text-transform: lowercase;         
-    border-radius: 18px;               
-    padding: 0 15px;      
-
-    transition: all 0.3s ease;
-    
+    border-radius: 22px;               
+    padding-inline: 15px;
+    transition: all 0.6s ease;
 }
 
 .btn-sm {
 
-    font-size: 0.90rem;
+    font-size: 0.95rem;
 }
+
 
 .glass-hr {
     border: 0;
@@ -149,6 +157,14 @@ body {
     margin: 10px 0;
     opacity: 0.6;
 }
+.glass-vr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.25));
+    margin: 5px 0;
+    opacity: 0.6;
+}
+
 .delete-row-btn {
     border-radius: 50%;
     display: flex;
@@ -166,3 +182,4 @@ body {
     transform: scale(1.1);
     display: block;
 }
+

@@ -9,7 +9,7 @@
     </div>
     <hr class="glass-hr">
 
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-4 pt-3">
+    <div class="d-flex justify-content-between mb-4 pb-4 pt-3">
         <a href="{% url 'stock:criar' %}" class="btn btn-primary px-3 py-1.5 " style="border-radius: 30px;">
             + Adicionar Item
         </a>
@@ -21,8 +21,9 @@
         value="{{ request.GET.q }}" 
         placeholder="Search items..." 
         aria-label="Search"
+        style="border-radius: 30px;"
     />
-    <button class="btn btn-outline-success ml-2 mr-4" type="submit">procurar</button>
+    <button class="btn btn-outline-success ml-2 mr-4 mt-1" type="submit">procurar</button>
     </form>
     </div>
 
@@ -31,19 +32,19 @@
         <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
             <div class="glass-card p-3 w-100">
                 <h5 class="text-capitalize mb-2">{{ item.name }}</h5>
-                <hr class="glass-hr">
                 
+                <hr class="glass-hr">
                 <div class="mb-3">
                     <small class="text-white-50 d-block">Quantidade:</small>
-                    <span>{{ item.quantity }}{{ item.unit }}</span>
+                    <span>{{ item.quantity|floatformat:"-1" }}<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                     <small class="text-white-50 d-block">Valor:</small>
-                    <span>R${{ item.price }} </span>
+                    <span>R${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
+                    <hr class="glass-hr">
                 </div>
-                <hr class="glass-hr">
-                <div class="mt-auto d-flex justify-content-end">
-                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-warning btn-sm mr-2">editar</a>
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-outline-warning btn-sm">editar</a>
                     <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger btn-sm">remover</a>
                 </div>
             </div>

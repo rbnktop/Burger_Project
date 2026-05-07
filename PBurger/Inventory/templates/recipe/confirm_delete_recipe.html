@@ -9,14 +9,12 @@
         <div class="item-preview mb-4">
             <h5 class="text-capitalize">{{ item.name }}</h5>
             <hr class="glass-hr">
-            <p class="mb-1">Quantidade: {{ item.quantity }}{{ item.unit }}</p>
-            <p>Valor: R${{ item.price }}</p>
         </div>
         <div class="mt-auto d-flex justify-content-center">
         <form method="post" class="d-flex flex-row">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger w-70  btn-sm mr-5">sim</button>
-            <a href="{% url 'stock:inventario' %}" class="btn btn-success w-70 btn-sm">não</a>
+            <a href="{% url 'stock:receita' %}" class="btn btn-success w-70 btn-sm">não</a>
         </form>
     </div>
     </div>

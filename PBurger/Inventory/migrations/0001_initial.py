@@ -8,63 +8,151 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=32, unique=True)),
-                ('price', models.FloatField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=32, unique=True)),
+                ("price", models.FloatField()),
             ],
         ),
         migrations.CreateModel(
-            name='Recipe',
+            name="Recipe",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=32, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=32, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Stock',
+            name="Stock",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=32, unique=True)),
-                ('quantity', models.FloatField()),
-                ('price', models.FloatField()),
-                ('unit', models.CharField(choices=[('g', 'Grams'), ('ml', 'Mililitters'), ('un', 'Units, Slices')], max_length=8)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=32, unique=True)),
+                ("quantity", models.FloatField()),
+                ("price", models.FloatField()),
+                (
+                    "unit",
+                    models.CharField(
+                        choices=[
+                            ("g", "Grams"),
+                            ("ml", "Mililitters"),
+                            ("un", "Units, Slices"),
+                        ],
+                        max_length=8,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='RecipeRequirements',
+            name="RecipeRequirements",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.FloatField()),
-                ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='requirements', to='Inventory.recipe')),
-                ('ingredient', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='Inventory.stock')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.FloatField()),
+                (
+                    "recipe",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="requirements",
+                        to="Inventory.recipe",
+                    ),
+                ),
+                (
+                    "ingredient",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="Inventory.stock",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='recipe',
-            name='ingredients',
-            field=models.ManyToManyField(through='Inventory.RecipeRequirements', to='Inventory.stock'),
+            model_name="recipe",
+            name="ingredients",
+            field=models.ManyToManyField(
+                through="Inventory.RecipeRequirements", to="Inventory.stock"
+            ),
         ),
         migrations.CreateModel(
-            name='Beverages',
+            name="Beverages",
             fields=[
-                ('product_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='Inventory.product')),
-                ('stock', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='Inventory.stock')),
+                (
+                    "product_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="Inventory.product",
+                    ),
+                ),
+                (
+                    "stock",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="Inventory.stock",
+                    ),
+                ),
             ],
-            bases=('Inventory.product',),
+            bases=("Inventory.product",),
         ),
         migrations.CreateModel(
-            name='Burger',
+            name="Burger",
             fields=[
-                ('product_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='Inventory.product')),
-                ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='Inventory.recipe')),
+                (
+                    "product_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="Inventory.product",
+                    ),
+                ),
+                (
+                    "recipe",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="Inventory.recipe",
+                    ),
+                ),
             ],
-            bases=('Inventory.product',),
+            bases=("Inventory.product",),
         ),
     ]

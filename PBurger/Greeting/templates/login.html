@@ -9,6 +9,7 @@
             <h2 class="text-center text-white mb-4">Login</h2>
             <form method="POST">
                 {% csrf_token %}
+                {{ form.non_field_errors }}
                 {% for field in form %}
                     <div class="mb-1">
                         <label class="form-label">{{ field.label }}</label>

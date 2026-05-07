@@ -9,11 +9,11 @@
     </div>
     <hr class="glass-hr">
 
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-4 pt-3">
-        <a href="{% url 'stock:receita_criar' %}" class="btn btn-primary px-3 py-1.5 " style="border-radius: 30px;">
+    <div class="d-flex justify-content-between mb-4 pb-4 pt-3">
+        <a href="{% url 'stock:criar' %}" class="btn btn-primary px-3 py-1.5 " style="border-radius: 30px;">
             + Adicionar Item
         </a>
-        <form class="d-flex" method="GET" action="{% url 'stock:receita' %}">
+        <form class="d-flex" method="GET" action="{% url 'stock:inventario' %}">
     <input 
         class="form-control me-2" 
         type="search" 
@@ -21,8 +21,9 @@
         value="{{ request.GET.q }}" 
         placeholder="Search items..." 
         aria-label="Search"
+        style="border-radius: 30px;"
     />
-    <button class="btn btn-outline-success ml-2 mr-4" type="submit">procurar</button>
+    <button class="btn btn-outline-success ml-2 mr-4 mt-1" type="submit">procurar</button>
     </form>
     </div>
 

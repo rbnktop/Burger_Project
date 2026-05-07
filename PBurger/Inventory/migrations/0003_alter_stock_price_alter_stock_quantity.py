@@ -7,18 +7,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Inventory', '0002_rename_beverages_beverage_alter_stock_unit'),
+        ("Inventory", "0002_rename_beverages_beverage_alter_stock_unit"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='stock',
-            name='price',
-            field=models.DecimalField(decimal_places=2, max_digits=10, validators=[django.core.validators.MinValueValidator(0.01)]),
+            model_name="stock",
+            name="price",
+            field=models.DecimalField(
+                decimal_places=2,
+                max_digits=10,
+                validators=[django.core.validators.MinValueValidator(0.01)],
+            ),
         ),
         migrations.AlterField(
-            model_name='stock',
-            name='quantity',
-            field=models.FloatField(validators=[django.core.validators.MinValueValidator(0.01)]),
+            model_name="stock",
+            name="quantity",
+            field=models.FloatField(
+                validators=[django.core.validators.MinValueValidator(0.01)]
+            ),
         ),
     ]

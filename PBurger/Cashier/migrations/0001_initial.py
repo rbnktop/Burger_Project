@@ -9,27 +9,51 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('Inventory', '0001_initial'),
+        ("Inventory", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('customer_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('total_price', models.FloatField(default=0.0)),
-                ('is_processed', models.BooleanField(default=False)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "customer_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("total_price", models.FloatField(default=0.0)),
+                ("is_processed", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
-            name='OrderItem',
+            name="OrderItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField(default=1)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='Cashier.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='Inventory.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.IntegerField(default=1)),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="items",
+                        to="Cashier.order",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="Inventory.product",
+                    ),
+                ),
             ],
         ),
     ]
