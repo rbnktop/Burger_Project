@@ -69,11 +69,11 @@ RecipeRequirementFormSet = inlineformset_factory(
     RecipeRequirements,
     formset=BaseRecipeRequirementFormSet,  # <--- THIS IS THE ONLY CHANGE
     fields=["ingredient", "amount"],
-    extra=4,
+    extra=2,
     can_delete=True,
     widgets={
         "ingredient": forms.Select(
-            attrs={"class": "form-select", "placeholder": "Cebolinha"}
+            attrs={"class": "form-select", "placeholder": "Cebolinha",}
         ),
         "amount": forms.NumberInput(
             attrs={"class": "form-control", "placeholder": "15.7"}

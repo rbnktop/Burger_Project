@@ -65,18 +65,20 @@ def update_recipe_view(request, recipe_id):
     if request.method == "POST":
         form = RecipeForm(request.POST, instance=item)
         formset = RecipeRequirementFormSet(request.POST, instance=item)
-
+        print(f"Form errors: {form.errors}")
+        print(f"Formset errors: {formset.errors}")
         if form.is_valid() and formset.is_valid():
             print('valid')
             recipe = form.save()
-            formset.instance = recipe  # Link the requirements to the new recipe
+            formset.instance = recipe
             formset.save()
             return redirect("stock:receita_inventario")
+        else: 
+            return render(request, "recipe/recipe_form.html", {"form": form, "formset": formset}, status=422)
     else:
-        # These instances MUST be passed to show existing data
+
         form = RecipeForm(instance=item)
         formset = RecipeRequirementFormSet(instance=item)
-
     return render(
         request, "recipe/recipe_form.html", {"form": form, "formset": formset}
     )

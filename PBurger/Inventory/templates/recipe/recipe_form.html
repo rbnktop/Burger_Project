@@ -1,26 +1,25 @@
 {% extends "layout.html" %}
 {% block title %} Receita {% endblock %}
 
-{% block content %}
-<div class="container mt-4 mb-4">
+{% block main %}
+<div class="container">
     <div class="glass-card my-auto mx-auto" style="max-width: 600px;">
-        <h2 class="text-white mb-4">Receita</h2>
-        <hr class="glass-hr">
-        <form method="post" id="recipe-form">
+        <form method="post" id="recipe-form" data-turbo="false">
             {% csrf_token %}
-
-            <div class="mb-4 mt-5">
+            
+            <div class="mb-4 mt-3">
                 <h5 class="text-white-50 mt-3 mb-4">Nome da Receita</h5>
-            <div class="ml-2 mr-2">
-                {{ form.name }}
-            </div>
+                <div class="ml-5 mr-5">
+                    {{ form.name }}
+                </div>
+                <hr class="glass-hr mt-4">
                 <h5 class="text-white mt-4 mb-3">Ingredientes</h5>
             </div>
                 
             {{ formset.management_form }}
-
+            
             <div id="empty-form-template" class="d-none">
-                <div class="row formset-row justify-content-center">
+                <div class="row formset-row justify-content-center mt-1">
                     <div class="col-md-6">
                         {{ formset.empty_form.ingredient }}
                     </div>
@@ -38,7 +37,19 @@
             </div>
             <div id="formset-container">
                 {% for f in formset %}
-                    <div class="row formset-row justify-content-center mb-3">
+                
+                    {# 1. KEEP ERRORS VISIBLE #}
+                    {% if form.errors %}
+                        {% for field, error_list in form.errors.items %}
+                            {% for error in error_list %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {# 2. HIDE ROW IF MARKED FOR DELETION AFTER A FAILED SUBMIT #}
+                    <div class="row formset-row justify-content-center mt-1" {% if f.DELETE.value %} style="display: none;" {% endif %}>
+                        
                         {{ f.id }}
                         
                         <div class="col-md-6">
@@ -47,58 +58,67 @@
 
                         <div class="col-md-2">
                             {{ f.amount }}
+                            {% if f.amount.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ f.amount.errors|join:", " }}
+                                </div>
+                            {% endif %}
                         </div>
 
                         <div class="col-2">
                             <div class="d-none">{{ f.DELETE }}</div>
+                            
                             <button type="button" class="btn btn-outline-danger delete-row-btn" title="Remover ingrediente">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                 </svg>
                             </button>
                         </div>
+                        
                         {% for hidden in f.hidden_fields %} {{ hidden }} {% endfor %}
+                        
                     </div>
                 {% endfor %} 
             </div>
-            <div class="mt-4 d-flex justify-content-center">
-
-            <button type="button" id="add-ingredient-btn" class="btn btn-outline-info btn-sm mt-3">+ ingrediente</button>
+            <div class="btn-container mt-4">
+            <button type="button" id="add-ingredient-btn" class="btn btn-outline-info btn-sm smaw">+ ingredientes</button>
             </div>
-            <div class="mt-4 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary px-3 mt-4" style="border-radius: 18px;">confirmar</button>
+            <div class="btn-container mt-4">
+                <button type="submit" class="btn btn-success smaw" style="border-radius: 18px;">confirmar</button>
             </div>
         </form>
     </div>
 </div>
-
 <script>
 
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
     const container = document.getElementById('formset-container');
     const addBtn = document.getElementById('add-ingredient-btn');
     const totalForms = document.querySelector('input[name$="-TOTAL_FORMS"]');
-    const emptyFormHtml = document.getElementById('empty-form-template').innerHTML;
+    const template = document.getElementById('empty-form-template');
 
-    // --- ADD ROW LOGIC ---
-    addBtn.addEventListener('click', function() {
-        let currentCount = parseInt(totalForms.value);
+    // If elements are missing, stop here
+    if (!addBtn || !container || !totalForms) {
+        console.error("Formset elements not found.");
+        return;
+    }
+
+    // --- Add Ingredient ---
+    addBtn.addEventListener('click', function(e) {
+        e.preventDefault();
         
-        // Replace __prefix__ with the current row index
-        const newFormHtml = emptyFormHtml.replace(/__prefix__/g, currentCount);
+        let currentCount = parseInt(totalForms.value);
+        const newHtml = template.innerHTML.replace(/__prefix__/g, currentCount);
         
         const newRow = document.createElement('div');
-        newRow.innerHTML = newFormHtml;
+        newRow.innerHTML = newHtml;
         
-        // Append to the container
         container.appendChild(newRow.firstElementChild);
-        
-        // Increment the total forms count so Django knows to process it
         totalForms.value = currentCount + 1;
     });
 
-    // --- DELETE ROW LOGIC (Event Delegation) ---
-    document.addEventListener('click', function(e) {
+    // --- Remove Ingredient ---
+    container.addEventListener('click', function(e) {
         const deleteBtn = e.target.closest('.delete-row-btn');
         if (!deleteBtn) return;
 
@@ -106,38 +126,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
 
         if (deleteCheckbox) {
-            // If it's a row from the database, check the 'DELETE' box and hide it
+            // Existing row: mark for deletion and hide
             deleteCheckbox.checked = true;
             row.style.display = 'none';
+            // Clear values so Django doesn't validate this "ghost" row
+            row.querySelectorAll('input:not([type="hidden"]), select').forEach(i => i.value = '');
         } else {
-            // If it's a brand new row that was never saved, just remove it
+            // New row: completely remove from DOM
             row.remove();
-            
-            // Adjust the TOTAL_FORMS count
-            let currentCount = parseInt(totalForms.value);
-            totalForms.value = currentCount - 1;
-
-            // Re-index remaining forms to keep the sequence clean
-            reindexForms();
+            totalForms.value = Math.max(0, parseInt(totalForms.value) - 1);
+            reindexRows();
         }
     });
 
-    function reindexForms() {
+    function reindexRows() {
         const rows = container.querySelectorAll('.formset-row');
         rows.forEach((row, index) => {
             row.querySelectorAll('input, select').forEach(input => {
                 const name = input.getAttribute('name');
-                if (name) {
-                    input.setAttribute('name', name.replace(/-\d+-/, `-${index}-`));
-                }
+                if (name) input.setAttribute('name', name.replace(/-\d+-/, `-${index}-`));
                 const id = input.getAttribute('id');
-                if (id) {
-                    input.setAttribute('id', id.replace(/-\d+-/, `-${index}-`));
-                }
+                if (id) input.setAttribute('id', id.replace(/-\d+-/, `-${index}-`));
             });
         });
     }
-});
-
+})();
 </script>
+
 {% endblock %}

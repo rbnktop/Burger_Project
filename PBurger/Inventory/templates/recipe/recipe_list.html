@@ -1,61 +1,34 @@
-{% extends "layout.html"%}
-{% block title %} Adicionar {% endblock %}
+{% extends "layout_lista.html" %}
+
+{% block title %} Receitas {% endblock %}
+{% block sub_title %} Receitas {% endblock %}
+{% block url_add_item %}{% url "stock:receita_criar" %}{% endblock url_add_item %}
+{% block url_item_query %}{% url "stock:receita_inventario" %}{% endblock url_item_query %}
 {% block content %} 
 
-<div class="container mt-5">
-    
-    <div class="d-flex mb-4">
-        <h2 class="text-white">Receitas</h2>
-    </div>
-    <hr class="glass-hr">
-
-    <div class="d-flex justify-content-between mb-5 mt-4">
-        <a href="{% url 'stock:receita_criar' %}" class="btn btn-primary" style="border-radius: 30px;">
-            + Adicionar Item
-        </a>
-    <form class="d-flex" method="GET" action="{% url 'stock:receita_inventario' %}">
-        <div class="glass-input">
-    <input 
-        class="form-control me-2 text-white" 
-        type="search" 
-        name="q" 
-        value="{{ request.GET.q }}" 
-        placeholder="Procurar items..." 
-        aria-label="Search"
-        style=" border-radius: 30px;"
-    />
-        </div>
-    <button class="btn btn-secondary ml-1" type="submit" style="border-radius: 30px;" >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-        </svg>
-    </button>
-</form>
-</div>
-
-    <div class="row g-4 justify-content-center">
+<div class="row g-4 justify-content-center">
     {% for item in recipe %}
         <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
             <div class="glass-card p-3 w-100">
                 <h5 class="text-capitalize mb-2">{{ item.name }}</h5>
+
                 <hr class="glass-hr">
+                
                 <div class="mb-3">
                     <small class="text-white-50 d-block"></small>
-                    <span>{{ item.ingredients.ingredient }}</span>
+                    <span>{{ item.ingredients }}</span>
                 </div>
                 
                 <hr class="glass-hr">
 
                 <div class="btn-container">
-                    <a href="{% url 'stock:receita_editar' item.pk %}" class="btn btn-warning ">editar</a>
-                    <a href="{% url 'stock:receita_apagar' item.pk %}" class="btn btn-danger ">remover</a>
+                    <a href="{% url 'stock:receita_editar' item.pk %}" class="btn btn-warning" >editar</a>
+                    <a href="{% url 'stock:receita_apagar' item.pk %}" class="btn btn-danger">remover</a>
                 </div>
-
             </div>
         </div>
     {% endfor %}
 </div>
 
-</div>
-
 {% endblock %}
+
