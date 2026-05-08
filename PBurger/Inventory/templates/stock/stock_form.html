@@ -1,11 +1,11 @@
 {% extends "layout.html"%}
 {% block title %} Adicionar {% endblock %}
-{% block content %} 
+{% block main %} 
 
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 40vh;">
-    <div class="col-6 col-md-4 col-lg-4">
-        <div class="glass-card">  
+<div class="d-flex justify-content-center" style="padding-top: 65px;">
+
+        <div class="glass-card" style="min-width: 300px;">  
             <form method="POST">
                 {% csrf_token %}
                 
@@ -16,7 +16,7 @@
                 </div>
             </form>
         </div>
-    </div>
+
 </div>
 
 {% endblock %}

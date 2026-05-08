@@ -1,0 +1,29 @@
+{% extends "layout.html"%}
+{% block title %} Apagar {% endblock %}
+{% block main %} 
+
+<div class="d-flex justify-content-center " style="padding-top: 130px;">
+ 
+    <div class="glass-card text-center">
+        <h2 class="text-white pb-4">Tem certeza?</h2>
+
+        <hr class="glass-hr">
+
+        <div class="item-preview pb-4">
+            <h5 class="text-capitalize">{{ item.name }}</h5>
+        </div>
+
+        
+        <form method="post" class="btn-container">
+
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger w-70  btn-sm mr-5">apagar</button>
+
+            <a href="{% url 'greeting:home' %}" class="btn btn-success w-70 btn-sm">voltar</a>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

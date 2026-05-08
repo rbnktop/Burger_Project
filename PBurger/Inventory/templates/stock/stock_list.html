@@ -1,57 +1,40 @@
-{% extends "layout.html"%}
+{% extends "layout_lista.html" %}
+
 {% block title %} Inventario {% endblock %}
+{% block sub_title %} Inventario {% endblock %}
+
+{% block url_add_item %}{% url "stock:criar" %}{% endblock url_add_item %}
+{% block url_item_query %}{% url "stock:inventario" %}{% endblock url_item_query %}
+
 {% block content %} 
 
-<div class="container mt-5">
-    
-    <div class="d-flex align-items- mb-4">
-        <h2 class="text-white">Inventário</h2>
-    </div>
-    <hr class="glass-hr">
-
-    <div class="d-flex justify-content-between mb-4 pb-4 pt-3">
-        <a href="{% url 'stock:criar' %}" class="btn btn-primary px-3 py-1.5 " style="border-radius: 30px;">
-            + Adicionar Item
-        </a>
-        <form class="d-flex" method="GET" action="{% url 'stock:inventario' %}">
-    <input 
-        class="form-control me-2" 
-        type="search" 
-        name="q" 
-        value="{{ request.GET.q }}" 
-        placeholder="Search items..." 
-        aria-label="Search"
-        style="border-radius: 30px;"
-    />
-    <button class="btn btn-outline-success ml-2 mr-4 mt-1" type="submit">procurar</button>
-    </form>
-    </div>
-
-    <div class="row g-4 justify-content-center">
+<div class="row g-4 justify-content-center ">
     {% for item in stock %}
-        <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
-            <div class="glass-card p-3 w-100">
-                <h5 class="text-capitalize mb-2">{{ item.name }}</h5>
+        <div class="col-6 col-md-5 col-lg-3 mb-4 d-flex"> 
+            <div class="glass-card w-100">
+                <h5 class="text-capitalize pt-2 align-self-center ">{{ item.name }}</h5>
                 
                 <hr class="glass-hr">
-                <div class="mb-3">
+
+                <div class="mb-4">
                     <small class="text-white-50 d-block">Quantidade:</small>
                     <span>{{ item.quantity|floatformat:"-1" }}<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
                 </div>
-                <div class="mb-2">
+                <div class="mb-1">
                     <small class="text-white-50 d-block">Valor:</small>
                     <span>R${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
-                    <hr class="glass-hr">
                 </div>
+                
+                <hr class="glass-hr">
+                
                 <div class="btn-container">
-                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-outline-warning">editar</a>
-                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger">remover</a>
+                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-outline-warning ">editar</a>
+                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-outline-danger ">remover</a>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
 
-</div>
 
 {% endblock  %}

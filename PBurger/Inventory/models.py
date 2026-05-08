@@ -1,3 +1,5 @@
+from typing import Required
+
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -33,7 +35,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Stock, through="RecipeRequirements")
 
     def __str__(self):
-        return f" Receita: {self.name} tem {self.ingredients}"
+        return f"{self.name}"
 
 
 class RecipeRequirements(models.Model):

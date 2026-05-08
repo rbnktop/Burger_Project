@@ -16,7 +16,7 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-LOGIN_URL = '/login'
+LOGIN_URL = "/login"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
