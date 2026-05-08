@@ -43,9 +43,9 @@
                     <span>R${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
                     <hr class="glass-hr">
                 </div>
-                <div class="d-flex justify-content-end">
-                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-outline-warning btn-sm">editar</a>
-                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger btn-sm">remover</a>
+                <div class="btn-container">
+                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-outline-warning">editar</a>
+                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger">remover</a>
                 </div>
             </div>
         </div>

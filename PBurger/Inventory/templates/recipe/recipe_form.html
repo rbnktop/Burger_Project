@@ -1,99 +1,143 @@
 {% extends "layout.html" %}
-{% block title %} Adicionar {% endblock %}
+{% block title %} Receita {% endblock %}
 
 {% block content %}
 <div class="container mt-4 mb-4">
-    <div class="glass-card p-4 mx-auto" style="max-width: 600px;">
+    <div class="glass-card my-auto mx-auto" style="max-width: 600px;">
         <h2 class="text-white mb-4">Receita</h2>
         <hr class="glass-hr">
-        <form method="post">
+        <form method="post" id="recipe-form">
             {% csrf_token %}
-            
-            <div class="mb-4 mt-2">
+
+            <div class="mb-4 mt-5">
                 <h5 class="text-white-50 mt-3 mb-4">Nome da Receita</h5>
             <div class="ml-2 mr-2">
                 {{ form.name }}
             </div>
-                
                 <h5 class="text-white mt-4 mb-3">Ingredientes</h5>
             </div>
                 
             {{ formset.management_form }}
 
+            <div id="empty-form-template" class="d-none">
+                <div class="row formset-row justify-content-center">
+                    <div class="col-md-6">
+                        {{ formset.empty_form.ingredient }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ formset.empty_form.amount }}
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-outline-danger delete-row-btn" title="Remover ingrediente">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div id="formset-container">
                 {% for f in formset %}
-                <div class="row g-2 m-2 align-items-baseline formset-row">
-                    <div class="col-md-7">
-                        {{ f.ingredient }}
-                    </div>
+                    <div class="row formset-row justify-content-center mb-3">
+                        {{ f.id }}
+                        
+                        <div class="col-md-6">
+                            {{ f.ingredient }}
+                        </div>
 
-                    <div class="col-md-5 mt-2">
-                        <div class="d-flex align-items-baseline">
-                        {% comment %} <div class="flex-grow-1"> {% endcomment %}
-                        {{ f.amount }}
-                    {% comment %} </div> {% endcomment %}
-                    <div class="col-2 d-flex">
-                        {% if formset.can_delete %}
+                        <div class="col-md-2">
+                            {{ f.amount }}
+                        </div>
+
+                        <div class="col-2">
                             <div class="d-none">{{ f.DELETE }}</div>
-                            <button type="button" class="btn btn-outline-danger btn-sm delete-row-btn " title="Remover ingrediente">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 pe-none" viewBox="0 0 16 16">
+                            <button type="button" class="btn btn-outline-danger delete-row-btn" title="Remover ingrediente">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                 </svg>
                             </button>
-                        {% endif %}
+                        </div>
+                        {% for hidden in f.hidden_fields %} {{ hidden }} {% endfor %}
                     </div>
-                </div>
-            </div>  
-                    {% for hidden in f.hidden_fields %} {{ hidden }} {% endfor %}
-                </div> {% endfor %}
+                {% endfor %} 
             </div>
-            
-            <button type="button" id="add-ingredient" class="btn btn-outline-info btn-sm mt-2">+ ingrediente</button>
-            
             <div class="mt-4 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary px-5">salvar</button>
+
+            <button type="button" id="add-ingredient-btn" class="btn btn-outline-info btn-sm mt-3">+ ingrediente</button>
+            </div>
+            <div class="mt-4 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary px-3 mt-4" style="border-radius: 18px;">confirmar</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    const addBtn = document.getElementById('add-ingredient');
-    // Note: 'requirements' must match your related_name in models.py exactly
-    const totalForms = document.getElementById('id_requirements-TOTAL_FORMS'); 
 
-    addBtn.addEventListener('click', () => {
-        const currentForms = document.getElementsByClassName('formset-row');
-        const formNum = currentForms.length; 
-        
-        const newForm = currentForms[0].cloneNode(true);
-        
-        const formRegex = RegExp(`requirements-(\\d+)-`,'g');
-        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `requirements-${formNum}-`);
-        
-        const inputs = newForm.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            if (input.type !== 'hidden') input.value = '';
-            if (input.type === 'checkbox') input.checked = false;
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('formset-container');
+    const addBtn = document.getElementById('add-ingredient-btn');
+    const totalForms = document.querySelector('input[name$="-TOTAL_FORMS"]');
+    const emptyFormHtml = document.getElementById('empty-form-template').innerHTML;
 
-        // Ensure newly cloned row is visible just in case we cloned a hidden/deleted one
-        newForm.style.display = 'flex';
-
-        document.getElementById('formset-container').appendChild(newForm);
-        totalForms.setAttribute('value', `${formNum + 1}`);
+    // --- ADD ROW LOGIC ---
+    addBtn.addEventListener('click', function() {
+        let currentCount = parseInt(totalForms.value);
+        
+        // Replace __prefix__ with the current row index
+        const newFormHtml = emptyFormHtml.replace(/__prefix__/g, currentCount);
+        
+        const newRow = document.createElement('div');
+        newRow.innerHTML = newFormHtml;
+        
+        // Append to the container
+        container.appendChild(newRow.firstElementChild);
+        
+        // Increment the total forms count so Django knows to process it
+        totalForms.value = currentCount + 1;
     });
 
-    document.getElementById('formset-container').addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-row-btn')) {
-            const row = e.target.closest('.formset-row');
-            const checkbox = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+    // --- DELETE ROW LOGIC (Event Delegation) ---
+    document.addEventListener('click', function(e) {
+        const deleteBtn = e.target.closest('.delete-row-btn');
+        if (!deleteBtn) return;
+
+        const row = deleteBtn.closest('.formset-row');
+        const deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
+
+        if (deleteCheckbox) {
+            // If it's a row from the database, check the 'DELETE' box and hide it
+            deleteCheckbox.checked = true;
+            row.style.display = 'none';
+        } else {
+            // If it's a brand new row that was never saved, just remove it
+            row.remove();
             
-            if (checkbox) {
-                checkbox.checked = true; 
-                row.style.display = 'none'; 
-            }
+            // Adjust the TOTAL_FORMS count
+            let currentCount = parseInt(totalForms.value);
+            totalForms.value = currentCount - 1;
+
+            // Re-index remaining forms to keep the sequence clean
+            reindexForms();
         }
     });
+
+    function reindexForms() {
+        const rows = container.querySelectorAll('.formset-row');
+        rows.forEach((row, index) => {
+            row.querySelectorAll('input, select').forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    input.setAttribute('name', name.replace(/-\d+-/, `-${index}-`));
+                }
+                const id = input.getAttribute('id');
+                if (id) {
+                    input.setAttribute('id', id.replace(/-\d+-/, `-${index}-`));
+                }
+            });
+        });
+    }
+});
+
 </script>
 {% endblock %}

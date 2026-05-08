@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 
 from .models import Recipe, Stock
@@ -53,30 +53,29 @@ def list_recipe_view(request):
     recipe = Recipe.objects.all()
     query = request.GET.get("q")
     if query:
-
         recipe = recipe.filter(Q(name__icontains=query))
     recipe = recipe.order_by("name")
+
     return render(request, "recipe/recipe_list.html", {"recipe": recipe})
 
 @login_required
 def update_recipe_view(request, recipe_id):
-    item = Recipe.objects.get(id=recipe_id)
-    
-    form = RecipeForm(instance=item)
-    formset = RecipeRequirementFormSet(instance=item)
+    item = get_object_or_404(Recipe.objects.prefetch_related('requirements'), id=recipe_id)
 
     if request.method == "POST":
-        form = StockForm(request.POST, instance=item)
+        form = RecipeForm(request.POST, instance=item)
         formset = RecipeRequirementFormSet(request.POST, instance=item)
 
         if form.is_valid() and formset.is_valid():
+            print('valid')
             recipe = form.save()
             formset.instance = recipe  # Link the requirements to the new recipe
             formset.save()
-            return redirect("stock:receita")
+            return redirect("stock:receita_inventario")
     else:
-        form = RecipeForm()
-        formset = RecipeRequirementFormSet()
+        # These instances MUST be passed to show existing data
+        form = RecipeForm(instance=item)
+        formset = RecipeRequirementFormSet(instance=item)
 
     return render(
         request, "recipe/recipe_form.html", {"form": form, "formset": formset}
@@ -92,7 +91,8 @@ def create_recipe_view(request):
             recipe = form.save()
             formset.instance = recipe
             formset.save()
-            return redirect("stock:receita")
+            return redirect("stock:receita_inventario")
+        else: print(f"{form.errors}")
     else:
         form = RecipeForm()
         formset = RecipeRequirementFormSet()
@@ -107,5 +107,5 @@ def delete_recipe_view(request, stock_id):
 
     if request.method == "POST":
         item.delete()
-        return redirect("stock:receita")
+        return redirect("stock:receita_inventario")
     return render(request, "recipe/confirm_delete_recipe.html", {"item": item})

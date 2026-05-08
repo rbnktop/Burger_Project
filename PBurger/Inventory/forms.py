@@ -1,7 +1,7 @@
 from django import forms
 from .models import Stock, Recipe, RecipeRequirements, Burger, Beverage
 from django.forms import inlineformset_factory
-
+from django.forms.models import BaseInlineFormSet
 
 class StockForm(forms.ModelForm):
     class Meta:
@@ -42,6 +42,15 @@ class StockForm(forms.ModelForm):
             ),
         }
 
+class BaseRecipeRequirementFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Fetch the ingredients ONCE
+        queryset = Stock.objects.all() 
+        for form in self.forms:
+            if 'ingredient' in form.fields:
+                form.fields['ingredient'].queryset = queryset
 
 class RecipeForm(forms.ModelForm):
     class Meta:
@@ -58,15 +67,17 @@ class RecipeForm(forms.ModelForm):
 RecipeRequirementFormSet = inlineformset_factory(
     Recipe,
     RecipeRequirements,
+    formset=BaseRecipeRequirementFormSet,  # <--- THIS IS THE ONLY CHANGE
     fields=["ingredient", "amount"],
     extra=4,
     can_delete=True,
     widgets={
         "ingredient": forms.Select(
-            attrs={"class": "form-control", "placeholder": "Cebola"}
+            attrs={"class": "form-select", "placeholder": "Cebolinha"}
         ),
         "amount": forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "0.0"}
+            attrs={"class": "form-control", "placeholder": "15.7"}
         ),
     },
 )
+

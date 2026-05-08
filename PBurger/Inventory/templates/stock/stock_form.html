@@ -4,15 +4,15 @@
 
 
 <div class="d-flex justify-content-center align-items-center" style="min-height: 40vh;">
-    <div class="col-12 col-md-4 col-lg-3">
+    <div class="col-6 col-md-4 col-lg-4">
         <div class="glass-card">  
             <form method="POST">
                 {% csrf_token %}
                 
                 {{ form.as_p }}
                 
-                <div class="text-center mt-1">
-                <button type="submit" class="btn btn-primary px-3 mt-" style="border-radius: 18px;">Confirmar</button>
+                <div class="text-center">
+                <button type="submit" class="btn btn-primary px-3 mt-4" style="border-radius: 18px;">confirmar</button>
                 </div>
             </form>
         </div>

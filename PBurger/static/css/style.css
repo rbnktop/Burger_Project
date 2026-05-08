@@ -11,29 +11,59 @@ body::-webkit-scrollbar,
     display: none !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.form-select option {
+    color: black !important;
+}
+
+.form-select {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    /* border: 1px solid rgba(255, 255, 255, 0.2) !important; */
+    color: white !important;
+}
+
 body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0,0,0,0.05)), url('../images/background.jpg');
     background-size: cover;         
     background-position: center;     
     background-attachment: fixed;    
     background-repeat: no-repeat; 
+    margin-bottom: 40px;
+    
 }
 
-body.loaded { display: block; }
-.navbar {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-    border-top: none;
-    border-left: none;
-    border-right: none;
+.navbar.fixed-top {
+    /* Center the element itself */
+    left: 0;
+    right: 0;
+    margin: 20px auto; /* 20px from top, centered horizontally */
+    width: 1360px;
+    max-width: 85%;
+    
 
-    background: rgba(255, 255, 255, 0.05) !important;
+    /* Ensure it stays on top of everything */
+    /* z-index: 1550; Aligns with standard desktop container widths */
+    
+    /* Glass styling */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.34);
     backdrop-filter: blur(15px) saturate(180%);
     -webkit-backdrop-filter: blur(15px) saturate(180%);
-
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px; 
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
+
 .navbar-brand {
     color: white;
     text-emphasis-color: #987c0d ;
@@ -57,9 +87,34 @@ body.loaded { display: block; }
     justify-content: space-between;
     color: #ffffff !important;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
-    /* min-height: 250px; */
 }
 
+.glass-input input,
+.glass-input textarea,
+.glass-input select {
+    width: 100%;
+    background: #6c757d ;
+    border-radius: 10px;
+    outline: none;
+    height: 38px; 
+    line-height: 1;
+    transition: 0.7s;
+    color: white;
+}
+
+.glass-input input:focus{
+    width: 100%;
+    /* padding: 5px 15px !important;  */
+
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid #0d6efd;
+    border-radius: 20px;
+
+    outline: invert;
+    height: 38px; 
+    line-height: 1;
+    transition: 1s;
+}
 
 .glass-card input, 
 .glass-card select, 
@@ -72,7 +127,7 @@ body.loaded { display: block; }
     border-radius: 16px;
     color: white;
     outline: none;
-    transition: 0.3s;
+    transition: 0.7s;
 }
 
 .glass-card select, 
@@ -113,40 +168,37 @@ body.loaded { display: block; }
     text-shadow: 1px 1px 2px rgba(0,0,0,5);
 }
 
-.glass-card .d-flex a + a {
-    margin-left: 10px;
-}
-
-.btn-outline-success {
-    display: inline-flex;
-    align-items: center;
-    justify-content: baseline;
-    padding-top: 1;
-    line-height: 1;
-    height: 31px; 
+.glass-card .btn {
     text-transform: lowercase;         
     border-radius: 22px;               
     padding-inline: 20px;
-    transition: all 0.6s ease;
-
-}
-
-.glass-card .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: baseline;
-    padding-top: 1;
-    line-height: 1;
-    height: 31px; 
-    text-transform: lowercase;         
-    border-radius: 22px;               
-    padding-inline: 15px;
+    min-height: 35px;
     transition: all 0.6s ease;
 }
 
-.btn-sm {
+.btn{
+    text-transform: lowercase;
+    border-radius: 22px;
+    padding-inline: 20px;
+    min-height: 35px;
+    transition: all 0.6s ease;
+    user-select: none;
+    padding: .200rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    }
 
-    font-size: 0.95rem;
+.btn-container {
+    justify-content: space-evenly;
+    display: grid;
+    grid-auto-flow: column; 
+    gap: 15px;
+    justify-items: stretch;
 }
 
 
@@ -179,7 +231,12 @@ body.loaded { display: block; }
 
 .delete-row-btn:hover {
     background-color: rgba(220, 53, 69, 0.2);
-    transform: scale(1.1);
+    transform: scale(1.4);
     display: block;
 }
+
+main, .main-container {
+    padding-top: 120px;
+}
+
 
