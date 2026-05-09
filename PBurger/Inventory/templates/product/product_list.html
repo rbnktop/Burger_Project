@@ -2,12 +2,12 @@
 
 {% block title %} Receitas {% endblock %}
 {% block sub_title %} Receitas {% endblock %}
-{% block url_add_item %}{% url "stock:receita_criar" %}{% endblock url_add_item %}
-{% block url_item_query %}{% url "stock:receita_inventario" %}{% endblock url_item_query %}
+{% block url_add_item %}{% url "stock:produto_criar" %}{% endblock url_add_item %}
+{% block url_item_query %}{% url "stock:produto_inventario" %}{% endblock url_item_query %}
 {% block content %} 
 
 <div class="row g-4 justify-content-center">
-    {% for item in recipe %}
+    {% for item in product %}
         <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
             <div class="glass-card p-3 w-100">
                 <h5 class="text-capitalize mb-2">{{ item.name }}</h5>
@@ -16,15 +16,15 @@
                 
                 <div class="mb-3">
                     <small class="text-white-50 d-block"></small>
-                    <span>{{ item.ingredients }}</span>
+                    <span>{{ item.recipe }}</span>
                 </div>
                 
                 <hr class="glass-hr">
 
-                <div class="btn-container">
-                    <a href="{% url 'stock:receita_editar' item.pk %}" class="btn btn-warning">editar</a>
+                {% comment %} <div class="btn-container">
+                    <a href="{% url 'stock:receita_editar' item.pk %}" class="btn btn-warning" >editar</a>
                     <a href="{% url 'stock:receita_apagar' item.pk %}" class="btn btn-danger">remover</a>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
     {% endfor %}

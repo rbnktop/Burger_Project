@@ -9,8 +9,7 @@ def home_view(request):
 
 
 def login_view(request):
-    
-    
+
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
 
