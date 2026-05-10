@@ -82,55 +82,82 @@ input[type=number] {
 }
 
 
+:root {
+    --bg: #121212;
+
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-bg-focus: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-border-2: rgba(255, 255, 255, 0.2);
+
+    --text: #ffffff;
+    --primary: #0d6efd;
+
+    --radius-1: 10px;
+    --radius-2: 20px;
+
+    --control-h: 42px;
+    --grid-row-h: 40px;
+
+    --danger: #dc3545;
+}
+
 /* Consolidated Input Styles */
 
-.glass-card input, 
-.glass-card select, 
-.glass-card textarea {
-    height: 42px;
+.glass-card input,
+.glass-card select,
+.glass-card textarea,
+.field-wrapper input,
+.field-wrapper select {
+    height: var(--control-h);
     padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.1); 
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border-2);
+    border-radius: var(--radius-1);
+    color: var(--text);
     outline: none;
-    transition: all 0.4s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: all 0.5s ease;
     box-sizing: border-box;
 }
-.glass-card select,
-.glass-input input {
-    height: 42px; /* Fixed height for everything in the row */
+
+/* Select often needs slightly different padding to align visually */
+.glass-card select {
     padding: 8px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-} 
-    /* background: #6c757d; */
-    
-.glass-card input:empty{min-width: 100%!important;}
+}
+
+.glass-card input:empty {
+    min-width: 100% !important;
+}
 
 /* Consolidated Focus States */
-.glass-input input:focus,
 .glass-card input:focus,
 .glass-card select:focus,
-.glass-card textarea:focus {
-    background: rgba(255, 255, 255, 0.15) !important; 
-    border-color: #0d6efd !important;
+.glass-card textarea:focus,
+.field-wrapper input:focus,
+.field-wrapper select:focus {
+    background: var(--glass-bg-focus) !important;
+    border-color: var(--primary) !important;
     box-shadow: 0 0 12px rgba(13, 110, 253, 0.8) !important;
-    border-radius: 20px;
-    color: #ffff ;
-
-
+    border-radius: var(--radius-2);
+    color: #ffff;
 }
+
 
 .glass-card input:-webkit-autofill {
     -webkit-text-fill-color: white !important;
     -webkit-box-shadow: 0 0 0 30px #2c2c2c inset !important;
 }
+
+/* Radio buttons (Bootstrap overrides can make them oversized) */
+.form-check-input,
+.product-category input[type="radio"] {
+    width: 1rem;
+    position:unset;
+    margin-top: 0px;
+    margin-left: 0px;
+
+}
+
 
 /* --- Glass Cards --- */
 .glass-card {
@@ -182,6 +209,9 @@ input[type=number] {
     width: 42px;
     padding: 0 !important; /* Reset padding to center the SVG */
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .formset-row {
     display: flex;
@@ -200,6 +230,8 @@ input[type=number] {
 .delete-row-btn:hover {
     background-color: rgba(220, 53, 69, 0.2);
 }
+
+
 
 .smaw {
     padding: 0.2rem 1rem !important;

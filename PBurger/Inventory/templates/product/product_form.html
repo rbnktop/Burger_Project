@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %} Produto {% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-center" style="padding-top: 65px;">
+    <div class="glass-card" style="min-width: 320px;">
+        <form method="POST" data-turbo="false">
+            {% csrf_token %}
+
+            <h5 class="text-white-50 mt-1 mb-4">Criar Produto</h5>
+
+            <div class="mb-3">
+                {{ product_form.name.label_tag }}
+                {{ product_form.name }}
+                {% if product_form.name.errors %}
+                    <div class="error-text">{{ product_form.name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ product_form.price.label_tag }}
+                {{ product_form.price }}
+                {% if product_form.price.errors %}
+                    <div class="error-text">{{ product_form.price.errors }}</div>
+                {% endif %}
+            </div>
+
+            <hr class="glass-hr mt-4 mb-4">
+
+            <div class="checkbox-row" style="">
+                <div class="text-white-50 mb-2">Categoria</div>
+                {{ product_form.product_category }}
+                {% if product_form.product_category.errors %}
+                    <div class="error-text">{{ product_form.product_category.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div id="burger-section" style="display:none;">
+                <hr class="glass-hr mt-4 mb-4">
+                <div class="mb-3">
+                    {{ burger_form.recipe.label_tag }}
+                    {{ burger_form.recipe }}
+                    {% if burger_form.recipe.errors %}
+                        <div class="error-text">{{ burger_form.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div id="beverage-section" style="display:none;">
+                <hr class="glass-hr mt-4 mb-4">
+                <div class="mb-3">
+                    {{ beverage_form.stock.label_tag }}
+                    {{ beverage_form.stock }}
+                    {% if beverage_form.stock.errors %}
+                        <div class="error-text">{{ beverage_form.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success px-3 mt-4" style="border-radius: 18px;">confirmar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const burgerSection = document.getElementById('burger-section');
+    const beverageSection = document.getElementById('beverage-section');
+    const radios = document.querySelectorAll('input[name="product_category"]');
+
+    function showByValue(value) {
+        console.log("Switching UI to:", value);
+        if (burgerSection) burgerSection.style.display = (value === 'burger') ? 'block' : 'none';
+        if (beverageSection) beverageSection.style.display = (value === 'beverage') ? 'block' : 'none';
+    }
+
+    radios.forEach(r => {
+        r.addEventListener('change', () => showByValue(r.value));
+    });
+
+    // Run immediately to catch pre-selected options
+    const currentSelected = document.querySelector('input[name="product_category"]:checked');
+    if (currentSelected) {
+        showByValue(currentSelected.value);
+    }
+});
+</script>
+{% endblock %}
+
