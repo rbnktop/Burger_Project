@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Stock, Recipe, RecipeRequirements, Burger, Beverage
+from .models import Product, Stock, Recipe, RecipeItems, Burger, Beverage
 from django.forms import inlineformset_factory
 from django.forms.models import BaseInlineFormSet
 
@@ -44,15 +44,14 @@ class StockForm(forms.ModelForm):
         }
 
 
-class BaseRecipeRequirementFormSet(BaseInlineFormSet):
+class BaseRecipeItemsFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
 
         queryset = Stock.objects.all()
         for form in self.forms:
             if "ingredient" in form.fields:
-                form.fields["ingredient"].queryset = queryset  #type: ignore pylance doesnt see the ingredient as a modelchoicefield
+                form.fields["ingredient"].queryset = queryset  # type: ignore pylance doesnt see the ingredient as a modelchoicefield
 
 
 class RecipeForm(forms.ModelForm):
@@ -66,10 +65,10 @@ class RecipeForm(forms.ModelForm):
         }
 
 
-RecipeRequirementFormSet = inlineformset_factory(
+RecipeItemsFormSet = inlineformset_factory(
     Recipe,
-    RecipeRequirements,
-    formset=BaseRecipeRequirementFormSet,
+    RecipeItems,
+    formset=BaseRecipeItemsFormSet,
     fields=["ingredient", "amount"],
     extra=2,
     can_delete=True,
@@ -89,18 +88,18 @@ RecipeRequirementFormSet = inlineformset_factory(
 
 class ProductBaseForm(forms.ModelForm):
     ProductCategories = [
-        ('burger', 'Hambúrguer'),
-        ('beverage', 'Bebida'),
+        ("burger", "Hambúrguer"),
+        ("beverage", "Bebida"),
     ]
     # Adding Bootstrap classes to the widget
     product_category = forms.ChoiceField(
-        choices=ProductCategories, 
-        widget=forms.RadioSelect(attrs={'class': 'form-check-input'})
+        choices=ProductCategories,
+        widget=forms.RadioSelect(attrs={"class": "form-check-input"}),
     )
 
     class Meta:
         model = Product
-        fields = ['name', 'price']
+        fields = ["name", "price"]
 
 
 class BurgerExtraForm(forms.ModelForm):

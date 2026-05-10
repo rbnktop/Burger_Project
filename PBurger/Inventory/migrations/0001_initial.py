@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="RecipeRequirements",
+            name="RecipeItems",
             fields=[
                 (
                     "id",
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
             model_name="recipe",
             name="ingredients",
             field=models.ManyToManyField(
-                through="Inventory.RecipeRequirements", to="Inventory.stock"
+                through="Inventory.RecipeItems", to="Inventory.stock"
             ),
         ),
         migrations.CreateModel(

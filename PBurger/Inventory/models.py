@@ -1,5 +1,3 @@
-from typing import Required
-
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -32,13 +30,13 @@ class Recipe(models.Model):
     """
 
     name = models.CharField(max_length=32, unique=True)
-    ingredients = models.ManyToManyField(Stock, through="RecipeRequirements")
+    ingredients = models.ManyToManyField(Stock, through="RecipeItems")
 
     def __str__(self):
         return f"{self.name}"
 
 
-class RecipeRequirements(models.Model):
+class RecipeItems(models.Model):
     """
     Amount of ingredients required to cook
     """
@@ -73,7 +71,7 @@ class Burger(Product):
     recipe = models.ForeignKey(Recipe, on_delete=models.PROTECT)
 
     def update_stock(self, quantity_sold):
-        ingredients = RecipeRequirements.objects.filter(recipe=self.recipe)
+        ingredients = RecipeItems.objects.filter(recipe=self.recipe)
 
         for i in ingredients:
             i.ingredient.quantity -= i.amount * quantity_sold

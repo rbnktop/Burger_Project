@@ -77,7 +77,6 @@ def process_checkout(request):
                 # Subtract stock (ingredients for burgers, stock for beverages)
                 product.update_stock(qty)
 
-
             OrderItem.objects.bulk_create(created_items)
 
             order.total_price = total_price
@@ -94,4 +93,3 @@ def process_checkout(request):
 
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
-
