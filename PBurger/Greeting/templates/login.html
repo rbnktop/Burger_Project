@@ -7,31 +7,8 @@
         <div class="glass-card " > 
             <h2 class="text-center text-white mb-4">Login</h2>
 
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white small py-2 mb-2">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-            
             <form method="POST" novalidate>
                 {% csrf_token %}
-              
-                {% if form.errors %}
-                    <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white small p-3 mb-3" style="border-radius: 10px;">
-                        <ul class="mb-0 ps-3">
-                            {% for field, error_list in form.errors.items %}
-                                {% for error in error_list %}
-                                    {# This hides the technical '__all__' name and just shows the message #}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-                
 
                 {% for field in form %}
                     <div class="mb-3">
@@ -45,8 +22,20 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white small" style="border-radius: 20px;">
+                        <ul class="mb-0 ps-3 pl-2">
+                           
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+            
+                        </ul>
+                    </div>
+                {% endif %}
 
-                <div class="d-flex justify-content-center mt-4">
+                <div class="d-flex justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary mt-3" style="border-radius: 15px;">
                     Confirmar
                 </button>

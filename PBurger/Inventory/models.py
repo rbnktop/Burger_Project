@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
+from Recipe.models import Recipe, RecipeItems
+
 
 class Stock(models.Model):
     """
@@ -22,33 +24,6 @@ class Stock(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.quantity}{self.unit}"
-
-
-class Recipe(models.Model):
-    """
-    Recipe of the meal
-    """
-
-    name = models.CharField(max_length=32, unique=True)
-    ingredients = models.ManyToManyField(Stock, through="RecipeItems")
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class RecipeItems(models.Model):
-    """
-    Amount of ingredients required to cook
-    """
-
-    recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name="requirements"
-    )
-    ingredient = models.ForeignKey(Stock, on_delete=models.PROTECT)
-    amount = models.FloatField()
-
-    def __str__(self):
-        return f" Receita: {self.recipe.name} precisa de {self.amount}{self.ingredient.unit} {self.ingredient.name}"
 
 
 class Product(models.Model):
