@@ -44,16 +44,6 @@ class StockForm(forms.ModelForm):
         }
 
 
-class BaseRecipeItemsFormSet(BaseInlineFormSet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        queryset = Stock.objects.all()
-        for form in self.forms:
-            if "ingredient" in form.fields:
-                form.fields["ingredient"].queryset = queryset  # type: ignore pylance doesnt see the ingredient as a modelchoicefield
-
-
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
@@ -64,6 +54,15 @@ class RecipeForm(forms.ModelForm):
             ),
         }
 
+
+class BaseRecipeItemsFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        queryset = Stock.objects.all()
+        for form in self.forms:
+            if "ingredient" in form.fields:
+                form.fields["ingredient"].queryset = queryset  # type: ignore pylance doesnt see the ingredient as a modelchoicefield
 
 RecipeItemsFormSet = inlineformset_factory(
     Recipe,

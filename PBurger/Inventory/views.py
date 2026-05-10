@@ -6,7 +6,7 @@ from .models import Recipe, Stock, Product, Burger, Beverage
 from .forms import (
     StockForm,
     RecipeForm,
-    RecipeRequirementFormSet,
+    RecipeItemsFormSet,
     ProductBaseForm,
     BurgerExtraForm,
     BeverageExtraForm,
@@ -77,7 +77,7 @@ def list_recipe_view(request):
 def create_recipe_view(request):
     if request.method == "POST":
         form = RecipeForm(request.POST)
-        formset = RecipeRequirementFormSet(request.POST)
+        formset = RecipeItemsFormSet(request.POST)
 
         if form.is_valid() and formset.is_valid():
             recipe = form.save()
@@ -88,7 +88,7 @@ def create_recipe_view(request):
             print(f"{form.errors}")
     else:
         form = RecipeForm()
-        formset = RecipeRequirementFormSet()
+        formset = RecipeItemsFormSet()
 
     return render(
         request, "recipe/recipe_form.html", {"form": form, "formset": formset}
@@ -103,7 +103,7 @@ def update_recipe_view(request, recipe_id):
 
     if request.method == "POST":
         form = RecipeForm(request.POST, instance=item)
-        formset = RecipeRequirementFormSet(request.POST, instance=item)
+        formset = RecipeItemsFormSet(request.POST, instance=item)
         print(f"Form errors: {form.errors}")
         print(f"Formset errors: {formset.errors}")
         if form.is_valid() and formset.is_valid():
@@ -122,7 +122,7 @@ def update_recipe_view(request, recipe_id):
     else:
 
         form = RecipeForm(instance=item)
-        formset = RecipeRequirementFormSet(instance=item)
+        formset = RecipeItemsFormSet(instance=item)
 
     return render(
         request, "recipe/recipe_form.html", {"form": form, "formset": formset}
