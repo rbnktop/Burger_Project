@@ -2,6 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from Inventory.models import Product
 
 
 def home_view(request):
@@ -31,3 +32,28 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("greeting:home")
+
+def history_sidebar(request):
+    """
+    Fetches the latest changes across the app and returns only the sidebar HTML.
+    """
+    # django-simple-history creates a separate table for each model.
+    # To get a global feed, we fetch the latest from the models we care about:
+    recent_stock = Product.history.all()[:10] # type:ignore
+    
+    # If you also tracked Burger:
+    # recent_burgers = Burger.history.all()[:10]
+    
+    # Combine and sort them by date (newest first)
+    # history_list = sorted(
+    #     chain(recent_stock, recent_burgers), 
+    #     key=attrgetter('history_date'), 
+    #     reverse=True
+    # )[:10]
+
+    # For now, let's just use Stock to keep it simple:
+    history_list = recent_stock
+
+    return render(request, 'history_sidebar.html', {
+        'history': history_list
+    })

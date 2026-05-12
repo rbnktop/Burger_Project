@@ -1,7 +1,6 @@
-from unicodedata import decimal
-
 from django.db import models
 from django.core.validators import MinValueValidator
+from simple_history.models import HistoricalRecords
 
 
 
@@ -18,17 +17,30 @@ class Stock(models.Model):
 
     name = models.CharField(max_length=32, unique=True)
     quantity = models.FloatField(validators=[MinValueValidator(0.01)], blank=False)
-    image = models.ImageField(upload_to='stock/', null=True, blank=True)
     unit = models.CharField(max_length=8, choices=UNIT_CHOICES, blank=False)
-    price = models.DecimalField(
-        max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)], blank=False
-    )
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)], blank=False)
+
     create_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='stock/', null=True, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.name} - {self.quantity}{self.unit}"
 
+    @property
+    def quantity_display(self):
+        """Returns a string with the best unit for display"""
+        if self.unit == "g" and self.quantity >= 1000:
+            kg_val:float = self.quantity / 1000
+            return kg_val
+        return self.quantity
+    
+    @property
+    def unit_display(self):
+        if self.quantity >= 1000:
+            return 'Kg'
+        return 'g'
 
 class Product(models.Model):
     """
@@ -43,7 +55,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product/', null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-    sold = models.IntegerField()
+    sold = models.IntegerField(default=0)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f" Produto: {self.name} ID: {self.id} por R${self.price}" #type:ignore
@@ -66,7 +79,11 @@ class Burger(Product):
     def get_total_cost(self):
         total_cost = 0
         for item in self.recipe_items.all(): #type:ignore
-            total_cost += int((item.amount * float(item.ingredient.price)))
+            if item.ingredient.unit == 'g':
+                price = item.ingredient.price/1000
+                total_cost += int((item.amount * float(price)))
+            else :
+                total_cost += int((item.amount * float(item.ingredient.price)))
         return round(total_cost, 2)
     
     @property
@@ -76,6 +93,8 @@ class Burger(Product):
         """
         cost = self.get_total_cost()
         return round(self.price - cost, 2)
+    
+    
 
 
 class Recipe(models.Model):

@@ -1,0 +1,24 @@
+<div class="list-group list-group-flush">
+    {% for record in history %}
+        <div class="list-group-item bg-transparent text-white border-secondary">
+            <div class="d-flex w-100 justify-content-between">
+                <small class="text-white-50">{{ record.history_date|date:"d/m H:i" }}</small>
+                <span class="badge {% if record.history_type == '+' %}bg-success{% elif record.history_type == '~' %}bg-warning{% else %}bg-danger{% endif %}">
+                    {{ record.get_history_type_display }}
+                </span>
+            </div>
+            <p class="mb-1 small">
+                <strong>{{ record.name }}</strong> 
+                {% if record.history_type == '~' %}
+                    editado por <span class="text-info">{{ record.history_user|default:"Sistema" }}</span>
+                {% else %}
+                    {{ record.get_history_type_display|lower }}
+                {% endif %}
+            </p>
+            {# Show quantity changes for Stock items #}
+            <small class="text-white-50">Qtd: {{ record.quantity }}{{ record.unit }}</small>
+        </div>
+    {% empty %}
+        <p class="p-3 text-white-50">Nenhum registro recente.</p>
+    {% endfor %}
+</div>

@@ -2,7 +2,28 @@
 {% block title %} Home {% endblock %}
 {% block main %} 
 {% load static %}
+
+
+<div class="col-md-3 glass-effect col-lg-2 text-white history-sidebar p-0 border-start border-secondary shadow" style= "border-radius: 20px;">
+        <h6 class="p-3 mb-0 text-uppercase text-white-50 border-bottom border-secondary">
+            🔴 Historico
+        </h6>
+        
+        <!-- HTMX Magic is right here -->
+        <div hx-get="{% url 'greeting:history_sidebar' %}" 
+                hx-trigger="load, every 10s" 
+                hx-swap="innerHTML">
+            
+            <!-- This shows briefly while loading -->
+            <div class="p-3 text-center text-white-50">
+                <div class="spinner-border spinner-border-sm" role="status"></div>
+                Carregando...
+            </div>
+        </div>
+    </div>
 <div>
+
+    
 <div class="glass-card mb-4 mt-5" style="margin-left:auto; width: 30%;">
     
     <h2 class="text-white">  я ьиктор </h2>
@@ -27,27 +48,22 @@ For the last time">Всё напоминает о тебе
     </p>
 
 </div>
-<div class="glass-card mb-4 mt-5 glass-effect" style="margin-right:auto; width: 30%;">
+<div class="glass-card mb-4 mt-5 glass-effect mx-auto" style="width: 30%;">
     
-    <h2 class="text-white">  я ьиктор </h2>
+    <h2 class="text-white">я</h2>
     
     <hr class="glass-hr">
 
-    <p class="" style="white-space: pre-line;" title="Everything reminds me of you
-And you're nowhere
-There's a world remaining that saw us two together
-For the last time
-A room with a balcony and a window
-It's bright right now
-Clear as the day that saw us two together
-For the last time">Всё напоминает о тебе 
-        А ты нигде
-        Остался мир, который вместе видел нас
-        В последний раз
-        Комната с балконом и окном
-        Светла сейчас
-        Чиста как день, который вместе видел нас
-        В последний раз
+    <p>
+       <i class="bi bi-wallet2"></i>
+       <i class="bi bi-credit-card-2-back"></i>
+       <i class="bi bi-coin"></i>
+       <i class="bi bi-currency-dollar"></i>
+       <i class="bi bi-floppy"></i>
+       <i class="bi bi-git"></i>
+       <i class="bi bi-handbag"></i>
+       <i class="bi bi-info-circle"></i>
+       
     </p>
 
 </div>

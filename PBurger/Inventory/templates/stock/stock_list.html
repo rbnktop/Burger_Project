@@ -12,19 +12,30 @@
     {% for item in stock %}
         <div class="col-md-4 col-lg-3 mb-4 d-flex"> 
             <div class="glass-card glass-effect" style="width:300px;">
-                <h5 class="text-capitalize pt-2">{{ item.name }}</h5>
+                <div class="row g-2" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="col d-flex flex-column">
+                        <h4 class="text-capitalize">{{ item.name }}</h4>
+                    </div>
+                    <div class="col-5 d-flex" style="margin-top:1px;">
+                        <span style="font-size: 1rem;" class="text-white-50 ms-1"><span><i class="bi bi-clock-history"></i> </span>{{ item.last_updated | date:"D H:i" }}</span>
+                    </div>
+                </div>
                 
-                <hr class="glass-hr">
+                <hr class="glass-hr mt-2">
 
                 <div class="mb-4">
                     <small class="text-white-50 d-block">Quantidade:</small>
                     {% comment %} {% if item.quantity <= 10 %} {% endcomment %}
-                    <span>{{ item.quantity|floatformat:"-1" }}<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
+                    <span>{{ item.quantity_display |floatformat:"-1" }}<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit_display }}</span></span>
                     {% comment %} {% endif %} {% endcomment %}
                 </div>
-                <div class="mb-1">
+                <div class="mb-4">
                     <small class="text-white-50 d-block">Valor:</small>
-                    <span>R${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
+                    <span>${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{% if item.unit == 'g' %}Kg{% else %}{{ item.unit }}{% endif%}</span></span>
+                </div>
+                <div class="mb-1">
+                    <small class="text-white-50 d-block">Usado em</small>
+                    <span>{{ item.recipe_set.count }} <span style="font-size: 0.75rem;" class="text-white-50 ms-1">Receita(s)</span></span>
                 </div>
                 
 
