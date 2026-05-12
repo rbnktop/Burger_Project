@@ -1,93 +1,153 @@
 {% extends "layout.html" %}
-
-{% block title %} Produto {% endblock %}
+{% block title %} Adicionar {% endblock %}
 
 {% block main %}
-<div class="d-flex justify-content-center" style="padding-top: 65px;">
-    <div class="glass-card" style="min-width: 320px;">
-        <form method="POST" data-turbo="false">
+
+<div class="d-flex justify-content-center" 
+     style="padding-top: 65px;" 
+     x-data="{ category: '{{ product_category }}' }">
+    <div class="glass-card glass-effect" style="min-width: 450px;">
+        <form method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
-
-            <h5 class="text-white-50 mt-1 mb-4">Criar Produto</h5>
-
-            <div class="mb-3">
-                {{ product_form.name.label_tag }}
-                {{ product_form.name }}
-                {% if product_form.name.errors %}
-                    <div class="error-text">{{ product_form.name.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="mb-3">
-                {{ product_form.price.label_tag }}
-                {{ product_form.price }}
-                {% if product_form.price.errors %}
-                    <div class="error-text">{{ product_form.price.errors }}</div>
-                {% endif %}
-            </div>
-
-            <hr class="glass-hr mt-4 mb-4">
-
-            <div class="checkbox-row" style="">
-                <div class="text-white-50 mb-2">Categoria</div>
-                {{ product_form.product_category }}
-                {% if product_form.product_category.errors %}
-                    <div class="error-text">{{ product_form.product_category.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div id="burger-section" style="display:none;">
-                <hr class="glass-hr mt-4 mb-4">
-                <div class="mb-3">
-                    {{ burger_form.recipe.label_tag }}
-                    {{ burger_form.recipe }}
-                    {% if burger_form.recipe.errors %}
-                        <div class="error-text">{{ burger_form.errors }}</div>
+            
+            <!-- FIXED: Using common_form for base fields so data loads for all categories -->
+            <div class="row g-2">
+                <div class="col d-flex flex-column">
+                    {{ common_form.name.label_tag }}{{ common_form.name }}
+                     {% if common_form.errors.name %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in common_form.errors.name %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-3 d-flex flex-column">
+                    {{ common_form.price.label_tag }}{{ common_form.price }}
+                    {% if common_form.errors.price %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in common_form.errors.price %}
+                                <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
+            
+            <div class="col d-flex flex-column mt-3 mb-3">
+                <span class="item-name">Descrição:</span>{{ common_form.description }}
+            </div>
+            
+            <div class="col d-flex flex-column mt-3 mb-3" >
+                <span class="item-name">Imagem:</span>{{ common_form.image }}
+                {% if common_form.errors.image %}
+                    <div class="alert alert-danger alert-invalid ">
+                        {% for error in common_form.errors.image %}
+                            <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
 
-            <div id="beverage-section" style="display:none;">
-                <hr class="glass-hr mt-4 mb-4">
-                <div class="mb-3">
-                    {{ beverage_form.stock.label_tag }}
-                    {{ beverage_form.stock }}
-                    {% if beverage_form.stock.errors %}
-                        <div class="error-text">{{ beverage_form.errors }}</div>
-                    {% endif %}
+            <div class="category-toggle d-flex gap-4 mb-4 justify-content-center">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="product_category" 
+                           id="cat_burger" value="burger" x-model="category">
+                    <label class="form-check-label text-white" for="cat_burger">Lanche/Batata</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="product_category" 
+                           id="cat_beverage" value="beverage" x-model="category">
+                    <label class="form-check-label text-white" for="cat_beverage">Outros</label>
+                </div>
+            </div>
+            <hr class="glass-hr">
+
+            <div x-show="category === 'burger'" x-cloak
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-70"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-400"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-70">
+                <div class="d-flex justify-content-between mt-4">
+                    <h5 class="text-white">Ingredientes</h5>
+                    <button type="button" class="btn btn-outline-info btn-sm" @click="addNewRow()">+ ingrediente</button>
+                </div>
+                
+                <!-- FIXED: Use fieldset so disabled attribute actually stops form submission for inactive tabs -->
+                <fieldset :disabled="category !== 'burger'">
+                    {{ formset.management_form }}
+                    <div id="ingredient-container" class="mt-4">
+                        {% for recipe_form in formset %}
+                            <div class="ingredient-row row g-2 mb-3 justify-content-center">
+                                {{ recipe_form.id }}
+                                <div class="col-6 d-flex flex-column">
+                                    {{ recipe_form.ingredient }}
+                                </div>
+                                <div class="col-2 d-flex flex-column">
+                                    {{ recipe_form.amount }}
+                                </div>
+                                <div class="col-1 ">
+                                <button type="button" class="btn btn-outline-danger delete-btn" @click="$el.closest('.ingredient-row').remove()">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>
+
+            <div x-show="category === 'beverage'" x-cloak
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-70"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-400"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-70">
+                <div class="d-flex flex-column mb-2">
+                    <h5 class="text-white mt-4 mb-3">Estoque</h5>
+                    <!-- FIXED: Use fieldset -->
+                    <fieldset :disabled="category !== 'beverage'">
+                        {{ beverage_form.stock }}
+                    </fieldset>
                 </div>
             </div>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-success px-3 mt-4" style="border-radius: 18px;">confirmar</button>
-            </div>
+            <button type="submit" class="btn btn-success mt-4 d-block mx-auto">salvar</button>
         </form>
     </div>
 </div>
 
+<template id="empty-form-template">
+    <div class="ingredient-row row g-2 mb-3 justify-content-center">
+        {{ formset.empty_form.id }}
+        <div class="col-6 d-flex flex-column">
+            {{ formset.empty_form.ingredient }}
+        </div>
+        <div class="col-2 d-flex flex-column">
+            {{ formset.empty_form.amount }}
+        </div>
+        <div class="col-1 ">
+            <button type="button" class="btn btn-outline-danger" @click="$el.closest('.ingredient-row').remove()" style="height: 42px;">
+                <i class="bi bi-trash3"></i>
+            </button>
+        </div>
+    </div>
+</template>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const burgerSection = document.getElementById('burger-section');
-    const beverageSection = document.getElementById('beverage-section');
-    const radios = document.querySelectorAll('input[name="product_category"]');
-
-    function showByValue(value) {
-        console.log("Switching UI to:", value);
-        if (burgerSection) burgerSection.style.display = (value === 'burger') ? 'block' : 'none';
-        if (beverageSection) beverageSection.style.display = (value === 'beverage') ? 'block' : 'none';
-    }
-
-    radios.forEach(r => {
-        r.addEventListener('change', () => showByValue(r.value));
-    });
-
-    // Run immediately to catch pre-selected options
-    const currentSelected = document.querySelector('input[name="product_category"]:checked');
-    if (currentSelected) {
-        showByValue(currentSelected.value);
-    }
-});
+function addNewRow() {
+    const container = document.getElementById('ingredient-container');
+    const totalForms = document.querySelector('[id$="-TOTAL_FORMS"]');
+    const currentFormCount = parseInt(totalForms.value);
+    
+    const template = document.getElementById('empty-form-template').innerHTML;
+    const newFormHtml = template.replace(/__prefix__/g, currentFormCount);
+    
+    container.insertAdjacentHTML('beforeend', newFormHtml);
+    totalForms.value = currentFormCount + 1;
+}
 </script>
 {% endblock %}
-

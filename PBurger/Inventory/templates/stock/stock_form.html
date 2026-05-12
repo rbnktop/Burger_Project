@@ -4,19 +4,73 @@
 
 
 <div class="d-flex justify-content-center" style="padding-top: 65px;">
-
-        <div class="glass-card" style="min-width: 300px;">  
-            <form method="POST">
-                {% csrf_token %}
-                
-                {{ form.as_p }}
-                
-                <div class="text-center">
-                <button type="submit" class="btn btn-primary px-3 mt-4" style="border-radius: 18px;">confirmar</button>
+    <div class="glass-card glass-effect" style="width: 400px;">
+        <form method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="row mb-4">
+                <div class="col d-flex flex-column">
+                    <span class="item-name">Nome</span>{{ form.name }}
+                    {% if form.errors.name %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in form.errors.name %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
-            </form>
-        </div>
+            </div>
 
+            
+            <div class="row mb-3 justify-content-center">
+                <div class="col flex-column form-items">
+                    <span >Valor</span>{{ form.price }}
+                    {% if form.errors.price %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in form.errors.price %}
+                                <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col flex-column form-items">
+                    <span>Quantia</span>{{ form.quantity }}
+                    {% if form.errors.quantity %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in form.errors.quantity %}
+                                <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col flex-column form-items">
+                    <span>Unidade</span>{{ form.unit }}
+                    {% if form.errors.unit %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in form.errors.unit %}
+                                <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row g-2">
+                <div class="col d-flex flex-column" style="width: 250px;">
+                    <span class="item-name">Imagem</span>{{ form.image }}
+                    {% if form.errors.image %}
+                        <div class="alert alert-danger alert-invalid ">
+                            {% for error in form.errors.image %}
+                                <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <hr class="glass-hr">
+                    
+            </div>
+            <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="border-radius: 18px;">confirmar</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

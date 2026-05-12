@@ -2,10 +2,9 @@
 {% block title %} Login {% endblock %}
 {% block main %} 
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="col-md-4 col-lg-4">
-        <div class="glass-card " > 
-            <h2 class="text-center text-white mb-4">Login</h2>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;" >
+        <div class="glass-card glass-effect" style="max-width: 350px;" > 
+            <h2 class="text-center text-blue mb-4">Login</h2>
 
             <form method="POST" novalidate>
                 {% csrf_token %}
@@ -13,7 +12,8 @@
                 {% for field in form %}
                     <div class="mb-3">
                         <label class="form-label text-white">{{ field.label }}</label>
-                        {{ field }} 
+
+                        {{ field }}
 
                         {% if field.errors %}
                             {% for error in field.errors %}
@@ -44,7 +44,6 @@
             </form>
 
         </div>
-    </div>
 </div>
 {% endblock %}
 

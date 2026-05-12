@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     "Inventory.apps.InventoryConfig",
     "Cashier.apps.CashierConfig",
     "Greeting.apps.GreetingConfig",
-    "Recipe.apps.RecipeConfig",
 ]
 
 MIDDLEWARE = [
@@ -101,3 +100,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

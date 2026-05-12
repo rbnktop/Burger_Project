@@ -5,29 +5,27 @@
 <head>  
 </script>
     <meta charset="UTF-8">
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@latest/dist/turbo.es2017-esm.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title%} Null {% endblock %}</title>
 </head>
-
+<div class="bg-layer"></div>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-effect">
     <div class="container container-nav">
         
-        <a href="{% url 'greeting:home' %}" class="navbar-brand">Hamburgeria</a>
+        <a href="{% url 'greeting:home' %}" class="navbar-brand"> Taco Bell</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="bi bi-menu-app-fill"></i>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto align-items-center">
+            <ul class="navbar-nav ms-auto align-items-center gap-3">
                 <li class="nav-item px-2">
                     <a class="nav-link" href="{% url 'stock:produto_inventario' %}">Produtos</a>
-                </li>
-                <li class="nav-item px-2">
-                    <a class="nav-link" href="{% url 'recipe:receita_inventario' %}">Receitas</a>
                 </li>
                 <li class="nav-item px-2">
                     <a class="nav-link" href="{% url 'stock:inventario' %}">Estoque</a>

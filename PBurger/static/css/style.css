@@ -1,189 +1,133 @@
+/* --- Root Variables --- */
+:root {
+    --bg: #121212;
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-bg-focus: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text: #ffffff;
+    --primary: #0d6efd;
+    --danger: #dc3545;
+    --radius-1: 10px;
+    --radius-2: 20px;
+    --control-h: 42px;
+    --transition: all 0.3s ease;
+}
+
 /* --- Resets & Scrollbar --- */
 html, body {
-    height:100%;
+    height: 100%;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    background-color: #121212;
+    background-color: var(--bg);
+    /* Standardized scrollbar hiding */
+    scrollbar-width: none; 
     -ms-overflow-style: none;
-    scrollbar-width: none;
+    scroll-behavior: auto !important;
 }
+
 
 body {
-    padding-bottom: 40px;
-    background-color: #121212;
-    
-    /* Apply the image directly here */
-    /* background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('../images/background.jpg'); */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    /* This does exactly what position: fixed was doing for you */
-    background-attachment: fixed; 
-}
-
+    margin: 0;
+    background-color: transparent !important;}
 ::-webkit-scrollbar {
     display: none;
 }
 
-/* --- Background --- */
+main {
+    position: relative;
+    z-index: 1;
+    /* This creates a hard boundary. The top buttons can't affect what's inside here. */
+    contain: paint layout; 
+}
+
+/* Background Overlay - Simplified to avoid redundancy */
 body::before {
     content: "";
     position: fixed;
-    inset: 0; 
-    /* background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('../images/background.jpg'); */
+    inset: 0;
+    background-image: url('../images/background.jpg'); 
     background-size: cover;
     background-position: center;
-    z-index: -1;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    z-index: -1;    
+    will-change: transform; 
 }
 
 
-
-/* --- Navbar --- */
 .navbar.fixed-top {
     top: 20px;
-    width: 1360px;
-    margin:auto;
-    max-width: 83%;
-    min-width: 83%;
+    width: 90%;
+    max-width: 1360px;
+    margin: 0 auto;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
     border-radius: 50px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    isolation: isolate;
+    }
 
+.navbar-nav .nav-link {
+    transition: opacity 0.8s ease;
 }
 
-.container-nav {
-    max-width: none !important
+.navbar-nav .nav-link:hover {
+    transform: none !important; /* Force no movement */
 }
 
 .navbar-brand {
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-}
-
-/* --- Typography & Dividers --- */
-.glass-hr {
-    border: 0;           
-    height: 1px;         
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.05) 100%);
-    margin: 1.2rem 0;    
-    width: 100%;
-}
-
-/* --- Forms & Inputs --- */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-input[type=number] {
-    -moz-appearance: textfield; 
-}
-
-
-:root {
-    --bg: #121212;
-
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-bg-focus: rgba(255, 255, 255, 0.15);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --glass-border-2: rgba(255, 255, 255, 0.2);
-
-    --text: #ffffff;
-    --primary: #0d6efd;
-
-    --radius-1: 10px;
-    --radius-2: 20px;
-
-    --control-h: 42px;
-    --grid-row-h: 40px;
-
-    --danger: #dc3545;
-}
-
-/* Consolidated Input Styles */
-
-.glass-card input,
-.glass-card select,
-.glass-card textarea,
-.field-wrapper input,
-.field-wrapper select {
-    height: var(--control-h);
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border-2);
-    border-radius: var(--radius-1);
-    color: var(--text);
-    outline: none;
-    transition: all 0.5s ease;
-    box-sizing: border-box;
-}
-
-/* Select often needs slightly different padding to align visually */
-.glass-card select {
-    padding: 8px 15px;
-}
-
-.glass-card input:empty {
-    min-width: 100% !important;
-}
-
-/* Consolidated Focus States */
-.glass-card input:focus,
-.glass-card select:focus,
-.glass-card textarea:focus,
-.field-wrapper input:focus,
-.field-wrapper select:focus {
-    background: var(--glass-bg-focus) !important;
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 12px rgba(13, 110, 253, 0.8) !important;
-    border-radius: var(--radius-2);
-    color: #ffff;
-}
-
-
-.glass-card input:-webkit-autofill {
-    -webkit-text-fill-color: white !important;
-    -webkit-box-shadow: 0 0 0 30px #2c2c2c inset !important;
-}
-
-/* Radio buttons (Bootstrap overrides can make them oversized) */
-.form-check-input,
-.product-category input[type="radio"] {
-    width: 1rem;
-    position:unset;
-    margin-top: 0px;
-    margin-left: 0px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    transition: ease-in-out 0.5s;
+    margin-left: 2rem;    
 
 }
 
+.navbar-brand:hover{
+    transform: scale3d(1.2, 1.2, 1.2);
+    transition: ease-in-out 0.8s;
+}
+/* --- Glass UI Components --- */
 
-/* --- Glass Cards --- */
 .glass-card {
-    background: rgba(255, 255, 255, 0.1); 
-    backdrop-filter: blur(8px);
+    text-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 1.5rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    
-
+    height: fit-content;
+    color: #ffff;
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
 }
 
-.glass-card label {
-    font-weight: 500;
-    margin-bottom: 5px;
+
+
+.glass-effect{
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(7px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    isolation: isolate; 
+    backface-visibility: hidden;
+    will-change: auto;
+    transform: translateZ(0);
+}
+
+
+.glass-hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right,  rgba(255,255,255,0.3), rgba(255,255,255,1), rgba(255,255,255,0.3));
+    margin: 2rem 0;
+}
+
+.glass-card input, 
+.glass-card select {
     display: block;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
+    width: 100%;
 }
 
-/* --- Buttons --- */
 .btn-container {
     display: flex;
     justify-content: space-evenly;
@@ -194,140 +138,165 @@ input[type=number] {
 
 .btn {
     text-transform: lowercase;
-    border-radius: 22px;
-    padding: 0.3rem 1rem;
-    font-size: 1rem;
-    transition: all 0.3s ease; /* Unified transition */
-    user-select: none;
-    text-align: center;
-    white-space: nowrap;
-}
+    border-radius: 30px;
+    font-weight: 500;
 
-
-.alert {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     
-    color:black;
-    background-color: #0d6efd;
-
+    /* 2. Force the button into its own layer so its movement doesn't affect the cards below */
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
 }
 
-
-.delete-row-btn {
-    border: 1px solid #dc3545;
-    color: #dc3545;
-    width: 42px;
-    padding: 0 !important; /* Reset padding to center the SVG */
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.formset-row {
-    display: flex;
-    align-items: center; 
-    gap: 2px; /* Consistent spacing between items */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* Consolidated Hover States */
-.btn-outline-warning:hover, 
-.btn-outline-danger:hover, 
-.btn-success:hover, 
-.delete-row-btn:hover {
-    transform: scale(1.1); /* Reduced from 1.2 to prevent jittering */
+.delete-btn {
+
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    background: transparent;
 }
 
-.delete-row-btn:hover {
-    background-color: rgba(220, 53, 69, 0.2);
+.delete-btn:hover {
+    background-color: var(--danger);
+    color: white;
+    transform: scale(1.2);
 }
 
-
-
-.smaw {
-    padding: 0.2rem 1rem !important;
+.card {
+    background-color: transparent;
 }
 
-main.container {
-    /* display: flex;
-    flex-direction: column; */
-    min-height: 100vh; 
-    
-}
 
 .ingredient-row {
-    display: grid;
-    /* Increase the first column to 3 parts of the available space */
-    grid-template-columns: 1fr 85px 45px; 
-    gap: 12px;
-    width: 100%; /* Ensure the row fills the glass-card */
-}
-/* Ensure all elements share the exact same height and box-model */
-.ingredient-row select,
-.ingredient-row input,
-.delete-row-btn {
-    height: 40px; 
-    margin: 0;
-    box-sizing: border-box;
-}
-
-/* Specific fix for the trash button centering */
-.delete-row-btn {
     display: flex;
+    gap: 10px;
     align-items: center;
-    justify-content: center;
-    padding: 0 !important; /* Removes padding that causes misalignment */
-}
-.field-wrapper select, 
-.field-wrapper input {
-    width: 100% !important; /* Forces the element to fill the grid cell */
-    min-width: 0;           /* Prevents the element from pushing past the grid boundary */
-}
-
-.action-wrapper .delete-btn {
-    width: 100%;
-    height: 42px;
-}
-
- 
-.ingredient-row option {
-    /* background-color: #2b2b2b !important; */
-    color: rgb(0, 0, 0);       
-}
-
-/* Fix for some browsers that struggle with option styling */
-.ingredient-row select {
-    appearance: none; /* Removes default browser arrow if needed */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns%20=%20"http://www.w3.org/2000/svg"%20viewBox%20=%20"0%200%20256%20256"><path%20fill%20=%20"white"%20d%20=%20"M225.8,92.2c-4.4-4.4-11.5-4.4-15.9,0L128,174.1L46.1,92.2c-4.4-4.4-11.5-4.4-15.9,0c-4.4,4.4-4.4,11.5,0,15.9l89.9,89.9c4.4,4.4,11.5,4.4,15.9,0l89.9-89.9C230.2,103.7,230.2,96.6,225.8,92.2z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
-    padding-right: 30px;
-}
-
-
-/* Grid for the top two fields */
-.product-base-grid {
-    display: grid;
-    grid-template-columns: 4fr 1fr; /* Name is twice as wide as Price */
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-/* Ensure all inputs fill their wrappers */
-.field-wrapper input,
-.field-wrapper select {
-    width: 100% !important;
-    height: 42px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    border-radius: 8px;
-    padding: 0 12px;
-    box-sizing: border-box;
+    margin-bottom: 0.75rem;
+    animation: fadeIn 0.5s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
+    from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
-}   
+}
+
+.form-control, .form-select, .glass-card input, .glass-card select {
+    height: var(--control-h);
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-1);
+    color: var(--text) !important;
+    transition: var(--transition);
+    padding-left: 12px;
+}
+
+
+.form-control:focus {
+    background-color: var(--glass-bg-focus) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 12px rgba(13, 110, 253, 0.4) !important;
+    color: black !important;
+}
+
+.form-check-input[type="radio"]{
+    height: 16px;
+    width: 16px !important;
+    padding-left: 0px !important;
+    padding-right:0px !important;
+
+}
+
+.form-select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="white" d="M225.8,92.2c-4.4-4.4-11.5-4.4-15.9,0L128,174.1L46.1,92.2c-4.4-4.4-11.5-4.4-15.9,0c-4.4,4.4-4.4,11.5,0,15.9l89.9,89.9c4.4,4.4,11.5,4.4,15.9,0l89.9-89.9C230.2,103.7,230.2,96.6,225.8,92.2z"/></svg>');
+    background-size: 12px;
+}
+
+.form-select:focus {
+    background-color: rgba(255, 255, 255, 0.1); /* Keep it glass-like */
+    color: rgb(0, 0, 0);
+    border-color: #0dcaf0; /* Match your blue button border */
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+}
+
+input {
+    /* Adds space to the left and right */
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+}
+
+/* Optional: Fixes the ugly yellow Autofill background in Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: black;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.alert-invalid {
+    padding: 0.5rem 1rem !important;
+    margin: 0 auto;
+    width: fit-content;
+    border:var(--danger);
+    background: var(--danger);
+    color: white;
+    margin-top: 0.5rem;
+    border-radius: 20px;
+    font-size: smaller;
+}
+
+/* Standardizes the height and text alignment for file inputs */
+input[type="file"].form-control {
+    padding: 0 10px;
+    margin-top: 7px;   
+    line-height: 1.5;
+    height: 42px;         
+}
+
+/* Optional: Styles the "Browse" button inside the input to look better with glassmorphism */
+input[type="file"]::file-selector-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0px 10px;
+    margin: 7px;
+    transition: 0.5s;
+    margin-left: -2px;
+
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+.form-items{
+    align-items: center;
+    display: flex;
+}
+
+.item-name{
+    margin-left:4%;
+    margin-bottom: 1%;
+}
+
+[x-cloak] { 
+    display: none !important; 
+}
+
