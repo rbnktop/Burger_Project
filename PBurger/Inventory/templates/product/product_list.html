@@ -1,7 +1,7 @@
 {% extends "layout_lista.html" %}
 
-{% block title %} Receitas {% endblock %}
-{% block sub_title %} Receitas {% endblock %}
+{% block title %} Null {% endblock %}
+{% block sub_title %} Null {% endblock %}
 {% block url_add_item %}{% url "stock:produto_criar" %}{% endblock url_add_item %}
 {% block url_item_query %}{% url "stock:produto_inventario" %}{% endblock url_item_query %}
 {% block content %} 
@@ -9,20 +9,44 @@
 <div class="row g-4 justify-content-center">
     {% for item in product %}
         <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
-            <div class="glass-card p-3 w-100">
-                <h5 class="text-capitalize mb-2">{{ item.name }}</h5>
+            <div class="glass-card w-100 glass-effect ">
+                <h5 class="text-capitalize mb-3">{{ item.name }}</h5>
+                {% if item.burger %}                 
+                    <div class="col d-flex flex-column">
+                        <small class="text-white-50 d-block">nº ingredientes {{ item.burger.recipe_items.all.count }}</small>
+                    </div>
+                {% else %}
+                    <div class="col d-flex flex-column">
+                        <small class="text-white-50 d-block">restantes {{ item.beverage.stock.quantity|floatformat:"-1" }}</small>
+                    </div>
+                {% endif %}
 
                 <hr class="glass-hr">
                 
-                 <div class="mb-4">
-                    <small class="text-white-50 d-block">Receita:</small>
-                    <span>{{ item.recipe }}</span>
+                <div class="row g-2 mx-auto">
+                    <div class="col d-flex flex-column">
+                        <small class="text-white-50 d-block">Preço:</small>
+                        <span class="text-warning">${{ item.price|floatformat:"-1" }}<span>
+                    </div>
+                    <div class="col d-flex flex-column">
+                        <small class="text-white-50 d-block">Custo:</small>
+                        <span class="text-danger">${{ item.burger.get_total_cost }}<span>
+                    </div>
+                    <div class="col d-flex flex-column">
+                        <small class="text-white-50 d-block">Lucro:</small>
+                        <span class="text-success" >${{ item.burger.profit_margin }}<span>
+                    </div>
                 </div>
-                <div class="mb-1">
-                    <small class="text-white-50 d-block">Valor:</small>
-                    <span>R${{ item.price|floatformat:"-1" }}<span>
+                <div class="row g-2 mx-auto">
+                    <div class="col d-flex flex-column">
+                        {{ item.burger.create_at }}
+                    </div>
                 </div>
-                
+                <div class="row g-2 mx-auto">
+                    <div class="col d-flex flex-column">
+                        {{ item.burger.last_updated }}
+                    </div>
+                </div>
                 <hr class="glass-hr">
 
                  <div class="btn-container">

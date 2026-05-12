@@ -8,23 +8,26 @@
 
 {% block content %} 
 
-<div class="row g-4 justify-content-center ">
+<div class="row g-4">
     {% for item in stock %}
-        <div class="col-6 col-md-5 col-lg-3 mb-4 d-flex"> 
-            <div class="glass-card w-100">
-                <h5 class="text-capitalize pt-2 align-self-center ">{{ item.name }}</h5>
+        <div class="col-md-4 col-lg-3 mb-4 d-flex"> 
+            <div class="glass-card glass-effect" style="width:300px;">
+                <h5 class="text-capitalize pt-2">{{ item.name }}</h5>
                 
                 <hr class="glass-hr">
 
                 <div class="mb-4">
                     <small class="text-white-50 d-block">Quantidade:</small>
+                    {% comment %} {% if item.quantity <= 10 %} {% endcomment %}
                     <span>{{ item.quantity|floatformat:"-1" }}<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
+                    {% comment %} {% endif %} {% endcomment %}
                 </div>
                 <div class="mb-1">
                     <small class="text-white-50 d-block">Valor:</small>
                     <span>R${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit }}</span></span>
                 </div>
                 
+
                 <hr class="glass-hr">
                 
                 <div class="btn-container">

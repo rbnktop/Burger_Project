@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("Greeting.urls"), name="greeting"),
     path("Caixa/", include("Cashier.urls")),
     path("Stock/", include("Inventory.urls")),
-    path("Receita/", include("Recipe.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

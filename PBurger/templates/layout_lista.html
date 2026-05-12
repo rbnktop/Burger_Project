@@ -16,16 +16,23 @@
             + Adicionar Item
         </a>
     <form class="d-flex" method="GET" action="{% block url_item_query %} null {% endblock url_item_query %}">
-        <div class="glass-input">
-            <input 
-                class="form-control me-2 text-white" 
-                type="search" 
-                name="q" 
-                value="{{ request.GET.q }}" 
-                placeholder="Procurar items..." 
-                aria-label="Search"
-                style=" border-radius: 30px;"
-            />
+        <div x-data="{ search: '' }">
+            <div class="mb-4">
+                <input type="text" x-model="search" placeholder="Procurar itens..." 
+                    class="form-control glass-input" style="max-width: 300px;">
+            </div>
+
+            <div class="row g-4">
+                {% for item in items %}
+                <div class="col-md-4" 
+                    x-show="'{{ item.name|lower }}'.includes(search.toLowerCase())"
+                    x-transition>
+                    
+                    <div class="glass-card">
+                        </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <button class="btn btn-secondary ml-1" type="submit" style="border-radius: 30px;" >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
