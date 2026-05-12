@@ -1,7 +1,7 @@
 {% extends "layout_lista.html" %}
 
-{% block title %} Null {% endblock %}
-{% block sub_title %} Null {% endblock %}
+{% block title %}  {% endblock %}
+{% block sub_title %} Produtos {% endblock %}
 {% block url_add_item %}{% url "stock:produto_criar" %}{% endblock url_add_item %}
 {% block url_item_query %}{% url "stock:produto_inventario" %}{% endblock url_item_query %}
 {% block content %} 
@@ -17,37 +17,36 @@
                     </div>
                 {% else %}
                     <div class="col d-flex flex-column">
-                        <small class="text-white-50 d-block">restantes {{ item.beverage.stock.quantity|floatformat:"-1" }}</small>
+                        <span class="text-white-50 d-block"><i class="bi bi-box-seam"></i> {{ item.beverage.stock.quantity|floatformat:"-1" }}</span>
                     </div>
                 {% endif %}
 
                 <hr class="glass-hr">
                 
-                <div class="row g-2 mx-auto">
+                <div class="row mx-auto">
                     <div class="col d-flex flex-column">
                         <small class="text-white-50 d-block">Preço:</small>
-                        <span class="text-warning">${{ item.price|floatformat:"-1" }}<span>
+                        <span class="text-white">${{ item.price|floatformat:"-1" }}<span>
                     </div>
                     <div class="col d-flex flex-column">
                         <small class="text-white-50 d-block">Custo:</small>
-                        <span class="text-danger">${{ item.burger.get_total_cost }}<span>
+                        <span class="text-warning">${{ item.burger.get_total_cost }}<span>
                     </div>
-                    <div class="col d-flex flex-column">
+                    <div class="col d-flex flex-column" >
                         <small class="text-white-50 d-block">Lucro:</small>
-                        <span class="text-success" >${{ item.burger.profit_margin }}<span>
+                        <span class="{% if item.burger.profit_margin > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.burger.profit_margin }}<span>
                     </div>
                 </div>
-                <div class="row g-2 mx-auto">
-                    <div class="col d-flex flex-column">
-                        {{ item.burger.create_at }}
+                <div class="d-flex flex-column">
+                    <div class="ms-auto mt-4" >
+                            <span style="font-size: 0.65rem;" class="text-white-50 ms-1"><span>criado em - </span>{{ item.burger.create_at | date:"d/m/y"  }}</span>
+                    </div>
+                    <div class="ms-auto" >
+                            <span style="font-size: 0.65rem;" class="text-white-50 ms-1"><span>ultima alt - </span>{{ item.burger.last_updated | date:"D H:i" }}</span>
                     </div>
                 </div>
-                <div class="row g-2 mx-auto">
-                    <div class="col d-flex flex-column">
-                        {{ item.burger.last_updated }}
-                    </div>
-                </div>
-                <hr class="glass-hr">
+
+                <hr class="glass-hr mt-2">
 
                  <div class="btn-container">
                     <a href="{% url 'stock:produto_editar' item.pk %}" class="btn btn-warning" >editar</a>
