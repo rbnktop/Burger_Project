@@ -23,6 +23,10 @@
                             {{ item_form.quantity }}
                         {% endfor %}
                     </div>
+                    <div id="order-total">
+                        Total: ${{ order.total_value }}
+                    </div>
+
                     
                     <button type="submit" class="btn btn-primary w-100">Finish Order</button>
                 </form>
