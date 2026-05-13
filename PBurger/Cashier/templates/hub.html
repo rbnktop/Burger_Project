@@ -1,11 +1,62 @@
 {% extends "layout.html" %}
-{% block content %}
+{% block main %}
 
-<div
+<div class="container-fluid px-4 ">
+    <div class="row hub-row">
+        
+        <!-- Center: Order Creation (Priority #1 on mobile) -->
+        <div class="col-12 col-lg-6 order-1 order-lg-2 scroll-col">
+            <div class="glass-card h-100">
+                <h4 class="text-white">creating orders</h4>
+                <hr class="glass-hr">
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
 
+                    {{ form.customer_name.label_tag }}
+                    {{ form.customer_name }}
+                    
+                    <div id="item-formset">
+                        {{ formset.management_form }}
+                        {% for item_form in formset %}
+                            {{ item_form.product }}
+                            {{ item_form.quantity }}
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Finish Order</button>
+                </form>
+            </div>
+        </div>
 
+        <!-- Left: Management (Priority #2 on mobile) -->
+        <div class="col-12 col-lg-3 order-2 order-lg-1 scroll-col">
+            <div class="glass-card h-100">
+                <h4 class="text-white">management</h4>
+                <hr class="glass-hr">
+                <!-- Long list of orders goes here -->
+                {% for i in orders %}
+                    <div class="glass-effect p-3 mb-3">{{ i }}</div>
+                {% endfor %}
+            </div>
+        </div>
 
-{% endblock content %}
+        <!-- Right: Stock Status (Priority #3 on mobile) -->
+        <div class="col-12 col-lg-3 order-3 order-lg-3 scroll-col">
+            <div class="glass-card h-100">
+                <h4 class="text-white">stock status</h4>
+                <hr class="glass-hr">
+                <!-- Long list of stock items goes here -->
+                {% for i in stock %}
+                    <div class="glass-effect p-3 mb-3">{{ i }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock main %}
 
 
 

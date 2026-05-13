@@ -1,11 +1,50 @@
 import json
+from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.db import transaction
-from Inventory.models import Beverage, Burger
-from .models import Order, OrderItem
-from .services import validate_cart_stock
 from decimal import Decimal
+from django.shortcuts import render, redirect
 
+from .services import validate_cart_stock
+from Inventory.models import Beverage, Burger, Stock
+from .models import Order, OrderItem
+from .forms import OrderForm
+
+
+def hub_view(request):
+    orders = Order.objects.filter().order_by('-id')
+    stock = Stock.objects.filter().order_by('-id')
+
+    OrderItemFormSet = inlineformset_factory(
+        Order, 
+        OrderItem, 
+        fields=('product', 'quantity'),
+        extra=1, 
+        can_delete=True
+    )
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        formset = OrderItemFormSet(request.POST)
+
+        if form.is_valid():
+            order = form.save()
+            formset = OrderItemFormSet(request.POST, instance=order)
+            
+            if formset.is_valid():
+                formset.save()                
+                return redirect('cashier:hub')
+
+    else:
+        form = OrderForm()
+        formset = OrderItemFormSet()
+
+    return render(request, 'hub.html', {
+        'form': form,
+        'formset': formset,
+        'orders': orders,
+        'stock': stock,
+    })
 
 def process_checkout(request):
 

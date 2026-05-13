@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from simple_history.models import HistoricalRecords
-
+from polymorphic.models import PolymorphicModel
+from abc import abstractmethod
 
 class Stock(models.Model):
     """
@@ -30,7 +31,7 @@ class Stock(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f" Estoque [{self.id}] {self.name} - {self.quantity}{self.unit}" #type:ignore
+        return f" {self.name} - {self.quantity}{self.unit}" #type:ignore [{self.id}]
 
     @property
     def quantity_display(self):
@@ -48,7 +49,7 @@ class Stock(models.Model):
             return self.unit
 
 
-class Product(models.Model):
+class Product(PolymorphicModel):
     """
     Base product
     """
@@ -68,7 +69,11 @@ class Product(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f" Produto [{self.id}] - {self.name} ${self.price}."  # type: ignore
+        return f"{self.name} ${self.price}"  # type: ignore [{self.id}]
+    
+    @abstractmethod
+    def update_stock(self, quantity_sold):
+        pass
 
 
 class Burger(Product):
@@ -80,8 +85,9 @@ class Burger(Product):
 
     def update_stock(self, quantity_sold):
         self.sold += quantity_sold
+
         for item in self.recipe_items.all():  # type: ignore
-            item.ingredient.quantity -= item.amount * quantity_sold
+            item.ingredient.quantity -= (item.amount * quantity_sold)
             item.ingredient.save()
 
     def get_total_cost(self):
@@ -101,21 +107,6 @@ class Burger(Product):
         """
         cost = self.get_total_cost()
         return self.price - cost
-
-
-class Recipe(models.Model):
-    """
-    Recipe of the meal
-    """
-
-    burger = models.ForeignKey(
-        Burger, on_delete=models.CASCADE, related_name="recipe_items"
-    )
-    ingredient = models.ForeignKey(Stock, on_delete=models.PROTECT)
-    amount = models.FloatField()
-
-    def __str__(self):
-        return f" Receita [{self.id}] @{self.burger} precisa de {self.amount}{self.ingredient.unit} {self.ingredient.name}."  # type: ignore
 
 
 class Beverage(Product):
@@ -138,3 +129,19 @@ class Beverage(Product):
         Calculates how much you make after production costs.
         """
         return self.price - self.stock.price
+
+class Recipe(models.Model):
+    """
+    Recipe of the meal
+    """
+
+    burger = models.ForeignKey(
+        Burger, on_delete=models.CASCADE, related_name="recipe_items"
+    )
+    ingredient = models.ForeignKey(Stock, on_delete=models.PROTECT)
+    amount = models.FloatField()
+
+    def __str__(self):
+        return f" Receita [{self.id}] @{self.burger} precisa de {self.amount}{self.ingredient.unit} {self.ingredient.name}."  # type: ignore
+
+
