@@ -1,50 +1,32 @@
 {% extends "layout.html" %}
 
 {% block main %}
-
-<div class="container mt-3">
+<div class="container mt-3" x-data="{ search: '' }"> 
     
     <div class="d-flex">
         <h2 class="text-white mx-auto">{% block sub_title %} Null {% endblock sub_title %}</h2>
     </div>
 
-    <hr class="glass-hr">
+    <hr class="glass-hr" style=" margin: 2rem 0;">
 
-    <div class="d-flex justify-content-between mb-5">
-        <a href="{% block url_add_item %} null {% endblock url_add_item %}" class="btn btn-primary " style="border-radius: 30px;"
-        >
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% block url_add_item %}#{% endblock url_add_item %}" class="btn btn-primary" style="border-radius: 30px;">
             + Adicionar Item
         </a>
-    <form class="d-flex" method="GET" action="{% block url_item_query %} null {% endblock url_item_query %}">
-        <div x-data="{ search: '' }">
-            <div class="mb-4">
-                <input type="text" x-model="search" placeholder="Procurar itens..." 
-                    class="form-control glass-input" style="max-width: 300px;">
-            </div>
-
-            <div class="row g-4">
-                {% for item in items %}
-                <div class="col-md-4" 
-                    x-show="'{{ item.name|lower }}'.includes(search.toLowerCase())"
-                    x-transition>
-                    
-                    <div class="glass-card">
-                        </div>
-                </div>
-                {% endfor %}
-            </div>
+        <div class="d-flex align-items-center gap-2">
+            <input type="text" 
+                   x-model="search" 
+                   @keydown.enter.prevent 
+                   placeholder="Procurar itens..." 
+                   class="form-control glass-input glass-effect" 
+                   style="max-width: 300px;">
+            
+            <i class="bi bi-search" style="position:relative; right:35px; color:white;"></i>
         </div>
-        <button class="btn btn-secondary ml-1" type="submit" style="border-radius: 30px;" >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-            </svg>
-        </button>
-    </form>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
 </div>
-
-{% block content %}
-
 {% endblock %}
-
-{% endblock %}
-

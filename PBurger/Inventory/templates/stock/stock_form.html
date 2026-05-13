@@ -4,9 +4,16 @@
 
 
 <div class="d-flex justify-content-center" style="padding-top: 65px;">
-    <div class="glass-card glass-effect" style="width: 400px;">
+    <div class="glass-card glass-effect" style="transform:none; width: 400px;">
         <form method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
+            <div class="row mb-4">
+                <div class="col d-flex flex-column">
+                    <h2>Estoque</h2>
+                </div>
+            </div>
+                <hr class="glass-hr" style=" margin: 1rem 0;">
+
             <div class="row mb-4">
                 <div class="col d-flex flex-column">
                     <span class="item-name">Nome</span>{{ form.name }}
@@ -63,7 +70,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <hr class="glass-hr">
+                <hr class="glass-hr" style=" margin: 1rem 0;">
                     
             </div>
             <div class="text-center">
