@@ -7,9 +7,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 from .services import validate_cart_stock
-from Inventory.models import Beverage, Burger, Stock
+from Inventory.models import Beverage, Burger, Stock, Product
 from .models import Order, OrderItem
 from .forms import OrderForm
+
 
 OrderItemFormSet = inlineformset_factory(
         Order, 
@@ -20,28 +21,45 @@ OrderItemFormSet = inlineformset_factory(
     )
 
 
-
-
 def hub_view(request):
+
+    products = list(Burger.objects.all()) + list(Beverage.objects.all())
+    initial_data = [{'product': p.id, 'quantity': 0} for p in products]
+
     if request.method == 'POST':
         form = OrderForm(request.POST)
         formset = OrderItemFormSet(request.POST)
 
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             order = form.save()
-            formset = OrderItemFormSet(request.POST, instance=order)
-            if formset.is_valid():
-                formset.save()
-                return redirect('cashier:hub')
-   
+            for item_form in formset:
+                qty = item_form.cleaned_data.get('quantity', 0)
+                if qty and qty > 0:
+                    item = item_form.save(commit=False)
+                    item.order = order
+                    item.save()
+            return redirect('cashier:hub')
     else:
         form = OrderForm()
-        formset = OrderItemFormSet()
+        # 3. Create the formset with 'extra' matching the number of products
+        OrderItemFormSetGrid = inlineformset_factory(
+            Order, OrderItem, 
+            fields=('product', 'quantity'), 
+            extra=len(products), 
+            can_delete=False
+        )
+
+        formset = OrderItemFormSetGrid(
+            initial=initial_data, 
+            queryset=OrderItem.objects.none()
+        )
 
     return render(request, 'hub.html', {
         'form': form,
         'formset': formset,
+        'products': products,
     })
+
 
 def calculate_order_total(request):
     """

@@ -3,96 +3,109 @@
 
 <div class="container-fluid px-4">
     <div class="row hub-row">
-        
-        <!-- Center: Order Creation -->
-        <div class="col-12 col-lg-6 order-1 order-lg-2 scroll-col">
+        <div class="col-12 col-lg-3 order-2 order-lg-1 scroll-col">
             <div class="glass-card h-100 glass-effect">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="text-white">Adicionar Pedido</h3>
-                    <div id="order-total" class="h4">oi vc :)</div>
+                <h4 class="text-white"><i class="bi bi-bar-chart-steps"></i>  Controle</h4>
+                <hr class="glass-hr">
+                <div hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 order-1 order-lg-2 scroll-col ">
+            <div class="glass-card h-100 glass-effect">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="text-white m-0">Novo Pedido</h3>
+                    <div id="order-total" class="h4 text-success fw-bold">oi vc :)</div>
                 </div>
                 <hr class="glass-hr">
                 
                 <form method="post" id="order-form">
                     {% csrf_token %}
+                    {{ formset.management_form }}
                     
-                    <div class="mb-3" style="width:150px;">
-                        {{ form.customer_name.label_tag }}
+                    <div class="mb-4" style="max-width: 250px;">
+                        <label class="text-white-50 small">Cliente</label>
                         {{ form.customer_name }}
                     </div>
 
-                    <div id="item-formset">
-                        {{ formset.management_form }}
-                        
-                        <div id="form-list">
-                            {% for form in formset %}
-                                <div class="item-row p-2 mb-2 d-flex gap-2 align-items-center">
-                                    {{ form.id }}
+                    <hr class="glass-hr">
+
+
+                    <div class="d-flex flex-wrap justify-content-start gap-3"> <!-- No more 'row' class -->
+                        {% for item_form in formset %}
+                            <!-- No more 'col' class -->
+                            <div class="product-card-wrapper">
+                                <div class="glass-card text-center" style="padding:15px; height: 100%;">
+                                    <div class="d-none">{{ item_form.product }}</div>
                                     
-                                    <div class="flex-grow-1">
-                                        <label class="small text-muted">Produto</label>
-                                        <!-- Trigger total update on product change -->
-                                        <div hx-post="{% url 'cashier:calculate-total' %}" 
-                                             hx-target="#order-total" 
-                                             hx-trigger="change from:select"
-                                             hx-include="#order-form">
-                                            {{ form.product }}
-                                        </div>
+                                    <div class="product-info mb-2" title="{{ product.name }}" >
+                                        {% if item_form.instance.pk %}
+                                            
+                                            <h6 class="text-white mb-1">{{ item_form.instance.product.name }}</h6>
+                                            <p class="text-white-50 small mb-0">${{ item_form.instance.product.price }}</p>
+                                        {% else %}
+                                            {% for product in products %}
+                                                {% if forloop.parentloop.counter0 == forloop.counter0 %}
+                                                    
+                                                    <p class="text-white mb-1">{{ product.name }} <i class="bi bi-journal-bookmark "  title="{{ product.burger.recipe_items.all|join:" | " }}"></i></p>
+                                                    <p class="text-white-50 small mb-0">${{ product.price }}</p>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
 
-                                    <div style="width: 60px;">
-                                        <label class="small text-muted">Quantia</label>
-                                        <input type="number" 
-                                               name="{{ form.quantity.html_name }}" 
-                                               value="{{ form.quantity.value|default:1 }}"
-                                               class="form-control"
-                                               hx-post="{% url 'cashier:calculate-total' %}" 
-                                               hx-target="#order-total" 
-                                               hx-trigger="keyup delay:200ms, change"
-                                               hx-include="#order-form">
+                                    <div class="qty-container d-flex justify-content-center align-items-center gap-2 mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-success border-0" onclick="changeQty(this, 1)"><i class="bi bi-plus-lg"></i></button>
+                                        <input type="number" name="{{ item_form.quantity.html_name }}" value="0" readonly
+                                                class="form-control form-control-sm bg-transparent text-white text-center border-0 qty-input p-0"
+                                                style="width: 30px; height:30px;"hx-post="{% url 'cashier:calculate-total' %}" 
+                                                hx-target="#order-total" 
+                                                hx-trigger="change"
+                                                hx-include="#order-form">
+                                        <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="changeQty(this, -1)"><i class="bi bi-dash"></i></button>
                                     </div>
                                 </div>
-                            {% endfor %}
+                            </div>
+                        {% endfor %}
                         </div>
+                    <div class="mt-4 pb-4">
+                        <button type="submit" class="btn btn-primary py-2">Confirmar Venda</button>
                     </div>
-                    <button type="button" class="btn btn-outline-light btn-sm mb-3"
-                            hx-get="{% url 'cashier:add-item-row' %}"
-                            hx-target="#form-list"
-                            hx-swap="beforeend">
-                        + Add Item
-                    </button>
-                    <hr class="glass-hr">
-                    
-                    <button type="submit" class="btn btn-primary d-block mx-auto">Confirmar Venda</button>
                 </form>
             </div>
         </div>   
-        <div class="col-12 col-lg-3 order-2 order-lg-1  scroll-col">
-            <div class="glass-card h-100 glass-effect">
-                <h4 class="text-white">Controle</h4>
+        <div class="col-12 col-lg-3 order-3 order-lg-3 scroll-col">
+            <div class="glass-card glass-effect">
+                <h4 class="text-white"><i class="bi bi-box-seam"></i>  Estoque</h4>
+
                 <hr class="glass-hr">
-                <div hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
-            </div>
-        </div>
-        </div>
-        <div class="col-12 col-lg-3 order-3 order-lg-3 scroll-col d-flex">
-            <div class="glass-card h-100">
-                <h4 class="text-white text-center">Estoque</h4>
-                <hr class="glass-hr">
+
                 <div hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 <script>
-    document.body.addEventListener('htmx:afterSwap', (event) => {
-    if (event.detail.target.id === "form-list") {
-        const totalForms = document.getElementById('id_form-TOTAL_FORMS');
-        const currentCount = document.querySelectorAll('.item-row').length;
-        totalForms.value = currentCount;
-    }
-});
-</script>
 
+function changeQty(btn, delta) {
+    // 1. Find the input field in the same card as the button
+    const container = btn.closest('.qty-container');
+    const input = container.querySelector('.qty-input');
+    
+    // 2. Calculate the new value
+    let currentValue = parseInt(input.value) || 0;
+    let newValue = currentValue + delta;
+
+    // 3. Safety Check: Don't let quantity go below 0
+    if (newValue < 0) newValue = 0;
+
+    // 4. Update the input value
+    input.value = newValue;
+
+
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    
+}
+</script>
 {% endblock main %}
