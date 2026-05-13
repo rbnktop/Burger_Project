@@ -1,11 +1,10 @@
+import json
 from django.http import JsonResponse
 from django.db import transaction
 from Inventory.models import Beverage, Burger
-
-from .services import validate_cart_stock
 from .models import Order, OrderItem
-
-import json
+from .services import validate_cart_stock
+from decimal import Decimal
 
 
 def process_checkout(request):
@@ -16,13 +15,13 @@ def process_checkout(request):
         )
 
     try:
-        cart_items = json.loads(request.body)
+        cart = json.loads(request.body)
     except Exception:
         return JsonResponse(
             {"status": "error", "message": "Invalid JSON payload"}, status=400
         )
 
-    is_valid, validation_message = validate_cart_stock(cart_items)
+    is_valid, validation_message = validate_cart_stock(cart)
     if not is_valid:
         return JsonResponse(
             {
@@ -34,21 +33,20 @@ def process_checkout(request):
         )
 
     customer_name = None
-    if isinstance(cart_items, dict) and "items" in cart_items:
-        # Optional payload format: { customer_name?: str, items: [...] }
-        customer_name = cart_items.get("customer_name")
-        cart_items = cart_items["items"]
+    if isinstance(cart, dict) and "items" in cart:
+
+        customer_name = cart.get("customer_name")
+        cart = cart["items"]
 
     try:
         with transaction.atomic():
             order = Order.objects.create(
-                customer_name=customer_name, total_price=0.0, is_processed=True
-            )
+                customer_name=customer_name, total_price=0.0 )
 
-            total_price = 0.0
+            total_price = Decimal(0)
             created_items = []
 
-            for item in cart_items:
+            for item in cart:
                 item_type = item.get("type")
                 product_id = item.get("id")
                 qty = int(item.get("quantity", 0))
@@ -64,10 +62,9 @@ def process_checkout(request):
                         id=product_id
                     )
                 else:
-                    # Unsupported cart line type; ignore safely.
                     continue
 
-                line_total = float(product.price) * qty
+                line_total = (product.price) * qty
                 total_price += line_total
 
                 created_items.append(

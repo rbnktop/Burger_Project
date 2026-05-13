@@ -12,8 +12,6 @@ urlpatterns = [
     path(
         "Inventario/Apagar/<int:stock_id>", views.delete_stock_item_view, name="apagar"
     ),
-
-
     path("Produto/", views.list_product_view, name="produto_inventario"),
     path("Produto/Criar", views.create_product_view, name="produto_criar"),
     path(
@@ -26,5 +24,4 @@ urlpatterns = [
         views.delete_product_view,
         name="produto_apagar",
     ),
-    
 ]

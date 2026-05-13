@@ -367,3 +367,11 @@ option {
     color: #121212;
     padding: 10px; /* Note: padding on options only works in some browsers */
 }
+
+.hub{
+    display:flex;
+    background-color: #0d6efd;
+    margin: auto;
+    width: auto;
+    height: auto;
+}

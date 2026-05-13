@@ -1,6 +1,7 @@
 from django import forms
 from .models import Burger, Beverage, Recipe, Stock
 
+
 class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
@@ -41,46 +42,70 @@ class StockForm(forms.ModelForm):
                     "min": "0.5",
                 }
             ),
-            "image": forms.FileInput(
-                
-            )
+            "image": forms.FileInput(),
         }
 
 
 class BurgerForm(forms.ModelForm):
     product_category = forms.ChoiceField(
-        choices=[('burger', 'Hambúrguer'), ('beverage', 'Bebida')],
-        widget=forms.RadioSelect(attrs={'class': 'category-radio'}),
+        choices=[("burger", "Hambúrguer"), ("beverage", "Bebida")],
+        widget=forms.RadioSelect(attrs={"class": "category-radio"}),
         initial=None,
     )
 
     class Meta:
         model = Burger
-        fields = ['name', 'price', 'product_category', 'description', 'image']
+        fields = ["name", "price", "product_category", "description", "image"]
         widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control text-white border-secondary',
-                'placeholder': 'X-Salada'
-            }),
-            'price': forms.NumberInput(attrs={
-                'class': 'form-control text-white border-secondary',
-                'placeholder': '$4.21'
-            }),
-            'description': forms.Textarea(attrs={'class': 'form-select text-white border-secondary', 'placeholder':'Um lanche muito daora mesmo'}),
-            'image': forms.FileInput(),
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "placeholder": "X-Salada",
+                }
+            ),
+            "price": forms.NumberInput(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "placeholder": "$4.21",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-select text-white border-secondary",
+                    "placeholder": "Um lanche muito daora mesmo",
+                }
+            ),
+            "image": forms.FileInput(),
         }
 
 
 class BeverageForm(forms.ModelForm):
     class Meta:
         model = Beverage
-        fields = ['name', 'price', 'stock', 'image', 'description']
+        fields = ["name", "price", "stock", "image", "description"]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control text-white border-secondary', 'placeholder': 'Coca lata'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control text-white border-secondary', 'placeholder': '$4.21'}),
-            'description': forms.Textarea(attrs={'class': 'form-control text-white border-secondary', 'placeholder': 'A parte'}),
-            'image': forms.FileInput(),
-            'stock': forms.Select(attrs={'class': 'form-select text-white border-secondary'}),
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "placeholder": "Coca lata",
+                }
+            ),
+            "price": forms.NumberInput(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "placeholder": "$4.21",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "placeholder": "A parte",
+                }
+            ),
+            "image": forms.FileInput(),
+            "stock": forms.Select(
+                attrs={"class": "form-select text-white border-secondary"}
+            ),
         }
 
 
@@ -88,16 +113,19 @@ class RecipeForm(forms.ModelForm):
     """
     This form will be used inside the FormSet for each ingredient row
     """
+
     class Meta:
         model = Recipe
-        fields = ['ingredient', 'amount']
+        fields = ["ingredient", "amount"]
         widgets = {
-            'ingredient': forms.Select(attrs={
-                'class': 'form-select text-white border-secondary flex-grow-1'
-            }),
-            'amount': forms.NumberInput(attrs={
-                'class': 'form-control text-white border-secondary',
-                'style': 'width: 100px;',
-                'placeholder': 'Qtd'
-            }),
+            "ingredient": forms.Select(
+                attrs={"class": "form-select text-white border-secondary flex-grow-1"}
+            ),
+            "amount": forms.NumberInput(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "style": "width: 100px;",
+                    "placeholder": "Qtd",
+                }
+            ),
         }
