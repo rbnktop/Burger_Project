@@ -38,9 +38,11 @@ class Stock(models.Model):
     
     @property
     def unit_display(self):
-        if self.quantity >= 1000:
+        if self.unit == 'g' and self.quantity >= 1000:
             return 'Kg'
-        return 'g'
+        else:
+            return self.unit
+
 
 class Product(models.Model):
     """

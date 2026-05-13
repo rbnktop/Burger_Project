@@ -76,8 +76,6 @@ def list_product_view(request):
 
     return render(request, "product/product_list.html", {"product": product})
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def create_product_view(request):
@@ -87,7 +85,6 @@ def create_product_view(request):
     product_category = 'None'
 
     if request.method == "POST":
-        # Keep the selected category state even if validation fails
         product_category = request.POST.get('product_category', 'None')
         print(f"--- DEBUG product type: {product_category} ---")
 
@@ -113,23 +110,23 @@ def create_product_view(request):
                 return redirect('stock:produto_inventario')
             else:
                 print("BEVERAGE ERRORS:", beverage_form.errors)
-                
-    # DYNAMIC FORM FIX: Pass the correct form to render common fields (name, price)
+ 
+
     common_form = beverage_form if product_category == 'beverage' else form
 
     return render(request, 'product/product_form.html', {
         'form': form,
         'formset': formset,
         'beverage_form': beverage_form,
-        'common_form': common_form, # New context variable
+        'common_form': common_form,
         'product_category': product_category,
     }, status=422 if request.method == "POST" else 200)
+
 
 @login_required
 def update_product_view(request, product_id):
     product_obj = get_object_or_404(Product, id=product_id)
     
-    # Determine which child it is
     if hasattr(product_obj, 'burger'):
         item = product_obj.burger #type:ignore
         product_category = 'burger'
@@ -140,13 +137,12 @@ def update_product_view(request, product_id):
         item = product_obj
         product_category = 'None'
 
-    # Initialize forms
     form = BurgerForm(instance=item if product_category == 'burger' else None)
     formset = RecipeFormSet(instance=item if product_category == 'burger' else None)
     beverage_form = BeverageForm(instance=item if product_category == 'beverage' else None)
 
     if request.method == "POST":
-        product_category = request.POST.get('product_category') # Keep state
+        product_category = request.POST.get('product_category') 
         
         if product_category == 'burger':
             form = BurgerForm(request.POST, request.FILES, instance=item)
@@ -158,21 +154,29 @@ def update_product_view(request, product_id):
                 formset.save()
                 return redirect('stock:produto_inventario')
 
+            else:
+                if not form.is_valid():
+                    print("FORM ERRORS:", form.errors.as_json())
+                if not formset.is_valid():
+                    print("FORMSET ERRORS:", formset.errors)
+
         elif product_category == 'beverage':
             beverage_form = BeverageForm(request.POST, request.FILES, instance=item)
             
             if beverage_form.is_valid():
                 beverage_form.save()
                 return redirect('stock:produto_inventario')
+        
+            else:
+                print("BEVERAGE ERRORS:", beverage_form.errors)
 
-    # DYNAMIC FORM FIX: Ensures Beverage gets populated with actual initial data
     common_form = beverage_form if product_category == 'beverage' else form
 
     return render(request, 'product/product_form.html', {
         'form': form,
         'formset': formset,
         'beverage_form': beverage_form,
-        'common_form': common_form, # New context variable
+        'common_form': common_form,
         'product_category': product_category,
     })
 

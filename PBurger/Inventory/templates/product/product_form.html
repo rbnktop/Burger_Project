@@ -6,11 +6,15 @@
 <div class="d-flex justify-content-center" 
      style="padding-top: 65px;" 
      x-data="{ category: '{{ product_category }}' }">
-    <div class="glass-card glass-effect" style="min-width: 450px;">
+    <div class="glass-card glass-effect" style="transform:none; min-width: 450px;">
         <form method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
-            
-            <!-- FIXED: Using common_form for base fields so data loads for all categories -->
+            <div class="row mb-4">
+                <div class="col d-flex flex-column">
+                    <h2>Produto</h2>
+                </div>
+            </div>
+                <hr class="glass-hr" style=" margin: 1rem 0;">
             <div class="row g-2">
                 <div class="col d-flex flex-column">
                     {{ common_form.name.label_tag }}{{ common_form.name }}
@@ -80,8 +84,11 @@
                     {{ formset.management_form }}
                     <div id="ingredient-container" class="mt-4">
                         {% for recipe_form in formset %}
-                            <div class="ingredient-row row g-2 mb-3 justify-content-center">
+                            <div class="ingredient-row row g-2 mb-3 justify-content-center" x-data="{ isDeleted: false }" x-show="!isDeleted">
                                 {{ recipe_form.id }}
+                                <div class="d-none">
+                                    {{ recipe_form.DELETE }}
+                                </div>
                                 <div class="col-6 d-flex flex-column">
                                     {{ recipe_form.ingredient }}
                                 </div>
@@ -89,7 +96,11 @@
                                     {{ recipe_form.amount }}
                                 </div>
                                 <div class="col-1 ">
-                                <button type="button" class="btn btn-outline-danger delete-btn" @click="$el.closest('.ingredient-row').remove()">
+                                <button type="button" class="btn btn-outline-danger delete-btn" 
+                                    @click="
+                                        isDeleted = true; 
+                                        $el.closest('.ingredient-row').querySelector('input[type=checkbox]').checked = true;
+                                    ">
                                     <i class="bi bi-trash3"></i>
                                 </button>
                                 </div>

@@ -1,6 +1,6 @@
 {% extends "layout_lista.html" %}
 
-{% block title %}  {% endblock %}
+{% block title %} Produtos {% endblock %}
 {% block sub_title %} Produtos {% endblock %}
 {% block url_add_item %}{% url "stock:produto_criar" %}{% endblock url_add_item %}
 {% block url_item_query %}{% url "stock:produto_inventario" %}{% endblock url_item_query %}
@@ -8,22 +8,24 @@
 
 <div class="row g-4 justify-content-center">
     {% for item in product %}
-        <div class="col-6 col-md-4 col-lg-3 mb-4 d-flex"> 
-            <div class="glass-card w-100 glass-effect ">
-                <h5 class="text-capitalize mb-3">{{ item.name }}</h5>
+        <div class="col-6 col-md-4 col-lg-3 mb-4" 
+             x-show="'{{ item.name|lower }}'.includes(search.toLowerCase())"
+             x-transition>
+            <div class="glass-card w-100 glass-effect " >
+                <h5 class="text-capitalize mb-3" style="pointer-events: none;">{{ item.name }}</h5>
                 {% if item.burger %}                 
                     <div class="col d-flex flex-column">
-                        <small class="text-white-50 d-block">nº ingredientes {{ item.burger.recipe_items.all.count }}</small>
+                        <small class="text-white-50 d-block"><i class="bi bi-journal-bookmark" title="nº de receitas"></i> {{ item.burger.recipe_items.all.count }}</small>
                     </div>
                 {% else %}
                     <div class="col d-flex flex-column">
-                        <span class="text-white-50 d-block"><i class="bi bi-box-seam"></i> {{ item.beverage.stock.quantity|floatformat:"-1" }}</span>
+                        <span class="text-white-50 d-block"><i class="bi bi-box-seam" title="qtd no estoque"></i> {{ item.beverage.stock.quantity|floatformat:"-1" }}</span>
                     </div>
                 {% endif %}
 
-                <hr class="glass-hr">
+                <hr class="glass-hr" >
                 
-                <div class="row mx-auto">
+                <div class="row mx-auto" style="pointer-events: none;">
                     <div class="col d-flex flex-column">
                         <small class="text-white-50 d-block">Preço:</small>
                         <span class="text-white">${{ item.price|floatformat:"-1" }}<span>
@@ -37,11 +39,11 @@
                         <span class="{% if item.burger.profit_margin > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.burger.profit_margin }}<span>
                     </div>
                 </div>
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column" style="pointer-events: none;">
                     <div class="ms-auto mt-4" >
                             <span style="font-size: 0.65rem;" class="text-white-50 ms-1"><span>criado em - </span>{{ item.burger.create_at | date:"d/m/y"  }}</span>
                     </div>
-                    <div class="ms-auto" >
+                    <div class="ms-auto" style="margin-top:-10px;">
                             <span style="font-size: 0.65rem;" class="text-white-50 ms-1"><span>ultima alt - </span>{{ item.burger.last_updated | date:"D H:i" }}</span>
                     </div>
                 </div>
@@ -54,6 +56,8 @@
                 </div> 
             </div>
         </div>
+    {% empty %}
+        <p class="text-white glass-effect glass-card">Nenhum item no estoque.</p>
     {% endfor %}
 </div>
 
