@@ -11,8 +11,7 @@ class Order(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    customer_name = models.CharField(max_length=100, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    customer_name = models.CharField(max_length=100, blank=True, null=True, default="Cliente")
     total_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -20,11 +19,13 @@ class Order(models.Model):
         blank=True,
         )
     
-    is_processed = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)
+
     history = HistoricalRecords()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-            return f"Order #{self.id} - {list(self.items.all())} " #type:ignore
+            return f"#{self.id} - {list(self.items.all())} " #type:ignore
 
     def update_price(self):
         
@@ -36,7 +37,7 @@ class Order(models.Model):
         for item in self.items.all():  #type:ignore
             total = item.product.price * item.quantity
 
-        self.total_price += total  #type:ignore
+        self.total_price += total 
         self.save()
 
 
@@ -45,20 +46,28 @@ class OrderItem(models.Model):
     The individual lines on the receipt
     """
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField()
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
     
     def save(self, *args, **kwargs):
+        is_new = self.pk is None
         super().save(*args, **kwargs)
-        self.order.update_price()
-
+    
+        if is_new:
+            self.product.update_stock(self.quantity) 
+            self.order.update_price()
 
     def delete(self, *args, **kwargs):
+        if self.product:
+            self.product.update_stock(-self.quantity)
+
         order = self.order
         deleted_count = super().delete(*args, **kwargs)
-        order.update_price()
+
+        if order:
+            order.update_price()
         return deleted_count
