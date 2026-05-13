@@ -85,7 +85,8 @@ class Burger(Product):
 
     def update_stock(self, quantity_sold):
         self.sold += quantity_sold
-
+        self.save(update_fields=['sold'])
+        
         for item in self.recipe_items.all():  # type: ignore
             item.ingredient.quantity -= (item.amount * quantity_sold)
             item.ingredient.save()
@@ -129,6 +130,7 @@ class Beverage(Product):
         Calculates how much you make after production costs.
         """
         return self.price - self.stock.price
+
 
 class Recipe(models.Model):
     """

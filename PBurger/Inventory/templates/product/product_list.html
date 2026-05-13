@@ -11,17 +11,21 @@
         <div class="col-6 col-md-4 col-lg-3 mb-4" 
              x-show="'{{ item.name|lower }}'.includes(search.toLowerCase())"
              x-transition>
-            <div class="glass-card w-100 glass-effect " >
-                <h5 class="text-capitalize mb-3" style="pointer-events: none;">{{ item.name }}</h5>
-                {% if item.burger %}                 
-                    <div class="col d-flex flex-column">
-                        <small class="text-white-50 d-block"><i class="bi bi-journal-bookmark" title="nº de receitas"></i> {{ item.burger.recipe_items.all.count }}</small>
-                    </div>
-                {% else %}
-                    <div class="col d-flex flex-column">
-                        <span class="text-white-50 d-block"><i class="bi bi-box-seam" title="qtd no estoque"></i> {{ item.beverage.stock.quantity|floatformat:"-1" }}</span>
-                    </div>
-                {% endif %}
+            <div class="glass-card glass-effect " >
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="text-capitalize" style="padding-left: 10px;">{{ item.name }}</h4>
+                    {% if item.burger %}                 
+                        <span class="text-white-50">
+                            <i class="bi bi-journal-bookmark" title="nº de receitas"></i> 
+                            {{ item.burger.recipe_items.all.count }}
+                        </span>
+                    {% else %}
+                        <span class="text-white-50">
+                            <i class="bi bi-box-seam" title="qtd no estoque"></i> 
+                            {{ item.beverage.stock.quantity|floatformat:"-1" }}
+                        </span>
+                    {% endif %}
+                </div>
 
                 <hr class="glass-hr" >
                 
@@ -36,18 +40,26 @@
                     </div>
                     <div class="col d-flex flex-column" >
                         <small class="text-white-50 d-block">Lucro:</small>
-                        <span class="{% if item.burger.profit > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.burger.profit_margin }}<span>
+                        <span class="{% if item.burger.profit > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.burger.profit }}<span>
                     </div>
                 </div>
-                <div class="d-flex flex-column" style="pointer-events: none;">
-                    <div class="ms-auto mt-4" >
-                            <span style="font-size: 0.65rem;" class="text-white-50 ms-1"><span>criado em - </span>{{ item.burger.create_at | date:"d/m/y"  }}</span>
+                <div class="d-flex justify-content-between align-items-end mt-4" style="margin-inline: 20px;">
+                    
+                    <div class="sold-count">
+                        <span class=""> <i class="bi bi-handbag"></i> {{ item.sold }}</span> 
                     </div>
-                    <div class="ms-auto" style="margin-top:-10px;">
-                            <span style="font-size: 0.65rem;" class="text-white-50 ms-1"><span>ultima alt - </span>{{ item.burger.last_updated | date:"D H:i" }}</span>
-                    </div>
-                </div>
+       
 
+                    <div class="d-flex flex-column text-end">
+                        <div style="font-size: 0.65rem;" class="text-white-50">
+                            <span>criado em - </span>{{ item.burger.create_at|date:"d/m/y" }}
+                        </div>
+                        <div style="font-size: 0.65rem; margin-top: -2px;" class="text-white-50">
+                            <span>ultima alt - </span>{{ item.burger.last_updated|date:"D H:i" }}
+                        </div>
+                    </div>
+
+                </div>
                 <hr class="glass-hr mt-2">
 
                  <div class="btn-container">

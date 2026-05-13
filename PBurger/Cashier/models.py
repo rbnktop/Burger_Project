@@ -52,7 +52,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
+        return f"{self.quantity}x {self.product.name}"
     
     def save(self, *args, **kwargs):
         is_new = self.pk is None

@@ -16,18 +16,31 @@ OrderItemFormSet = inlineformset_factory(
         Order, 
         OrderItem, 
         fields=('product', 'quantity'),
-        extra=1, 
+        extra=len(Product.objects.all()), 
         can_delete=True
     )
 
 
 def hub_view(request):
+    products = list(Product.objects.all())
+    initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
 
-    products = list(Burger.objects.all()) + list(Beverage.objects.all())
-    initial_data = [{'product': p.id, 'quantity': 0} for p in products]
+    form = OrderForm()
+    formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
 
+    return render(request, 'hub.html', {
+        'form': form,
+        'formset': formset,
+        'products': products,
+    })
+
+
+def process_order(request):
+    products = list(Product.objects.all())
+    
     if request.method == 'POST':
         form = OrderForm(request.POST)
+        
         formset = OrderItemFormSet(request.POST)
 
         if form.is_valid() and formset.is_valid():
@@ -38,52 +51,55 @@ def hub_view(request):
                     item = item_form.save(commit=False)
                     item.order = order
                     item.save()
-            return redirect('cashier:hub')
+            
+
+            initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
+            empty_form = OrderForm()
+            empty_formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
+
+            context = {
+                'form': empty_form,           
+                'formset': empty_formset,     
+                'products': products,
+                'new_order': order,     
+                'stock': Stock.objects.all().order_by('-last_updated'),    
+                'success_message': f"Pedido #{order.id} confirmado!"
+            }
+            return render(request, 'partials/order_success.html', context)
+        
     else:
+        initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
         form = OrderForm()
-        # 3. Create the formset with 'extra' matching the number of products
-        OrderItemFormSetGrid = inlineformset_factory(
-            Order, OrderItem, 
-            fields=('product', 'quantity'), 
-            extra=len(products), 
-            can_delete=False
-        )
+        formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
 
-        formset = OrderItemFormSetGrid(
-            initial=initial_data, 
-            queryset=OrderItem.objects.none()
-        )
-
-    return render(request, 'hub.html', {
+    context = {
         'form': form,
         'formset': formset,
         'products': products,
-    })
+        'stock': Stock.objects.all().order_by('-last_updated')
+    }
 
-
+    return render(request, 'partials/order_success.html', context)
+        
 def calculate_order_total(request):
     """
     Calculates the total on-the-fly using only POST data. 
     Does not require the Order to exist in the DB yet.
     """
-    # Initialize the formset with POST data but NO instance
+
     formset = OrderItemFormSet(request.POST)
     
     total = Decimal('0.00')
     
-    # We don't necessarily need formset.is_valid() just to calculate a preview total,
-    # but it's safer to use cleaned_data.
     if formset.is_valid():
         for form in formset:
-            # Check if it's not marked for deletion
             if not form.cleaned_data.get('DELETE'):
                 product = form.cleaned_data.get('product')
                 quantity = form.cleaned_data.get('quantity', 0)
                 if product and quantity:
                     total += product.price * quantity
 
-    # Return only the inner content for the #order-total div
-    return HttpResponse(f"Total: ${total:.2f}")
+    return HttpResponse (f"${total:.2f}")
 
 def add_item_row(request):
     """Returns a single empty form row to be appended to the formset."""

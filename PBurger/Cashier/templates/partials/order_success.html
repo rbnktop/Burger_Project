@@ -1,0 +1,52 @@
+
+
+
+
+
+
+<div id="order-form-container">
+    {% include "partials/order_form.html" %}
+</div>
+
+<div id="stock-list-content" hx-swap-oob="true">
+    {% include "partials/stock_list.html" %}
+</div>
+
+<div id="customer-input-container" class="col-6" hx-swap-oob="true">
+    <label class="text-white-50 small"><i class="bi bi-person-vcard-fill"></i></label>
+    {{ form.customer_name }}
+    <button type="submit" class="btn btn-primary fw-bold">Confirmar Venda</button>
+</div>
+
+
+<div id="order-total" hx-swap-oob="true" class="h4 fw-bold" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
+
+
+<div id="messages" hx-swap-oob="true">
+    <div class="fade-out-message alert alert-success text-center mx-auto ms-auto glass-card glass-effect">{{ success_message }}<i class="bi bi-check"></i>
+    </div>
+</div>
+
+
+<div hx-swap-oob="afterbegin:#order-list-content">
+    <div class="glass-card mb-2 p-2 animate-new-item">
+        <details name="items">
+            <summary class="d-flex justify-content-between" style="padding-inline:15px;">
+                
+                <span><i class="bi bi-card-text"></i> {{ new_order.id }}</span>  
+
+                <span><i class="bi bi-person-fill"></i>{{ new_order.customer_name }}</span>
+                
+                <span>{{ new_order.total_price }}<i class="bi bi-currency-dollar" style="color:#85bb65;"></i></span>
+            </summary>
+            <hr class="glass-hr">
+            {% for x in new_order.items.all %}
+                <p class="content" style="padding-left:15px; margin-block: 2px; padding-bottom: 5px;">
+                    <i class="bi bi-dot"></i> {{ x }}
+                </p>
+            {% endfor %}
+        </details>
+    </div>
+</div>
+
+

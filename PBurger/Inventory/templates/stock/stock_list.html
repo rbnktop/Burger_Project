@@ -32,7 +32,7 @@
                 </div>
                 <div class="mb-4">
                     <small class="text-white-50 d-block">Valor:</small>
-                    <span>${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{% if item.unit == 'g' %}Kg{% else %}{{ item.unit }}{% endif%}</span></span>
+                    <span>${{ item.price|floatformat:"-1" }}/<span style="font-size: 0.75rem;" class="text-white-50 ms-1">{{ item.unit_display }}</span></span>
                 </div>
                 <div class="mb-1">
                     <small class="text-white-50 d-block">Usado em</small>
