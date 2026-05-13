@@ -1,0 +1,16 @@
+
+<div class="alert alert-success py-2 mb-3 text-center">
+    {{ success_message }}
+</div>
+
+
+{% include "partials/order_form.html" %}
+
+
+<div id="order-list-content" hx-swap-oob="true">
+    {% include "partials/order_list.html" %}
+</div>
+
+<div id="stock-list-content" hx-swap-oob="true">
+    {% include "partials/stock_list.html" %}
+</div>

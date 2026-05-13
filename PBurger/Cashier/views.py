@@ -22,12 +22,29 @@ OrderItemFormSet = inlineformset_factory(
 
 
 def hub_view(request):
-
     products = list(Burger.objects.all()) + list(Beverage.objects.all())
-    initial_data = [{'product': p.id, 'quantity': 0} for p in products]
+    initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
 
+    form = OrderForm()
+    OrderItemFormSetGrid = inlineformset_factory(
+        Order, OrderItem, fields=('product', 'quantity'), 
+        extra=len(products), can_delete=False
+    )
+    formset = OrderItemFormSetGrid(initial=initial_data, queryset=OrderItem.objects.none())
+
+    return render(request, 'hub.html', {
+        'form': form,
+        'formset': formset,
+        'products': products,
+    })
+
+
+def process_order(request):
+    products = list(Burger.objects.all()) + list(Beverage.objects.all())
+    
     if request.method == 'POST':
         form = OrderForm(request.POST)
+        
         formset = OrderItemFormSet(request.POST)
 
         if form.is_valid() and formset.is_valid():
@@ -38,51 +55,40 @@ def hub_view(request):
                     item = item_form.save(commit=False)
                     item.order = order
                     item.save()
-            return redirect('cashier:hub')
-    else:
-        form = OrderForm()
-        # 3. Create the formset with 'extra' matching the number of products
-        OrderItemFormSetGrid = inlineformset_factory(
-            Order, OrderItem, 
-            fields=('product', 'quantity'), 
-            extra=len(products), 
-            can_delete=False
-        )
+            
 
-        formset = OrderItemFormSetGrid(
-            initial=initial_data, 
-            queryset=OrderItem.objects.none()
-        )
+            initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
+            empty_form = OrderForm()
+            empty_formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
 
-    return render(request, 'hub.html', {
-        'form': form,
-        'formset': formset,
-        'products': products,
-    })
-
-
+            context = {
+                'form': empty_form,           # Fresh form
+                'formset': empty_formset,     # Fresh quantities (all 0)
+                'products': products,
+                'orders': Order.objects.all()[:10], # Updated order list
+                'stock': Product.objects.all(),     # Updated stock list
+                'success_message': f"Pedido #{order.id} confirmado!"
+            }
+            return render(request, 'partials/order_success.html', context)
+        
 def calculate_order_total(request):
     """
     Calculates the total on-the-fly using only POST data. 
     Does not require the Order to exist in the DB yet.
     """
-    # Initialize the formset with POST data but NO instance
+
     formset = OrderItemFormSet(request.POST)
     
     total = Decimal('0.00')
     
-    # We don't necessarily need formset.is_valid() just to calculate a preview total,
-    # but it's safer to use cleaned_data.
     if formset.is_valid():
         for form in formset:
-            # Check if it's not marked for deletion
             if not form.cleaned_data.get('DELETE'):
                 product = form.cleaned_data.get('product')
                 quantity = form.cleaned_data.get('quantity', 0)
                 if product and quantity:
                     total += product.price * quantity
 
-    # Return only the inner content for the #order-total div
     return HttpResponse(f"Total: ${total:.2f}")
 
 def add_item_row(request):
