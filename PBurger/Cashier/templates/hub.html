@@ -1,68 +1,98 @@
 {% extends "layout.html" %}
 {% block main %}
 
-<div class="container-fluid px-4 ">
+<div class="container-fluid px-4">
     <div class="row hub-row">
         
-        <!-- Center: Order Creation (Priority #1 on mobile) -->
+        <!-- Center: Order Creation -->
         <div class="col-12 col-lg-6 order-1 order-lg-2 scroll-col">
-            <div class="glass-card h-100">
-                <h4 class="text-white">creating orders</h4>
+            <div class="glass-card h-100 glass-effect">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="text-white">Adicionar Pedido</h3>
+                    <div id="order-total" class="h4">oi vc :)</div>
+                </div>
                 <hr class="glass-hr">
                 
-                <form method="post" novalidate>
+                <form method="post" id="order-form">
                     {% csrf_token %}
-
-                    {{ form.customer_name.label_tag }}
-                    {{ form.customer_name }}
                     
+                    <div class="mb-3" style="width:150px;">
+                        {{ form.customer_name.label_tag }}
+                        {{ form.customer_name }}
+                    </div>
+
                     <div id="item-formset">
                         {{ formset.management_form }}
-                        {% for item_form in formset %}
-                            {{ item_form.product }}
-                            {{ item_form.quantity }}
-                        {% endfor %}
-                    </div>
-                    <div id="order-total">
-                        Total: ${{ order.total_value }}
-                    </div>
+                        
+                        <div id="form-list">
+                            {% for form in formset %}
+                                <div class="item-row p-2 mb-2 d-flex gap-2 align-items-center">
+                                    {{ form.id }}
+                                    
+                                    <div class="flex-grow-1">
+                                        <label class="small text-muted">Produto</label>
+                                        <!-- Trigger total update on product change -->
+                                        <div hx-post="{% url 'cashier:calculate-total' %}" 
+                                             hx-target="#order-total" 
+                                             hx-trigger="change from:select"
+                                             hx-include="#order-form">
+                                            {{ form.product }}
+                                        </div>
+                                    </div>
 
+                                    <div style="width: 60px;">
+                                        <label class="small text-muted">Quantia</label>
+                                        <input type="number" 
+                                               name="{{ form.quantity.html_name }}" 
+                                               value="{{ form.quantity.value|default:1 }}"
+                                               class="form-control"
+                                               hx-post="{% url 'cashier:calculate-total' %}" 
+                                               hx-target="#order-total" 
+                                               hx-trigger="keyup delay:200ms, change"
+                                               hx-include="#order-form">
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-light btn-sm mb-3"
+                            hx-get="{% url 'cashier:add-item-row' %}"
+                            hx-target="#form-list"
+                            hx-swap="beforeend">
+                        + Add Item
+                    </button>
+                    <hr class="glass-hr">
                     
-                    <button type="submit" class="btn btn-primary w-100">Finish Order</button>
+                    <button type="submit" class="btn btn-primary d-block mx-auto">Confirmar Venda</button>
                 </form>
             </div>
-        </div>
-
-        <!-- Left: Management (Priority #2 on mobile) -->
-        <div class="col-12 col-lg-3 order-2 order-lg-1 scroll-col">
-            <div class="glass-card h-100">
-                <h4 class="text-white">management</h4>
+        </div>   
+        <div class="col-12 col-lg-3 order-2 order-lg-1  scroll-col">
+            <div class="glass-card h-100 glass-effect">
+                <h4 class="text-white">Controle</h4>
                 <hr class="glass-hr">
-                <!-- Long list of orders goes here -->
-                {% for i in orders %}
-                    <div class="glass-effect p-3 mb-3">{{ i }}</div>
-                {% endfor %}
+                <div hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
             </div>
         </div>
-
-        <!-- Right: Stock Status (Priority #3 on mobile) -->
-        <div class="col-12 col-lg-3 order-3 order-lg-3 scroll-col">
+        </div>
+        <div class="col-12 col-lg-3 order-3 order-lg-3 scroll-col d-flex">
             <div class="glass-card h-100">
-                <h4 class="text-white">stock status</h4>
+                <h4 class="text-white text-center">Estoque</h4>
                 <hr class="glass-hr">
-                <!-- Long list of stock items goes here -->
-                {% for i in stock %}
-                    <div class="glass-effect p-3 mb-3">{{ i }}</div>
-                {% endfor %}
+                <div hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
             </div>
         </div>
-
     </div>
 </div>
 
+<script>
+    document.body.addEventListener('htmx:afterSwap', (event) => {
+    if (event.detail.target.id === "form-list") {
+        const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+        const currentCount = document.querySelectorAll('.item-row').length;
+        totalForms.value = currentCount;
+    }
+});
+</script>
+
 {% endblock main %}
-
-
-
-
-

@@ -368,7 +368,7 @@ option {
 /* Only apply independent scrolling on desktop (lg breakpoint) */
 @media (min-width: 992px) {
     .hub-row {
-        height: calc(100vh - 125px) !important;   
+        height: calc(100vh - 85px) !important;   
         margin: 0 !important;
         overflow: hidden; /* This prevents the whole page from scrolling */
     }
