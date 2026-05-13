@@ -31,7 +31,7 @@ class Stock(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f" {self.name} - {self.quantity}{self.unit}" #type:ignore [{self.id}]
+        return f" {self.name} | {self.quantity}{self.unit}" #type:ignore [{self.id}]
 
     @property
     def quantity_display(self):
@@ -142,6 +142,6 @@ class Recipe(models.Model):
     amount = models.FloatField()
 
     def __str__(self):
-        return f" Receita [{self.id}] @{self.burger} precisa de {self.amount}{self.ingredient.unit} {self.ingredient.name}."  # type: ignore
+        return f"{self.amount}{self.ingredient.unit} {self.ingredient.name}"  # type: ignore
 
 

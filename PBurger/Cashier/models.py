@@ -25,7 +25,8 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-            return f"#{self.id} - {list(self.items.all())} " #type:ignore
+        items_summary = ", ".join([str(item) for item in self.items.all()])  #type:ignore
+        return f"{self.id}° ${self.total_price} {items_summary} " #type:ignore
 
     def update_price(self):
         

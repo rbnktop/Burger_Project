@@ -108,7 +108,7 @@ body::before {
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
-    padding: 1.5rem;
+    padding: 1.3rem;
     height: fit-content;
     color: #ffff;
     transition: all 0.45s ease-in-out;
@@ -185,7 +185,7 @@ body::before {
     justify-content: space-evenly;
     align-items: center;
     gap: 10px;
-    margin-top: 15px;
+    /* margin-top: 15px; */
     isolation: isolate;
     position: relative;
     z-index: 10;
@@ -297,7 +297,7 @@ input::-webkit-inner-spin-button {
 
 /* Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
+  -moz-appearance: textfield; 
 }
 
 .alert-invalid {
@@ -390,4 +390,26 @@ option {
     .scroll-col::-webkit-scrollbar {
     display: none;
     }
+}
+
+  .product-card {
+        border-radius: 12px;
+        transition: transform 0.2s;
+    }
+    .product-card:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.15) !important;
+    }
+    .border-white-10 { border: 1px solid rgba(255,255,255,0.1) !important; }
+    input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+
+.qty-container .btn {
+    font-size: 1.2rem;
+    transition: all 0.1s ease;
+    border-radius: 30px;
+}
+
+.qty-container .btn:active {
+    transform: scale(0.7);
+    background-color: rgba(255,255,255,0.1);
 }
