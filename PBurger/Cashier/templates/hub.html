@@ -11,7 +11,7 @@
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 2; overflow: hidden;">
                 <h6 class="text-white m-0 p-3"><i class="bi bi-bar-chart-steps"></i> Pedidos</h6>
                 <hr class="glass-hr m-0">
-                <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" h-get="{% url 'cashier:order-list' %}" hx-trigger="load">
+                <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 1; overflow: hidden;">
                 <h6 class="text-white m-0 p-3"><i class="bi bi-box-seam"></i> Estoque</h6>
                 <hr class="glass-hr m-0">
-                <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" h-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
+                <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
                 </div>
             </div>
 
@@ -38,21 +38,27 @@
                         
                         
                         <!-- left side -->
-                        <div id="customer-input-container" class="col-9" >
+                        <div id="customer-input-container" class="col-6" >
                             <label class="text-white-50 small"><i class="bi bi-person-vcard-fill"></i></label>
                             {{ form.customer_name }}
                             <button type="submit" class="btn btn-primary fw-bold">Confirmar Venda</button>
                         </div>
+                        <!-- end left -->
                         
                         
                         <!-- right side -->
-                        <div class="col border-start border-secondary">
-                            <div id="messages-container" class="col-2"></div>
+                        <div class="col-3 border-start border-secondary">
+                            
+                            
+                            <div id="messages" hx-swap-oob="true">
+                                <div class="fade-out-message alert alert-success text-center mx-auto ms-auto glass-card glass-effect"><i class="bi bi-check"></i>
+                                </div>
+                            </div>
+
                             <div id="order-total" class="h2 fw-bold mb-2" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
+                       
+                        <!-- end right -->
                         </div>
-
-
-
                     </div>
                     <hr class="glass-hr my-2">
 
