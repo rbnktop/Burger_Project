@@ -16,7 +16,7 @@ OrderItemFormSet = inlineformset_factory(
         Order, 
         OrderItem, 
         fields=('product', 'quantity'),
-        extra=1, 
+        extra=len(Product.objects.all()), 
         can_delete=True
     )
 
@@ -60,13 +60,14 @@ def process_order(request):
             initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
             empty_form = OrderForm()
             empty_formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
+            stock = Stock.objects.all().order_by('-last_updated')
 
             context = {
-                'form': empty_form,           # Fresh form
-                'formset': empty_formset,     # Fresh quantities (all 0)
+                'form': empty_form,           
+                'formset': empty_formset,     
                 'products': products,
-                'orders': Order.objects.all()[:10], # Updated order list
-                'stock': Product.objects.all(),     # Updated stock list
+                'new_order': order,     
+                'stock': stock,     
                 'success_message': f"Pedido #{order.id} confirmado!"
             }
             return render(request, 'partials/order_success.html', context)

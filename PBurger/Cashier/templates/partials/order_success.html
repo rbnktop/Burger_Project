@@ -1,14 +1,17 @@
-
-<div class="alert alert-success py-2 mb-3 text-center">
-    {{ success_message }}
+<div id="messages-container" hx-swap-oob="true">
+    <div class="alert alert-success text-center mx-auto ms-auto animate__animated animate__fadeIn glass-card glass-effect">
+        {{ success_message }}  <i class="bi bi-check"></i>
+    </div>
 </div>
 
 
 {% include "partials/order_form.html" %}
 
 
-<div id="order-list-content" hx-swap-oob="true">
-    {% include "partials/order_list.html" %}
+<div hx-swap-oob="afterbegin:#order-list-content">
+    <div class="glass-card mb-2 p-2 animate-new-item">
+        {{ new_order }}
+    </div>
 </div>
 
 <div id="stock-list-content" hx-swap-oob="true">

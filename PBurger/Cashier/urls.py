@@ -6,7 +6,9 @@ app_name='cashier'
 urlpatterns = [
     path("hub/", hub_view, name="hub"),  
     path('calculate-total/', calculate_order_total, name='calculate-total'),
+    
     path('checkout/', process_checkout, name="checkout"),
+
     path('add_item_row/', add_item_row, name="add-item-row"),
     path('order_list/', order_list_partial, name="order-list"),
     path('stock_list/', stock_list_partial, name="stock-list"),

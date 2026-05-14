@@ -1,14 +1,18 @@
+
 <form id="order-form" 
-hx-post="{% url 'cashier:process-order' %}" 
-hx-target="#order-form-container" 
-hx-swap="innerHTML">
+    hx-post="{% url 'cashier:process-order' %}" 
+    hx-target="#order-form-container" 
+    hx-swap="innerHTML">
+
     {% csrf_token %}
+
     {{ formset.management_form }}
     
     <div class="mb-4" style="max-width: 250px;">
         <label class="text-white-50 small">Cliente</label>
         {{ form.customer_name }}
     </div>
+
     <hr class="glass-hr">
     <div class="d-flex flex-wrap justify-content-start gap-3"> 
         {% for item_form in formset %}
@@ -18,7 +22,6 @@ hx-swap="innerHTML">
                     
                     <div class="product-info mb-2" title="{{ product.name }}" >
                         {% if item_form.instance.pk %}
-                            
                             <h6 class="text-white mb-1">{{ item_form.instance.product.name }}</h6>
                             <p class="text-white-50 small mb-0">${{ item_form.instance.product.price }}</p>
                         {% else %}
@@ -46,7 +49,7 @@ hx-swap="innerHTML">
             </div>
         {% endfor %}
         </div>
-    <div class="mt-4 pb-4">
+    <div class="mt-4 pb-4 btn-container">
         <button type="submit" class="btn btn-primary py-2">Confirmar Venda</button>
     </div>
 </form>
