@@ -3,14 +3,14 @@
 
 {{ formset.management_form }}
 <div class="d-flex flex-wrap justify-content-start gap-3"> 
-    {% for item_form in formset %}
+    {% for item in formset %}
         <div class="product-card-wrapper" style="width: 160px;">
             <div class="glass-card text-center p-3 h-100 transition-all">
-                <div class="d-none">{{ item_form.product }}</div>
+                <div class="d-none">{{ item.product.id }}</div>
                 
                 <div class="product-info mb-2">
-                    <h6 class="text-white mb-1 small">{{ item_form.instance.product.name|default:"Produto" }}</h6>
-                    <p class="text-white-50 small mb-0">${{ item_form.instance.product.price }}</p>
+                    <h6 class="text-white mb-1 small">{{ item.instance.product.name }}</h6>
+                    <p class="text-white-50 small mb-0">${{ item.instance.product.price }}</p>
                 </div>
 
                 <div class="qty-container d-flex justify-content-center align-items-center gap-2 mt-2">

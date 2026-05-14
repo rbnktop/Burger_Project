@@ -495,3 +495,28 @@ input[type=number]::-webkit-inner-spin-button { opacity: 1; }
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 } */
+
+.pos-dashboard-grid {
+    display: grid;
+    /* Two columns at the top, and the bottom spans both */
+    grid-template-areas: 
+        "customer-info checkout-info"
+        "product-list product-list";
+    grid-template-columns: 1fr 1fr; /* Two equal halves for the top */
+    grid-template-rows: auto 1fr;    /* Top adjusts to content, bottom takes remaining space */
+    gap: 20px;
+    height: 100%;
+
+}
+
+/* Assign sections to the areas */
+.area-customer { grid-area: customer-info; }
+.area-checkout { grid-area: checkout-info; }
+.area-products { grid-area: product-list; }
+
+/* For the actual product grid inside the area */
+.product-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
