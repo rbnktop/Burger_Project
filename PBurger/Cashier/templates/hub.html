@@ -1,46 +1,68 @@
 {% extends "layout.html" %}
 {% block main %}
+<div class="container-fluid">
+    <div class="row hub-row g-3">
+        
 
-<div class="container-fluid px-4">
-    <div class="row hub-row">
+        <!-- ================= LEFT COLUMN: Sidebar ================= -->
+        <div class="col-12 col-lg-3 d-flex flex-column gap-3" style="height: 84vh;">
 
-        <div class="col-12 col-lg-3 order-2 order-lg-1 scroll-col">
-            <div class="glass-card h-100 glass-effect">
-                <h4 class="text-white"><i class="bi bi-bar-chart-steps"></i> Pedidos</h4>
-                <hr class="glass-hr">
-                <div id="order-list-content" hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
+                                        <!-- Pedidos -->
+            <div class="glass-card glass-effect d-flex flex-column" style="flex: 2; overflow: hidden;">
+                <h6 class="text-white m-0 p-3"><i class="bi bi-bar-chart-steps"></i> Pedidos</h6>
+                <hr class="glass-hr m-0">
+                <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" h-get="{% url 'cashier:order-list' %}" hx-trigger="load">
                 </div>
             </div>
+
+                                        <!-- Estoque -->
+            <div class="glass-card glass-effect d-flex flex-column" style="flex: 1; overflow: hidden;">
+                <h6 class="text-white m-0 p-3"><i class="bi bi-box-seam"></i> Estoque</h6>
+                <hr class="glass-hr m-0">
+                <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" h-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
+                </div>
+            </div>
+
         </div>
 
+        <!-- ================= RIGHT COLUMN: The Interactive Form ================= -->
+        <div class="col-12 col-lg-9" style="height: 84vh;">
+            <form id="order-form" 
+                  hx-post="{% url 'cashier:process-order' %}" 
+                  hx-target="#order-form-container" 
+                  class="h-100">
+                {% csrf_token %}
+                
+                <div class="glass-card h-100 glass-effect d-flex flex-column p-4">
+                    <div class="row align-items-center pb-2">
+                        
+                        
+                        <!-- left side -->
+                        <div id="customer-input-container" class="col-9" >
+                            <label class="text-white-50 small"><i class="bi bi-person-vcard-fill"></i></label>
+                            {{ form.customer_name }}
+                            <button type="submit" class="btn btn-primary fw-bold">Confirmar Venda</button>
+                        </div>
+                        
+                        
+                        <!-- right side -->
+                        <div class="col border-start border-secondary">
+                            <div id="messages-container" class="col-2"></div>
+                            <div id="order-total" class="h2 fw-bold mb-2" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
+                        </div>
 
-        <div class="col-12 col-lg-6 order-1 order-lg-2 scroll-col">
-            <div class="glass-card h-100 glass-effect">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="text-white m-0"></h3>
-                    <div id="messages-container"></div>
-                    <div id="order-total" class="h4 fw-bold" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
-                </div>
-                <hr class="glass-hr">
-                <div id="order-form-container">
-                    {% include "partials/order_form.html" %}
-                </div>
-            </div>
-        </div>
 
 
-        <div class="col-12 col-lg-3 order-3 order-lg-3 scroll-col" >
-            <div class="glass-card glass-effect">
-                <h4 class="text-white"><i class="bi bi-box-seam"></i> Estoque</h4>
-                <hr class="glass-hr">
-                <div id="stock-list-content" hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load" >
+                    </div>
+                    <hr class="glass-hr my-2">
+
+                    <!-- BOTTOM SECTION: Product Grid -->
+                    <div id="order-form-container" class="flex-grow-1 overflow-auto">
+                        {% include "partials/order_form.html" %}
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
-
-
-
 {% endblock main %}
-
