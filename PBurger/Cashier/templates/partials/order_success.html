@@ -1,8 +1,11 @@
 <div id="messages-container" hx-swap-oob="true">
-    <div class="alert alert-success text-center mx-auto ms-auto animate__animated animate__fadeIn glass-card glass-effect">
+    <div class="fade-out-message alert alert-success text-center mx-auto ms-auto glass-card glass-effect">
         {{ success_message }}  <i class="bi bi-check"></i>
     </div>
 </div>
+
+
+<div id="order-total" hx-swap-oob="true" class="h4 fw-bold" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
 
 
 {% include "partials/order_form.html" %}

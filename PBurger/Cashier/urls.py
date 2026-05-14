@@ -4,7 +4,7 @@ from .views import process_checkout, hub_view, calculate_order_total, order_list
 app_name='cashier'
 
 urlpatterns = [
-    path("hub/", hub_view, name="hub"),  
+    path("", hub_view, name="hub"),  
     path('calculate-total/', calculate_order_total, name='calculate-total'),
     
     path('checkout/', process_checkout, name="checkout"),

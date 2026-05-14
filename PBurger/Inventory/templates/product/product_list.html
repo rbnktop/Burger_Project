@@ -11,17 +11,25 @@
         <div class="col-6 col-md-4 col-lg-3 mb-4" 
              x-show="'{{ item.name|lower }}'.includes(search.toLowerCase())"
              x-transition>
-            <div class="glass-card w-100 glass-effect " >
-                <h5 class="text-capitalize mb-3" style="pointer-events: none;">{{ item.name }}</h5>
-                {% if item.burger %}                 
-                    <div class="col d-flex flex-column">
-                        <small class="text-white-50 d-block"><i class="bi bi-journal-bookmark" title="nº de receitas"></i> {{ item.burger.recipe_items.all.count }}</small>
-                    </div>
-                {% else %}
-                    <div class="col d-flex flex-column">
-                        <span class="text-white-50 d-block"><i class="bi bi-box-seam" title="qtd no estoque"></i> {{ item.beverage.stock.quantity|floatformat:"-1" }}</span>
-                    </div>
-                {% endif %}
+            <div class="glass-card glass-effect " >
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="text-capitalize" style="padding-left: 10px;">{{ item.name }}</h4>
+                        <span class="text-white-50">
+                            <!-- <i class="bi bi-journal-bookmark" title="nº de receitas"></i>  -->
+                            {{ item.sold }}
+                        </span>
+                    {% if item.burger %}                 
+                        <span class="text-white-50">
+                            <i class="bi bi-journal-bookmark" title="nº de receitas"></i> 
+                            {{ item.burger.recipe_items.all.count }}
+                        </span>
+                    {% else %}
+                        <span class="text-white-50">
+                            <i class="bi bi-box-seam" title="qtd no estoque"></i> 
+                            {{ item.beverage.stock.quantity|floatformat:"-1" }}
+                        </span>
+                    {% endif %}
+                </div>
 
                 <hr class="glass-hr" >
                 
@@ -36,7 +44,7 @@
                     </div>
                     <div class="col d-flex flex-column" >
                         <small class="text-white-50 d-block">Lucro:</small>
-                        <span class="{% if item.burger.profit > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.burger.profit_margin }}<span>
+                        <span class="{% if item.burger.profit > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.burger.profit }}<span>
                     </div>
                 </div>
                 <div class="d-flex flex-column" style="pointer-events: none;">

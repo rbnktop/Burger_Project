@@ -2,8 +2,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>  
-</script>
+<head>
     <meta charset="UTF-8">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
@@ -18,6 +17,9 @@
 </head>
 <div class="bg-layer"></div>
 <body>
+<!-- <div class="glass-effect" id="loading-screen">
+    <div class="loader"><i class="bi bi-playstation"></i></div>
+</div> -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-effect">
     <div class="container container-nav">
         
@@ -76,7 +78,7 @@
 </nav>
 
 <main class="container-fluid d-flex flex-column px-4" 
-      style="padding-top: 85px;">
+      style="padding-top: 85px">
 
       {% block main %}
 
@@ -98,4 +100,20 @@
         </div>
     </div>
 </footer>
+
+<script>
+
+window.addEventListener('load', function() {
+    const loader = document.getElementById('loading-screen');
+    
+    // Add a slight fade out for a smoother transition
+    loader.style.opacity = '0';
+    
+    // Remove it from the DOM after the fade so it doesn't block clicks
+    setTimeout(() => {
+        loader.style.display = 'none';
+    }, 500); 
+});
+
+</script>
 </html>

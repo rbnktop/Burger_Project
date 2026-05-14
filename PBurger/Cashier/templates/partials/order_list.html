@@ -1,3 +1,24 @@
+
+
+
+
 {% for i in orders %}
-<div class="glass-effect glass-card p-3 mb-3">{{ i }} </div>
+<div class="glass-card mb-2 p-2 animate-new-item">
+    <details name="items">
+        <summary class="d-flex justify-content-between" style="padding-inline:15px;">
+            
+            <span><i class="bi bi-card-text"></i> {{ i.pk }}</span>  
+
+            <span><i class="bi bi-person-fill"></i>{{ i.customer_name }}</span>
+            
+            <span>{{ i.total_price }}<i class="bi bi-currency-dollar" style="color:#85bb65;"></i></span>
+        </summary>
+        <hr class="glass-hr">
+        {% for x in i.items.all %}
+            <p class="content" style="padding-left:15px; margin-block: 2px; padding-bottom: 5px;">
+                <i class="bi bi-dot"></i> {{ x }}
+            </p>
+        {% endfor %}
+    </details>
+</div>
 {% endfor %}

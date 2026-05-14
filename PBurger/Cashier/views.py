@@ -22,15 +22,11 @@ OrderItemFormSet = inlineformset_factory(
 
 
 def hub_view(request):
-    products = list(Burger.objects.all()) + list(Beverage.objects.all())
+    products = list(Product.objects.all())
     initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
 
     form = OrderForm()
-    OrderItemFormSetGrid = inlineformset_factory(
-        Order, OrderItem, fields=('product', 'quantity'), 
-        extra=len(products), can_delete=False
-    )
-    formset = OrderItemFormSetGrid(initial=initial_data, queryset=OrderItem.objects.none())
+    formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
 
     return render(request, 'hub.html', {
         'form': form,
@@ -40,7 +36,7 @@ def hub_view(request):
 
 
 def process_order(request):
-    products = list(Burger.objects.all()) + list(Beverage.objects.all())
+    products = list(Product.objects.all())
     
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -60,17 +56,30 @@ def process_order(request):
             initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
             empty_form = OrderForm()
             empty_formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
-            stock = Stock.objects.all().order_by('-last_updated')
 
             context = {
                 'form': empty_form,           
                 'formset': empty_formset,     
                 'products': products,
                 'new_order': order,     
-                'stock': stock,     
+                'stock': Stock.objects.all().order_by('-last_updated'),    
                 'success_message': f"Pedido #{order.id} confirmado!"
             }
             return render(request, 'partials/order_success.html', context)
+        
+    else:
+        initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
+        form = OrderForm()
+        formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
+
+    context = {
+        'form': form,
+        'formset': formset,
+        'products': products,
+        'stock': Stock.objects.all().order_by('-last_updated')
+    }
+
+    return render(request, 'partials/order_success.html', context)
         
 def calculate_order_total(request):
     """
@@ -90,7 +99,7 @@ def calculate_order_total(request):
                 if product and quantity:
                     total += product.price * quantity
 
-    return HttpResponse(f"Total: ${total:.2f}")
+    return HttpResponse (f"${total:.2f}")
 
 def add_item_row(request):
     """Returns a single empty form row to be appended to the formset."""
