@@ -1,24 +1,19 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
-from django.forms import inlineformset_factory
 
-from .models import Recipe, Burger, Beverage, Product, Stock
+from .models import Product, Stock
 
 from .forms import (
     StockForm,
-    BurgerForm,
-    BeverageForm,
-    RecipeForm,
-)
-
-RecipeFormSet = inlineformset_factory(
-    Burger, Recipe, fields=("ingredient", "amount"), extra=2, can_delete=True
+    DishForm,
+    OtherForm,
+    RecipeFormSet,
 )
 
 
 def list_stock_view(request):
-    stock = Stock.objects.all().prefetch_related('ingredient_items')
+    stock = Stock.objects.all().prefetch_related("ingredient_items")
     query = request.GET.get("q")
     if query:
 
@@ -61,11 +56,9 @@ def delete_stock_item_view(request, stock_id):
     return render(request, "confirm_delete.html", {"item": item})
 
 
-
 def list_product_view(request):
     products = Product.objects.all().prefetch_related(
-    'burger__recipe_items__ingredient'
-    'beverage__stock'                    
+        "dish__recipe_items__ingredient", "nondish__stock"
     )
 
     query = request.GET.get("q")
@@ -73,29 +66,29 @@ def list_product_view(request):
     if query:
         products = products.filter(Q(name__icontains=query))
 
-    products = products.order_by('-total_sold')
+    products = products.order_by("-total_sold")
 
     return render(request, "product/product_list.html", {"products": products})
 
 
 @login_required
 def create_product_view(request):
-    form = BurgerForm()
+    form = DishForm()
     formset = RecipeFormSet()
-    beverage_form = BeverageForm()
-    product_category = "None"
+    nondish_form = OtherForm()
+    product_base_category = "None"
 
     if request.method == "POST":
-        product_category = request.POST.get("product_category", "None")
-        print(f"--- DEBUG product type: {product_category} ---")
+        product_base_category = request.POST.get("product_base_category", "None")
+        print(f"--- DEBUG product type: {product_base_category} ---")
 
-        if product_category == "burger":
-            form = BurgerForm(request.POST, request.FILES)
+        if product_base_category == "dish":
+            form = DishForm(request.POST, request.FILES)
             formset = RecipeFormSet(request.POST)
 
             if form.is_valid() and formset.is_valid():
-                burger = form.save()
-                formset.instance = burger
+                dish = form.save()
+                formset.instance = dish
                 formset.save()
                 return redirect("stock:produto_inventario")
             else:
@@ -104,26 +97,29 @@ def create_product_view(request):
                 if not formset.is_valid():
                     print("FORMSET ERRORS:", formset.errors)
 
-        elif product_category == "beverage":
-            beverage_form = BeverageForm(request.POST, request.FILES)
-            if beverage_form.is_valid():
-                beverage_form.save()
+        elif product_base_category == "nondish":
+            nondish_form = OtherForm(request.POST, request.FILES)
+
+            if nondish_form.is_valid():
+                nondish_form.save()
                 return redirect("stock:produto_inventario")
             else:
-                print("BEVERAGE ERRORS:", beverage_form.errors)
+                print("NONDISH ERRORS:", nondish_form.errors)
 
-    common_form = beverage_form if product_category == "beverage" else form
+    common_form = nondish_form if product_base_category == "nondish" else form
+
+    context = {
+        "form": form,
+        "formset": formset,
+        "nondish_form": nondish_form,
+        "common_form": common_form,
+        "product_base_category": product_base_category,
+    }
 
     return render(
         request,
         "product/product_form.html",
-        {
-            "form": form,
-            "formset": formset,
-            "beverage_form": beverage_form,
-            "common_form": common_form,
-            "product_category": product_category,
-        },
+        context,
         status=422 if request.method == "POST" else 200,
     )
 
@@ -132,32 +128,30 @@ def create_product_view(request):
 def update_product_view(request, product_id):
     product_obj = get_object_or_404(Product, id=product_id)
 
-    if hasattr(product_obj, "burger"):
-        item = product_obj.burger  # type: ignore
-        product_category = "burger"
-    elif hasattr(product_obj, "beverage"):
-        item = product_obj.beverage  # type: ignore
-        product_category = "beverage"
+    if hasattr(product_obj, "dish"):
+        item = product_obj.dish  # type: ignore
+        product_base_category = "dish"
+    elif hasattr(product_obj, "nondish"):
+        item = product_obj.nondish  # type: ignore
+        product_base_category = "nondish"
     else:
         item = product_obj
-        product_category = "None"
+        product_base_category = "None"
 
-    form = BurgerForm(instance=item if product_category == "burger" else None)
-    formset = RecipeFormSet(instance=item if product_category == "burger" else None)
-    beverage_form = BeverageForm(
-        instance=item if product_category == "beverage" else None
-    )
+    form = DishForm(instance=item if product_base_category == "dish" else None)
+    formset = RecipeFormSet(instance=item if product_base_category == "dish" else None)
+    nondish_form = OtherForm(instance=item if product_base_category == "nondish" else None)
 
     if request.method == "POST":
-        product_category = request.POST.get("product_category")
+        posted_category = request.POST.get("product_base_category")
 
-        if product_category == "burger":
-            form = BurgerForm(request.POST, request.FILES, instance=item)
+        if product_base_category == "dish":
+            form = DishForm(request.POST, request.FILES, instance=item)
             formset = RecipeFormSet(request.POST, instance=item)
 
             if form.is_valid() and formset.is_valid():
-                burger = form.save()
-                formset.instance = burger
+                dish = form.save()
+                formset.instance = dish
                 formset.save()
                 return redirect("stock:produto_inventario")
 
@@ -167,17 +161,17 @@ def update_product_view(request, product_id):
                 if not formset.is_valid():
                     print("FORMSET ERRORS:", formset.errors)
 
-        elif product_category == "beverage":
-            beverage_form = BeverageForm(request.POST, request.FILES, instance=item)
+        elif product_base_category == "nondish":
+            nondish_form = OtherForm(request.POST, request.FILES, instance=item)
 
-            if beverage_form.is_valid():
-                beverage_form.save()
+            if nondish_form.is_valid():
+                nondish_form.save()
                 return redirect("stock:produto_inventario")
 
             else:
-                print("BEVERAGE ERRORS:", beverage_form.errors)
+                print("NONDISH ERRORS:", nondish_form.errors)
 
-    common_form = beverage_form if product_category == "beverage" else form
+    common_form = nondish_form if product_base_category == "nondish" else form
 
     return render(
         request,
@@ -185,9 +179,9 @@ def update_product_view(request, product_id):
         {
             "form": form,
             "formset": formset,
-            "beverage_form": beverage_form,
+            "nondish_form": nondish_form,
             "common_form": common_form,
-            "product_category": product_category,
+            "product_base_category": product_base_category,
         },
     )
 

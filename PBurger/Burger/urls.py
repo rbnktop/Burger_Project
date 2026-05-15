@@ -5,10 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
     path("", include("Greeting.urls"), name="greeting"),
     path("Caixa/", include("Cashier.urls")),
-    path("Stock/", include("Inventory.urls")),
-    
-
+    path("Inventario/", include("Inventory.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

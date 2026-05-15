@@ -47,7 +47,7 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-image: url('../images/Claytonia-perfoliata.jpg'); 
+    /* background-image: url('../images/Claytonia-perfoliata.jpg');  */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

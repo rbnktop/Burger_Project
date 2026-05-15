@@ -1,10 +1,10 @@
-from Inventory.models import Stock, Burger, Beverage
+from Inventory.models import Stock, Dish, NonDish
 
 
 def validate_cart_stock(cart_items):
     """
     Analyzes the entire cart to ensure we have enough stock.
-    cart_items format: [{'id': 1, 'category': 'burger', 'quantity': 2}, ...]
+    cart_items format: [{'id': 1, 'category': 'dish', 'quantity': 2}, ...]
     """
 
     total_stock_needed = {}
@@ -13,10 +13,10 @@ def validate_cart_stock(cart_items):
         product_id = item["id"]
         qty = item["quantity"]
 
-        if item["category"] == "burger":
-            burger = Burger.objects.get(id=product_id)
-   
-            for req in burger.recipe.ingredients.all(): #type:ignore
+        if item["category"] == "dish":
+            dish = Dish.objects.get(id=product_id)
+
+            for req in dish.recipe.ingredients.all():  # type: ignore
                 ingredient_id = req.ingredient.pk
                 amount_needed = req.amount * qty
 
@@ -24,10 +24,12 @@ def validate_cart_stock(cart_items):
                     total_stock_needed.get(ingredient_id, 0) + amount_needed
                 )
 
-        elif item["category"] == "beverage":
-            bev = Beverage.objects.get(id=product_id)
+        elif item["category"] == "nondish":
+            bev = NonDish.objects.get(id=product_id)
             ingredient_id = bev.stock.pk
-            total_stock_needed[ingredient_id] = total_stock_needed.get(ingredient_id, 0) + qty
+            total_stock_needed[ingredient_id] = (
+                total_stock_needed.get(ingredient_id, 0) + qty
+            )
 
     missing_items = []
 
