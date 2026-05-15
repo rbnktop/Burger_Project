@@ -9,68 +9,64 @@
 
                                         <!-- Pedidos -->
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 2; overflow: hidden;">
-                <h6 class="text-white m-0 p-3"><i class="bi bi-bar-chart-steps"></i> Pedidos</h6>
-                <hr class="glass-hr m-0">
+                <h6 class="text-white m-2"><i class="bi bi-bar-chart-steps"></i> Pedidos</h6>
+                <hr class="glass-hr">
                 <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
                 </div>
             </div>
 
                                         <!-- Estoque -->
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 1; overflow: hidden;">
-                <h6 class="text-white m-0 p-3"><i class="bi bi-box-seam"></i> Estoque</h6>
-                <hr class="glass-hr m-0">
+                <h6 class="text-white m-0 p-2"><i class="bi bi-box-seam"></i> Estoque</h6>
+                <hr class="glass-hr">
                 <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
                 </div>
             </div>
 
         </div>
 
-        <!-- ================= RIGHT COLUMN: The Interactive Form ================= -->
-        <div class="col-12 col-lg-9" style="height: 84vh;">
+        <!-- ================= RIGHT COLUMN  ================= -->
+        <div class="col-12 col-lg-9">
             <form id="order-form" 
                   hx-post="{% url 'cashier:process-order' %}" 
-                  hx-target="#order-form-container">
+                  hx-target="#order-form-container"
+                  class="glass-card glass-effect d-flex flex-column" 
+                  style="height: 84vh;">
                 {% csrf_token %}
-
-                
+                <!-- top -->
                 <div class="glass-card pos-dashboard-grid">
                     <!-- left side -->
                     <div id="customer-input-container" class="area-customer" >
                         <label class="text-white-50 small"><i class="bi bi-person-vcard-fill"></i></label>
+    
                         {{ form.customer_name }}
-                        {{ form.customer_name }}
-
-                        {{ form.customer_name }}
-
-                        {{ form.customer_name }}
-                        {{ form.customer_name }}
-                        <button type="submit" class="btn btn-primary fw-bold">Confirmar</button>
                     </div>
                     <!-- end left -->
-                    
                     
                     <!-- right side -->
                     <div class="area-checkout d-flex flex-column align-items-end justify-content-center border-start border-secondary">
                         
+                        <div id="order-total" class="h2 fw-bold mb-2 display-1 glass-card" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
                         
-                        <div class="glass-card" id="messages" hx-swap-oob="true">
-                            <div class="fade-out-message alert alert-success text-center mx-auto ms-auto glass-card glass-effect"><i class="bi bi-check"></i>
-                            </div>
+                        <div id="messages" class="glass-card" hx-swap-oob="true">
+                            <div class="fade-out-message alert alert-success text-center mx-auto ms-auto glass-card glass-effect"><i class="bi bi-check"></i></div>
                         </div>
-
-                        <div id="order-total" class="h2 fw-bold mb-2" style="color:#85bb65;"><i class="bi bi-currency-dollar"></i></div>
-                    
+                        
+                        <button type="submit" class="btn btn-primary fw-bold">Confirmar</button>
+                    </div>
                     <!-- end right -->
+                </div>
+                <!-- end top -->
+                <!-- <hr class="glass-hr"> -->
+                <!-- bottom -->
+                <div class="flex-grow-1 overflow-auto pt-2 pe-2 " style="scrollbar-width: thin;">
+                    <div id="order-form-container">
+                        {% include "partials/order_form.html" %}
                     </div>
                 </div>
-                <hr class="glass-hr my-2">
-
-                <!-- BOTTOM SECTION: Product Grid -->
-                <div id="order-form-container" class="area-products">
-                    {% include "partials/order_form.html" %}
-                </div>
-            </div>
-        </form>
+                <!-- end bottom -->
+            </form>
+        </div>
     </div>
 </div>
 {% endblock main %}

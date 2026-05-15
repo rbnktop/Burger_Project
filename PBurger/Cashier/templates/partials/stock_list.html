@@ -3,4 +3,6 @@
     <div class="glass-card text-center text-capitalize" style=" padding:4px ">{{ i.name }}</div>
     <div class="glass-card text-center" style="padding:2px;">{{ i.quantity|floatformat:"-1" }}{{ i.unit_display }}</div>
 </div>
+{% empty %}
+        <p class="text-white glass-effect glass-card">Nenhum item no estoque.</p>
 {% endfor %}

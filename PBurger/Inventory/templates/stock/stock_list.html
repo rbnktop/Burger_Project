@@ -36,7 +36,7 @@
                 </div>
                 <div class="mb-1">
                     <small class="text-white-50 d-block">Usado em</small>
-                    <span>{{ item.recipe_set.count }} <span style="font-size: 0.75rem;" class="text-white-50 ms-1">Receita(s)</span></span>
+                    <span>{{ item.ingredient_items.all|length }} <span style="font-size: 0.75rem;" class="text-white-50 ms-1">Receita(s)</span></span>
                 </div>
                 
 
@@ -48,6 +48,8 @@
                 </div>
             </div>
         </div>
+    {% empty %}
+        <p class="text-white glass-effect glass-card">Nenhum item no estoque.</p>
     {% endfor %}
 </div>
 

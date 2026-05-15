@@ -1,5 +1,4 @@
 import json
-from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.db import transaction
 from decimal import Decimal
@@ -9,20 +8,14 @@ from django.http import HttpResponse
 from .services import validate_cart_stock
 from Inventory.models import Beverage, Burger, Stock, Product
 from .models import Order, OrderItem
-from .forms import OrderForm
+from .forms import OrderForm, OrderItemFormSet
 
 
-OrderItemFormSet = inlineformset_factory(
-        Order, 
-        OrderItem, 
-        fields=('product', 'quantity'),
-        extra=len(Product.objects.all()), 
-        can_delete=True
-    )
+
 
 
 def hub_view(request):
-    products = list(Product.objects.all())
+    products = list(Product.objects.all().order_by('-total_sold'))
     initial_data = [{'product': p.id, 'quantity': 0} for p in products] #type:ignore
 
     form = OrderForm()
@@ -36,7 +29,7 @@ def hub_view(request):
 
 
 def process_order(request):
-    products = list(Product.objects.all())
+    products = list(Product.objects.all().order_by('-total_sold'))
     
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -62,7 +55,7 @@ def process_order(request):
                 'formset': empty_formset,     
                 'products': products,
                 'new_order': order,     
-                'stock': Stock.objects.all().order_by('-last_updated'),    
+                'stock': Stock.objects.all().order_by('-updated_at'),    
                 'success_message': f"Pedido #{order.id} confirmado!"
             }
             return render(request, 'partials/order_success.html', context)
@@ -76,7 +69,7 @@ def process_order(request):
         'form': form,
         'formset': formset,
         'products': products,
-        'stock': Stock.objects.all().order_by('-last_updated')
+        'stock': Stock.objects.all().order_by('-updated_at')
     }
 
     return render(request, 'partials/order_success.html', context)

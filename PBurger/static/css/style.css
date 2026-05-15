@@ -47,7 +47,7 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-image: url('../images/seagul.jpg'); 
+    background-image: url('../images/Claytonia-perfoliata.jpg'); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -115,6 +115,7 @@ body::before {
     overflow: hidden;
     isolation: isolate; 
 }
+
 
 .glass-card .display:hover{
     transform: scale(1.05);
@@ -507,6 +508,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 1; }
     gap: 20px;
     height: 100%;
 
+
 }
 
 /* Assign sections to the areas */
@@ -519,4 +521,12 @@ input[type=number]::-webkit-inner-spin-button { opacity: 1; }
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 15px;
+}
+
+.area-products {
+    grid-area: product-list;
+    /* Ensures the container stays within the dashboard bounds */
+    max-height: 60vh; 
+    overflow-y: auto;
+    padding-right: 10px; /* Space for the scrollbar */
 }
