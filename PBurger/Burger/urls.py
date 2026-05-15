@@ -8,4 +8,5 @@ urlpatterns = [
     path("", include("Greeting.urls"), name="greeting"),
     path("Caixa/", include("Cashier.urls")),
     path("Inventario/", include("Inventory.urls")),
+    path("Menu/", include("Menu.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

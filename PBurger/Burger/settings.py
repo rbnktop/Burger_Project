@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "Inventory.apps.InventoryConfig",
     "Cashier.apps.CashierConfig",
     "Greeting.apps.GreetingConfig",
+    "Menu.apps.MenuConfig",
 ]
 
 MIDDLEWARE = [

@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import transaction
 
-from Inventory.models import Stock, Product
+from Inventory.models import Stock
+from Menu.models import Product
+
 from .models import Order, OrderItem
 from .forms import OrderForm, OrderItemFormSet
 
