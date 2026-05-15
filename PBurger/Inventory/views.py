@@ -18,7 +18,7 @@ RecipeFormSet = inlineformset_factory(
 
 
 def list_stock_view(request):
-    stock = Stock.objects.all()
+    stock = Stock.objects.all().prefetch_related('ingredient_items')
     query = request.GET.get("q")
     if query:
 
@@ -62,18 +62,20 @@ def delete_stock_item_view(request, stock_id):
 
 
 
-
-
 def list_product_view(request):
-    product = Product.objects.all()
+    products = Product.objects.all().prefetch_related(
+    'burger__recipe_items__ingredient'
+    'beverage__stock'                    
+    )
+
     query = request.GET.get("q")
 
     if query:
-        product = product.filter(Q(name__icontains=query))
+        products = products.filter(Q(name__icontains=query))
 
-    product = product.order_by("name")
+    products = products.order_by('-total_sold')
 
-    return render(request, "product/product_list.html", {"product": product})
+    return render(request, "product/product_list.html", {"products": products})
 
 
 @login_required

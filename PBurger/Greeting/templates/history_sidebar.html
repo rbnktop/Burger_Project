@@ -15,7 +15,6 @@
                     {{ record.get_history_type_display|lower }}
                 {% endif %}
             </p>
-            {# Show quantity changes for Stock items #}
             <small class="text-white-50">Qtd: {{ record.quantity }}{{ record.unit }}</small>
         </div>
     {% empty %}

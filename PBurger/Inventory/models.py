@@ -25,8 +25,8 @@ class Stock(models.Model):
         blank=False,
     )
 
-    create_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="stock/", null=True, blank=True)
     history = HistoricalRecords()
 
@@ -63,10 +63,10 @@ class Product(PolymorphicModel):
     )
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to="product/", null=True, blank=True)
-    create_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    sold = models.IntegerField(default=0)
-    history = HistoricalRecords()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    total_sold = models.IntegerField(default=0)
+    history = HistoricalRecords(inherit=True)
 
     def __str__(self):
         return f"{self.name} ${self.price}"  # type: ignore [{self.id}]
@@ -140,7 +140,7 @@ class Recipe(models.Model):
     burger = models.ForeignKey(
         Burger, on_delete=models.CASCADE, related_name="recipe_items"
     )
-    ingredient = models.ForeignKey(Stock, on_delete=models.PROTECT)
+    ingredient = models.ForeignKey(Stock, on_delete=models.PROTECT, related_name="ingredient_items")
     amount = models.FloatField()
 
     def __str__(self):

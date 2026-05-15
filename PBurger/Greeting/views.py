@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from Inventory.models import Product
+from Inventory.models import Stock
+from Cashier.models import Order
 
 
 def home_view(request):
@@ -22,7 +22,6 @@ def login_view(request):
     else:
         form = AuthenticationForm()
 
-    # CRITICAL: This print should trigger ONLY after a failed POST
     if request.method == "POST":
         print(f"FAILED LOGIN ERRORS: {form.errors}")
 
@@ -40,7 +39,7 @@ def history_sidebar(request):
     """
     # django-simple-history creates a separate table for each model.
     # To get a global feed, we fetch the latest from the models we care about:
-    recent_stock = Product.history.all()[:10]  # type: ignore
+    recent_stock = Order.history.all()  # type: ignore
 
     # If you also tracked Burger:
     # recent_burgers = Burger.history.all()[:10]
@@ -55,4 +54,4 @@ def history_sidebar(request):
     # For now, let's just use Stock to keep it simple:
     history_list = recent_stock
 
-    return render(request, "history_sidebar.html", {"history": history_list})
+    return render(request, "history_sidebar.html", {"history": recent_stock})
