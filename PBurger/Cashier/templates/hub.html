@@ -54,29 +54,44 @@
                     <!-- end left -->
                     
                     <!-- right side -->
-                    <div class="glass-card area-checkout d-flex flex-column align-items-end justify-content-center border-start border-secondary">
-                        
-                        <div class="d-flex align-items-end align-self-end">
-                            <div id="order-total" class="h2 fw-bold mb-2 display-1" style="color:#85bb65;">
-                                <i class="bi bi-currency-dollar"></i>
+                    <div id="info-container" hx-swap-oob="true" class="glass-card area-checkout d-flex flex-column justify-content-evenly border-start border-secondary p-3">
+    
+                        <div class="d-flex w-100 justify-content-between align-items-center gap-3">
+                            
+                            <div class="glass-card flex-grow-1">
+                                {% if status %}
+                                    <div class="fade-out-message alert alert-success m-0 py-2">
+                                        Pedido {{ new_order.id }} confirmado! <i class="bi bi-check"></i>
+                                    </div>
+                                {% else %}
+                                    <div class="fade-out-message  small">
+                                        <i class="bi bi-info-circle"></i> status
+                                        <ul class="mb-0 ps-3">
+                                            {% for item in missing_items %}
+                                                <li>{{ item }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div id="order-total"class="h2 fw-bold m-0 display-4" style="color:#85bb65;">
+                                <i class="bi bi-currency-dollar"></i><span id="order-value"></span>
                             </div>
                         </div>
-                        
-                        <div id="messages" class="glass-card" hx-swap-oob="true">
-                            <div class=" text-center mx-auto ms-auto"> STATUS... <i class="bi bi-info-circle"></i></div>
-                        </div>
 
-                        <div class="d-flex align-items-center align-self-center">
-                            <button type="submit" class="btn btn-primary fw-bold">Confirmar</button>
+                        <div class="d-flex justify-content-center mt-2">
+                            <div class="btn-container">
+                            <button type="submit" class="btn btn-primary fw-bold w-100 py-2">Confirmar</button>
+                            </button>
                         </div>
-
                     </div>
                     <!-- end right -->
                 </div>
                 <!-- end top -->
                 <!-- <hr class="glass-hr"> -->
                 <!-- bottom -->
-                <div class="flex-grow-1 overflow-auto pt-2 pe-2 " style="scrollbar-width: thin;">
+                <div class="flex-grow-1 overflow-auto pt-2 pe-2 ">
                     <div id="order-form-container">
                         {% include "partials/order_form.html" %}
                     </div>

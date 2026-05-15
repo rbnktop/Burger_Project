@@ -44,7 +44,7 @@ def create_product_view(request):
                 dish = form.save()
                 formset.instance = dish
                 formset.save()
-                return redirect("stock:produto_inventario")
+                return redirect("menu:inventario")
             else:
                 if not form.is_valid():
                     print("FORM ERRORS:", form.errors.as_json())
@@ -56,7 +56,7 @@ def create_product_view(request):
 
             if nondish_form.is_valid():
                 nondish_form.save()
-                return redirect("stock:produto_inventario")
+                return redirect("menu:inventario")
             else:
                 print("NONDISH ERRORS:", nondish_form.errors)
 
@@ -107,7 +107,7 @@ def update_product_view(request, product_id):
                 dish = form.save()
                 formset.instance = dish
                 formset.save()
-                return redirect("stock:produto_inventario")
+                return redirect("menu:inventario")
 
             else:
                 if not form.is_valid():
@@ -120,7 +120,7 @@ def update_product_view(request, product_id):
 
             if nondish_form.is_valid():
                 nondish_form.save()
-                return redirect("stock:produto_inventario")
+                return redirect("menu:inventario")
 
             else:
                 print("NONDISH ERRORS:", nondish_form.errors)
@@ -146,6 +146,6 @@ def delete_product_view(request, product_id):
 
     if request.method == "POST":
         item.delete()
-        return redirect("stock:produto_inventario")
+        return redirect("menu:inventario")
 
     return render(request, "confirm_delete.html", {"item": item})
