@@ -1,4 +1,6 @@
 from django import forms
+
+from Inventory.models import Product
 from .models import Order, OrderItem
 from django.forms import inlineformset_factory
 
@@ -40,5 +42,5 @@ class OrderItemForm(forms.ModelForm):
 
 
 OrderItemFormSet = inlineformset_factory(
-    Order, OrderItem, fields=("product", "quantity"), can_delete=True
+    Order, OrderItem, fields=("product", "quantity"), can_delete=True, extra=len(Product.objects.all()),
 )

@@ -11,15 +11,18 @@
     {{ form.customer_name }}
 </div>
 
-<div id="order-total" class="h2 fw-bold mb-2 display-1 glass-card" style="color:#85bb65;" hx-swap-oob="true">
+<div id="order-total" class="h2 fw-bold mb-2 display-1" style="color:#85bb65;"> hx-swap-oob="true">
     <i class="bi bi-currency-dollar"></i>
 </div>
 
 <div id="messages" class="glass-card" hx-swap-oob="true">
-    <div class="fade-out-message alert alert-success text-center mx-auto ms-auto glass-card glass-effect">
-        {{ message }} <i class="bi bi-check"></i>
-    </div>
+    {% if status %}
+    <div class="fade-out-message alert alert-success text-center mx-auto ms-auto"> Pedido {{ new_order.id }} confirmado!"<i class="bi bi-check"></i></div>
+    {% else %}
+    <div class="fade-out-message alert alert-warning text-center mx-auto ms-auto"> Pedido {{ new_order.id }} falho!"<i class="bi bi-info-circle"></i></div>
+    {% endif %}
 </div>
+
 
 {% if new_order %}
 <div hx-swap-oob="afterbegin:#order-list-content">

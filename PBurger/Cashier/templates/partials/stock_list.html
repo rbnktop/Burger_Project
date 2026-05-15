@@ -1,8 +1,13 @@
 {% for i in stock %}
-<div class="d-flex mb-2 btn-container animate-new-item">
-    <div class="glass-card text-center text-capitalize" style=" padding:4px ">{{ i.name }}</div>
-    <div class="glass-card text-center" style="padding:2px;">{{ i.quantity|floatformat:"-1" }}{{ i.unit_display }}</div>
+<div class="d-flex mb-2 w-100 gap-2 animate-new-item">
+    <div class="glass-card text-start text-capitalize flex-grow-1 p-2 px-3">
+        {{ i.name }}
+    </div>
+    
+    <div class="glass-card text-center p-2" style="width: 90px; min-width: 90px;">
+        {{ i.quantity|floatformat:"-1" }}{{ i.unit_display }}
+    </div>
 </div>
 {% empty %}
-        <p class="text-white glass-effect glass-card">Nenhum item no estoque.</p>
+    <p class="text-white glass-effect glass-card p-3">Nenhum item no estoque.</p>
 {% endfor %}
