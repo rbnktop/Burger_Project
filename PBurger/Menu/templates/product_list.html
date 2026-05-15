@@ -2,8 +2,8 @@
 
 {% block title %} Produtos {% endblock %}
 {% block sub_title %} Produtos {% endblock %}
-{% block url_add_item %}{% url "menu:produto_criar" %}{% endblock url_add_item %}
-{% block url_item_query %}{% url "menu:produto_inventario" %}{% endblock url_item_query %}
+{% block url_add_item %}{% url "menu:criar" %}{% endblock url_add_item %}
+{% block url_item_query %}{% url "menu:inventario" %}{% endblock url_item_query %}
 {% block content %} 
 
 <div class="row g-4 justify-content-center">
@@ -64,8 +64,8 @@
                 <hr class="glass-hr mt-2">
 
                  <div class="btn-container">
-                    <a href="{% url 'stock:produto_editar' item.pk %}" class="btn btn-warning" >editar</a>
-                    <a href="{% url 'stock:produto_apagar' item.pk %}" class="btn btn-danger">remover</a>
+                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-warning" >editar</a>
+                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger">remover</a>
                 </div> 
             </div>
         </div>

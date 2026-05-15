@@ -8,6 +8,7 @@ from Menu.models import Product
 
 from .models import Order, OrderItem
 from .forms import OrderForm, OrderItemFormSet
+from .utils import check_order
 
 
 
@@ -29,8 +30,6 @@ def hub_view(request):
     )
 
 
-
-
 def process_order(request):
     # Fetch products for the 'Initial' grid layout
     products = list(Product.objects.all().order_by("-total_sold"))
@@ -41,7 +40,17 @@ def process_order(request):
 
         if form.is_valid() and formset.is_valid():
             try:
-                with transaction.atomic():
+                is_available, message = check_order(formset)
+                if not is_available:
+                    return render(request, "partials/order_update.html", {
+                        "status": False,
+                        "missing_items": message,
+                        "form": form,
+                        "products": Product.objects.all().order_by("-total_sold"),
+                        "formset": formset,
+                    })
+                
+                with transaction.atomic():   
                     order = form.save()
                     
                     instances = formset.save(commit=False)
@@ -63,7 +72,7 @@ def process_order(request):
                 context = {
                     "form": empty_form,
                     "formset": empty_formset,
-                    "products": products,
+                    "products": Product.objects.all().order_by("-total_sold"),
                     "new_order": order, 
                     "stock": Stock.objects.all().order_by("-updated_at"),
                     "status": True,
@@ -86,9 +95,7 @@ def process_order(request):
     context = {
         "form": form,
         "formset": formset,
-        "products": products,
-        "new_order": Order.objects.all().order_by("-id")[:25],
-        "stock": Stock.objects.all().order_by("-updated_at"),
+        "products": Product.objects.all().order_by("-total_sold"),
         "status": False,
     }
 
@@ -104,7 +111,7 @@ def calculate_order_total(request):
     formset = OrderItemFormSet(request.POST)
     total = Decimal("0.00")
 
-    # Force Django to populate cleaned_data, but ignore the ForeignKey errors
+
     for form in formset:
         form.is_valid() 
         if not form.cleaned_data.get("DELETE"):

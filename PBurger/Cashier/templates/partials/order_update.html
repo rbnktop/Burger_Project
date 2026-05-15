@@ -1,31 +1,70 @@
 
 
-{% include "partials/order_form.html" %}
 
+{% if products %}
+    {% include "partials/order_form.html" %}
+{% endif %}
+
+{% if stock %}
 <div id="stock-list-content" hx-swap-oob="true" class="flex-grow-1 overflow-auto p-2">
     {% include "partials/stock_list.html" %}
 </div>
+{% endif %}
 
-<div id="customer-input-container" class="area-customer" hx-swap-oob="true">
+<div id="customer-input-container" class="glass-card area-customer" hx-swap-oob="true">
     <label class="text-white-50 small"><i class="bi bi-person-vcard-fill"></i></label>
+
     {{ form.customer_name }}
+    <br>
+    {{ form.customer_name }}
+    <br>
+    {{ form.customer_name }}
+    <br>
+    {{ form.customer_name }}
+    <br>
+    {{ form.customer_name }}
+
 </div>
 
-<div id="order-total" class="h2 fw-bold mb-2 display-1" style="color:#85bb65;"> hx-swap-oob="true">
-    <i class="bi bi-currency-dollar"></i>
+
+
+<div id="info-container" hx-swap-oob="true" class="glass-card area-checkout d-flex flex-column justify-content-evenly border-start border-secondary p-3">
+    
+    <div class="d-flex w-100 justify-content-between align-items-center gap-3">
+        
+        <div class="glass-card animate-new-item flex-grow-1">
+            {% if status %}
+                <div class="fade-out-message alert alert-success m-0 py-2">
+                    Pedido {{ new_order.id }} confirmado! <i class="bi bi-check"></i>
+                </div>
+            {% else %}
+                <div class="fade-out-message m-0 py-2 small">
+                    <i class="bi bi-info-circle"></i> Pedido falho!
+                    <ul class="mb-0 ps-3">
+                        {% for item in missing_items %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+
+        <div id="order-total" class="h2 fw-bold m-0 display-4" style="color:#85bb65;">
+            <i class="bi bi-currency-dollar"></i>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-2">
+        <div class="btn-container">
+        <button type="submit" class="btn btn-primary fw-bold w-100 py-2">Confirmar</button>
+        </button>
+    </div>
 </div>
 
-<div id="messages" class="glass-card" hx-swap-oob="true">
-    {% if status %}
-    <div class="fade-out-message alert alert-success text-center mx-auto ms-auto"> Pedido {{ new_order.id }} confirmado!"<i class="bi bi-check"></i></div>
-    {% else %}
-    <div class="fade-out-message alert alert-warning text-center mx-auto ms-auto"> Pedido {{ new_order.id }} falho!"<i class="bi bi-info-circle"></i></div>
-    {% endif %}
-</div>
-
+                   
 
 {% if new_order %}
-<div hx-swap-oob="afterbegin:#order-list-content">
+<div hx-swap-oob="afterbegin:#order-list-content" class="overflow-auto">
     <div class="glass-card mb-2 p-2 animate-new-item">
         <details name="items">
             <summary class="d-flex justify-content-between" style="padding-inline:15px;">
@@ -43,3 +82,4 @@
     </div>
 </div>
 {% endif %}
+
