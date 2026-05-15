@@ -39,8 +39,9 @@
                         <span class="text-warning">${{ item.get_total_cost }}<span>
                     </div>
                     <div class="col d-flex flex-column" >
-                        <small class="text-white-50 d-block">Lucro:</small>
-                        <span class="{% if item.burger.profit > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.profit }}<span>
+                        <small class=" d-block text-white-50">Lucro:</small>
+                         <!-- style="color :#88FF00;" -->
+                        <span class="{% if item.profit > 1 %}text-success{% else %}text-danger{% endif %}" >${{ item.profit }}<span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-end mt-4" style="margin-inline: 20px;">
@@ -52,10 +53,10 @@
 
                     <div class="d-flex flex-column text-end">
                         <div style="font-size: 0.65rem;" class="text-white-50">
-                            <span>criado em - </span>{{ item.burger.created_at|date:"d/m/y" }}
+                            <span>criado em - </span>{{ item.dish.created_at|date:"d/m/y" }}
                         </div>
                         <div style="font-size: 0.65rem; margin-top: -2px;" class="text-white-50">
-                            <span>ultima alt - </span>{{ item.burger.updated_at|date:"D H:i" }}
+                            <span>ultima alt - </span>{{ item.dish.updated_at|date:"D H:i" }}
                         </div>
                     </div>
 

@@ -1,7 +1,9 @@
 from django import forms
-from .models import Order, OrderItem
+
 from Inventory.models import Product
+from .models import Order, OrderItem
 from django.forms import inlineformset_factory
+
 
 class OrderForm(forms.ModelForm):
     class Meta:
@@ -20,6 +22,7 @@ class OrderForm(forms.ModelForm):
             )
         }
 
+
 class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
@@ -37,11 +40,7 @@ class OrderItemForm(forms.ModelForm):
             ),
         }
 
-OrderItemFormSet = inlineformset_factory(
-        Order, 
-        OrderItem, 
-        fields=('product', 'quantity'),
-        extra=len(Product.objects.all()), 
-        can_delete=True
-    )
 
+OrderItemFormSet = inlineformset_factory(
+    Order, OrderItem, fields=("product", "quantity"), can_delete=True, extra=len(Product.objects.all()),
+)

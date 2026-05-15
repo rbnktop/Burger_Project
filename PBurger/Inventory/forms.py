@@ -1,5 +1,6 @@
 from django import forms
-from .models import Burger, Beverage, Recipe, Stock
+from .models import Dish, NonDish, Recipe, Stock
+from django.forms import inlineformset_factory
 
 
 class StockForm(forms.ModelForm):
@@ -46,16 +47,52 @@ class StockForm(forms.ModelForm):
         }
 
 
-class BurgerForm(forms.ModelForm):
-    product_category = forms.ChoiceField(
-        choices=[("burger", "Hambúrguer"), ("beverage", "Bebida")],
+class BaseProductForm(forms.ModelForm):
+    product_base_category = forms.ChoiceField(
+        choices=[("dish", "Cozinha"), ("nondish", "Outros")],
         widget=forms.RadioSelect(attrs={"class": "category-radio"}),
         initial=None,
+        required=True,
     )
 
+
+RecipeFormSet = inlineformset_factory(
+    Dish, 
+    Recipe, 
+    fields=("ingredient", "amount"), 
+    extra=2, 
+    can_delete=True,
+    min_num=1,
+    validate_min=True,
+)
+
+
+class RecipeForm(forms.ModelForm):
+    """
+    This form will be used inside the FormSet for each ingredient row
+    """
+
     class Meta:
-        model = Burger
-        fields = ["name", "price", "product_category", "description", "image"]
+        model = Recipe
+        fields = ["ingredient", "amount"]
+        widgets = {
+            "ingredient": forms.Select(
+                attrs={"class": "form-select text-white border-secondary flex-grow-1"}
+            ),
+            "amount": forms.NumberInput(
+                attrs={
+                    "class": "form-control text-white border-secondary",
+                    "style": "width: 100px;",
+                    "placeholder": "somente numeros",
+                }
+            ),
+        }
+
+
+class DishForm(BaseProductForm):
+    class Meta:
+        model = Dish
+        fields = ["product_base_category", "name", "price", "description", "image"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
@@ -79,10 +116,10 @@ class BurgerForm(forms.ModelForm):
         }
 
 
-class BeverageForm(forms.ModelForm):
+class OtherForm(BaseProductForm):
     class Meta:
-        model = Beverage
-        fields = ["name", "price", "stock", "image", "description"]
+        model = NonDish
+        fields = ["product_base_category", "name", "price", "stock", "image", "description"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
@@ -99,33 +136,11 @@ class BeverageForm(forms.ModelForm):
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control text-white border-secondary",
-                    "placeholder": "A parte",
+                    "placeholder": "Uma latinha de refrigerante.",
                 }
             ),
             "image": forms.FileInput(),
             "stock": forms.Select(
                 attrs={"class": "form-select text-white border-secondary"}
-            ),
-        }
-
-
-class RecipeForm(forms.ModelForm):
-    """
-    This form will be used inside the FormSet for each ingredient row
-    """
-
-    class Meta:
-        model = Recipe
-        fields = ["ingredient", "amount"]
-        widgets = {
-            "ingredient": forms.Select(
-                attrs={"class": "form-select text-white border-secondary flex-grow-1"}
-            ),
-            "amount": forms.NumberInput(
-                attrs={
-                    "class": "form-control text-white border-secondary",
-                    "style": "width: 100px;",
-                    "placeholder": "Qtd",
-                }
             ),
         }

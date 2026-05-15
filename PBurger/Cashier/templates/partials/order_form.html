@@ -16,7 +16,7 @@
                         {% for product in products %}
                             {% if forloop.parentloop.counter0 == forloop.counter0 %}
                                 <p class="text-white mb-1">{{ product.name }}</p>
-                                <i class="bi bi-journal-bookmark "  title="{{ product.burger.recipe_items.all|join:" | " }}"></i>
+                                <i class="bi bi-journal-bookmark "  title="{{ product.dish.recipe_items.all|join:" | " }}"></i>
                                 <p class="text-white-50 small mb-0">${{ product.price }}</p>
                             {% endif %}
                         {% endfor %}
@@ -38,7 +38,6 @@
             </div>
         </div>
     {% empty %}
-    
         <p class="text-white glass-effect glass-card">Nenhum produto registrado.</p>
     {% endfor %}
 </div>

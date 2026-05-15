@@ -4,15 +4,16 @@ from simple_history.models import HistoricalRecords
 from polymorphic.models import PolymorphicModel
 from abc import abstractmethod
 
+
 class Stock(models.Model):
     """
-    Stock Items, including ingredients beverages and such
+    Stock Items, including ingredients nondishs and such
     """
 
     UNIT_CHOICES = [
         ("g", "Gramas"),
         ("ml", "Mililitros"),
-        ("un", "Unidades/Fatias"),
+        ("un", "Unidades"),
     ]
 
     name = models.CharField(max_length=32, unique=True)
@@ -31,7 +32,7 @@ class Stock(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f" {self.name} | {self.quantity}{self.unit}" #type:ignore [{self.id}]
+        return f" {self.name} | {self.quantity}{self.unit}"  # type: ignore [{self.id}]
 
     @property
     def quantity_display(self):
@@ -70,13 +71,13 @@ class Product(PolymorphicModel):
 
     def __str__(self):
         return f"{self.name} ${self.price}"  # type: ignore [{self.id}]
-    
+
     @abstractmethod
     def update_stock(self, quantity_sold):
         pass
 
 
-class Burger(Product):
+class Dish(Product):
     """
     Child product with a recipe
     """
@@ -84,11 +85,11 @@ class Burger(Product):
     ingredients = models.ManyToManyField("Inventory.Stock", through="Recipe")
 
     def update_stock(self, quantity_sold):
-        self.sold += quantity_sold
-        self.save(update_fields=['sold'])
-        
+        self.total_sold += quantity_sold
+        self.save(update_fields=["total_sold"])
+
         for item in self.recipe_items.all():  # type: ignore
-            item.ingredient.quantity -= (item.amount * quantity_sold)
+            item.ingredient.quantity -= item.amount * quantity_sold
             item.ingredient.save()
 
     def get_total_cost(self):
@@ -110,7 +111,7 @@ class Burger(Product):
         return self.price - cost
 
 
-class Beverage(Product):
+class NonDish(Product):
     """
     Child product with no recipe
     """
@@ -121,6 +122,8 @@ class Beverage(Product):
         return f" {self.name} R${self.price} ."
 
     def update_stock(self, quantity_sold):
+        self.total_sold += quantity_sold
+        self.save(update_fields=["total_sold"])
         self.stock.quantity -= quantity_sold
         self.stock.save()
 
@@ -137,13 +140,13 @@ class Recipe(models.Model):
     Recipe of the meal
     """
 
-    burger = models.ForeignKey(
-        Burger, on_delete=models.CASCADE, related_name="recipe_items"
+    dish = models.ForeignKey(
+        Dish, on_delete=models.CASCADE, related_name="recipe_items"
     )
-    ingredient = models.ForeignKey(Stock, on_delete=models.PROTECT, related_name="ingredient_items")
+    ingredient = models.ForeignKey(
+        Stock, on_delete=models.PROTECT, related_name="ingredient_items"
+    )
     amount = models.FloatField()
 
     def __str__(self):
         return f"{self.amount}{self.ingredient.unit} {self.ingredient.name}"  # type: ignore
-
-

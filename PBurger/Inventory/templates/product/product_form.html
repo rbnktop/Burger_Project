@@ -5,7 +5,7 @@
 
 <div class="d-flex justify-content-center" 
      style="padding-top: 65px;" 
-     x-data="{ category: '{{ product_category }}' }">
+     x-data="{ category: '{{ product_base_category }}' }">
     <div class="glass-card glass-effect" style="transform:none; min-width: 450px;">
         <form method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
@@ -55,19 +55,19 @@
 
             <div class="category-toggle pt-2 d-flex justify-content-evenly">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="product_category" 
-                           id="cat_burger" value="burger" x-model="category">
-                    <label class="form-check-label text-white" for="cat_burger">Lanche/Batata</label>
+                    <input class="form-check-input" type="radio" name="product_base_category" 
+                           id="cat_dish" value="dish" x-model="category">
+                    <label class="form-check-label text-white" for="cat_dish">Lanche/Batata</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="product_category" 
-                           id="cat_beverage" value="beverage" x-model="category">
-                    <label class="form-check-label text-white" for="cat_beverage">Outros</label>
+                    <input class="form-check-input" type="radio" name="product_base_category" 
+                           id="cat_nondish" value="nondish" x-model="category">
+                    <label class="form-check-label text-white" for="cat_nondish">Outros</label>
                 </div>
             </div>
             <hr class="glass-hr mb-2 mt-3">
 
-            <div x-show="category === 'burger'" x-cloak
+            <div x-show="category === 'dish'" x-cloak
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 transform scale-70"
                 x-transition:enter-end="opacity-100 transform scale-100"
@@ -80,7 +80,7 @@
                 </div>
                 
                 <!-- FIXED: Use fieldset so disabled attribute actually stops form submission for inactive tabs -->
-                <fieldset :disabled="category !== 'burger'">
+                <fieldset :disabled="category !== 'dish'">
                     {{ formset.management_form }}
                     <div id="ingredient-container" class="mt-4">
                         {% for recipe_form in formset %}
@@ -110,7 +110,7 @@
                 </fieldset>
             </div>
 
-            <div x-show="category === 'beverage'" x-cloak
+            <div x-show="category === 'nondish'" x-cloak
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 transform scale-70"
                 x-transition:enter-end="opacity-100 transform scale-100"
@@ -119,8 +119,8 @@
                 x-transition:leave-end="opacity-0 transform scale-70">
                 <div class="d-flex flex-column mb-2">
                     <h5 class="text-white mb-3">Estoque</h5>
-                    <fieldset :disabled="category !== 'beverage'">
-                        {{ beverage_form.stock }}
+                    <fieldset :disabled="category !== 'nondish'">
+                        {{ nondish_form.stock }}
                     </fieldset>
                 </div>
             </div>

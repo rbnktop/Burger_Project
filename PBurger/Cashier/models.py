@@ -11,34 +11,34 @@ class Order(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    customer_name = models.CharField(max_length=100, blank=True, null=True, default="Cliente")
+    customer_name = models.CharField(
+        max_length=100, blank=True, null=True, default="Cliente"
+    )
     total_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal(0),    
+        default=Decimal(0),
         blank=True,
-        )
-    
+    )
+
     status = models.BooleanField(default=False)
 
     history = HistoricalRecords()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        items_summary = ", ".join([str(item) for item in self.items.all()])  #type:ignore
-        return f"{self.id}° ${self.total_price} {items_summary} " #type:ignore
+        items_summary = ", ".join([str(item) for item in self.items.all()])  # type: ignore
+        return f"{self.id}° ${self.total_price} {items_summary} "  # type: ignore
 
     def update_price(self):
-        
+
         # result = self.items.aggregate(
         # total=Sum(F('quantity') * F('product__price'))
         # )
 
-        total = Decimal(0)
+        self.total_price = Decimal(0) # Reset it first!
         for item in self.items.all():  #type:ignore
-            total = item.product.price * item.quantity
-
-        self.total_price += total 
+            self.total_price += (item.product.price * item.quantity) # Sum them up
         self.save()
 
 
@@ -53,13 +53,13 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity}x {self.product.name}"
-    
+
     def save(self, *args, **kwargs):
         is_new = self.pk is None
         super().save(*args, **kwargs)
-    
+
         if is_new:
-            self.product.update_stock(self.quantity) 
+            self.product.update_stock(self.quantity)
             self.order.update_price()
 
     def delete(self, *args, **kwargs):
