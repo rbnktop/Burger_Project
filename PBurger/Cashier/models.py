@@ -1,6 +1,5 @@
 from django.db import models
-from Inventory.models import Product
-from django.core.validators import MinValueValidator
+from Menu.models import Product
 from simple_history.models import HistoricalRecords
 from decimal import Decimal
 
