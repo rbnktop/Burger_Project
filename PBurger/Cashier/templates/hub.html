@@ -5,7 +5,7 @@
         
 
         <!-- ================= LEFT COLUMN: Sidebar ================= -->
-        <div class="col-12 col-lg-3 d-flex flex-column gap-3" style="height: 84vh;">
+        <div class="col-12 col-lg-3 d-flex flex-column gap-3" style="height:90vh;">
 
                                         <!-- Orders -->
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 2; overflow: hidden; padding-bottom: 0rem;">
@@ -31,21 +31,29 @@
                   hx-post="{% url 'cashier:process-order' %}" 
                   hx-target="#order-form-container"
                   class="glass-card glass-effect d-flex flex-column" 
-                  style="height: 84vh;">
+                  style="height: 90vh;">
                 {% csrf_token %}
                 <!-- top -->
                 <div class="pos-dashboard-grid">
                     <!-- left side -->
-                    <div id="customer-input-container" class="glass-card area-customer" >
-                        <label class="text-white-50 small"><i class="bi bi-person-vcard-fill"></i></label>
-    
+                    <div id="customer-input-container" class="h-auto glass-card area-customer overflow-auto" style="max-height: 300px;">
+                        <div class="d-flex justify-content-center pb-3">
+                        <label><i class="bi bi-person-vcard-fill"></i> Dados do Cliente</label>
+                    </div>
+                    <div class="d-flex flex-column">
                         {{ form.customer_name }}
-                        <br>
+                        <span class="m-2"></span>
                         {{ form.customer_name }}
-                        <br>
+                        <span class="m-2"></span>
                         {{ form.customer_name }}
-                        <br>
+                        <span class="m-2"></span>
                         {{ form.customer_name }}
+
+                        <span class="m-2"></span>
+                        {{ form.customer_name }}
+                        <span class="m-2"></span>
+                        {{ form.customer_name }}
+                     </div>
 
 
 
@@ -54,21 +62,20 @@
                     
                     <!-- right side -->
                     <div id="info-container" hx-swap-oob="true" 
-                    class=" area-checkout d-flex flex-column justify-content-between p-2 "
-                    style="height:100%;"
-                    >
-    
+                        class=" area-checkout d-flex flex-column justify-content-between p-2 "
+                        style="height:100%;"
+                        >
                         <div class="d-flex w-100 justify-content-between align-items-center gap-3">
                             
-                            <div class="glass-card w-50" style="height: 10rem!important;">
+                            <div class="glass-card d-flex w-50" style="min-height:150px !important; max-width: 100%!important;">
                                 <div>
-                                    <i class="bi bi-info-circle"></i> status
+                                    <i class="bi bi-info-circle ms-auto"></i> Status
                                 </div>
                             </div>
 
-                        </div>
-                        <div id="order-total"class="h2 fw-bold m-0 display-4 ms-auto" style="color:#85bb65;">
-                            <i class="bi bi-currency-dollar"></i><span id="order-value"></span>
+                            <div id="order-total"class="h2 fw-bold m-0 display-4 ms-auto" style="color:#85bb65;">
+                                <i class="bi bi-currency-dollar"></i><span id="order-value"></span>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-center mt-2">
@@ -76,18 +83,16 @@
                             <button type="submit" id='confirm' class="btn btn-primary fw-bold w-100 py-2">Confirmar</button>
                             </div>
                         </div>
-                        
                     </div>
                     <!-- end right -->
                 </div>
                 <!-- end top -->
                 <!-- <hr class="glass-hr-2"> -->
                 <!-- bottom -->
-                <div class="flex-grow-1 area-products pb-4" x-data="{ search: '' }" style="max-height: 60vh;">
+                <div class="flex-grow-1 area-products animate-new-item pb-4" x-data="{ search: '' }" style="max-height: 60vh;">
     
-                    <div class="d-flex justify-content-evenly align-items-center w-100 mb-2 pe-3">
+                    <div class="d-flex align-items-center w-100 mb-2 pe-3">
                         
-                        <h6 class="text-white m-2"><i class="bi bi-handbag"></i> Produtos</h6>
                         
                         <div class="d-flex align-items-center gap-2">
                             <input type="text" 
@@ -95,10 +100,13 @@
                                 @keydown.enter.prevent 
                                 placeholder="Procurar..." 
                                 class="form-control glass-input glass-effect" 
-                                style="max-width: 300px;">
+                                style="max-width: 300px;"
+                                >
                             
                             <i class="bi bi-search" style="position:relative; right:35px; color:white;"></i>
                         </div>
+
+                        <h6 class="text-white m-2" style="padding-left:190px;"><i class="bi bi-handbag"></i> Produtos</h6>
 
                     </div>
 
