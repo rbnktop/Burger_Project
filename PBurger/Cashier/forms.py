@@ -46,5 +46,5 @@ OrderItemFormSet = inlineformset_factory(
     Order, OrderItem,
     fields=("product", "quantity"), 
     can_delete=True, 
-    extra=len(Product.objects.all()), 
+    extra=Product.objects.all().count(), 
 )
