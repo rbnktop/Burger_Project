@@ -1,20 +1,28 @@
-from decimal import Decimal
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import transaction
+from django.template.loader import render_to_string
+
+from decimal import Decimal
+from collections import defaultdict
 
 from Inventory.models import Stock
 from Menu.models import Product
-
 from .models import Order, OrderItem
+
 from .forms import OrderForm, OrderItemFormSet
 from .services import check_order
 
 
 
 def hub_view(request):
-    products = list(Product.objects.all().order_by("-total_sold"))
+    products = Product.objects.all().order_by("-total_sold")
     initial_data = [{"product": p.id, "quantity": 0} for p in products]  # type: ignore
+
+    formset_class = OrderItemFormSet
+    
+    # 2. Force extra to match your live product count on EVERY page load
+    formset_class.extra = len(initial_data) #type:ignore
 
     form = OrderForm()
     formset = OrderItemFormSet(initial=initial_data, queryset=OrderItem.objects.none())
@@ -25,14 +33,23 @@ def hub_view(request):
         {
             "form": form,
             "formset": formset,
-            "products": Product.objects.all().order_by("-total_sold"),
+            "products": products,
         },
     )
 
 
+
 def process_order(request):
-    # Fetch products for the 'Initial' grid layout
-    products = list(Product.objects.all().order_by("-total_sold"))
+    """
+    series of validations before commiting the order
+    those include standard form validations and checking using check_order service,
+    to see if the order is available for production based on the ingredients in stock. 
+    """
+    products = Product.objects.all().order_by("-total_sold")
+    formset_class = OrderItemFormSet
+    
+    # 2. Force extra to match your live product count on EVERY page load
+    formset_class.extra = len(initial_data) #type:ignore
     
     if request.method == "POST":
         form = OrderForm(request.POST)
@@ -42,13 +59,14 @@ def process_order(request):
             try:
                 is_available, message = check_order(formset)
                 if not is_available:
-                    return render(request, "partials/order_update.html", {
+                    context = {
                         "status": False,
-                        "missing_items": message,
+                        "status_message": message,
+                        "products": products,
                         "form": form,
-                        "products": Product.objects.all().order_by("-total_sold"),
                         "formset": formset,
-                    })
+                    }
+                    return render(request, "partials/order_update.html", context)
                 
                 with transaction.atomic():   
                     order = form.save()
@@ -68,20 +86,38 @@ def process_order(request):
                     initial=initial_data, 
                     queryset=OrderItem.objects.none()
                 )
-
+                
                 context = {
+                    "status": True,
                     "form": empty_form,
                     "formset": empty_formset,
-                    "products": Product.objects.all().order_by("-total_sold"),
                     "new_order": order, 
+                    "products": products,
                     "stock": Stock.objects.all().order_by("-updated_at"),
-                    "status": True,
                 }
                 return render(request, "partials/order_update.html", context)
 
             except Exception as e:
 
                 return HttpResponse(f"Error processing order: {e}", status=500)
+            
+        else:
+            form_errors = []
+            
+            for field, error in form.errors.items():
+                form_errors.append(f"Campo '{field}': {error.as_text()}")
+            
+            for err in formset.non_form_errors():
+                form_errors.append(err)
+
+            context = {
+                "status": False,
+                "status_message": form_errors, 
+                "form": form,
+                "formset": formset,
+                "products": products,
+            }
+            return render(request, "partials/order_update.html", context)
 
 
     else:
@@ -95,7 +131,7 @@ def process_order(request):
     context = {
         "form": form,
         "formset": formset,
-        "products": Product.objects.all().order_by("-total_sold"),
+        "products": products,
         "status": False,
     }
 
@@ -105,23 +141,45 @@ def process_order(request):
 def calculate_order_total(request):
     """
     Calculates the total on-the-fly using only POST data.
-    Does not require the Order to exist in the DB yet.
+    And calculate required ingredients for that order.
     """
 
     formset = OrderItemFormSet(request.POST)
     total = Decimal("0.00")
+    required_ingredients = defaultdict(Decimal)
+    errors = []
 
+    if formset.is_valid():
+        for form in formset:
+            if not form.cleaned_data.get("DELETE"):
+                product = form.cleaned_data.get("product")
+                quantity = form.cleaned_data.get("quantity", 0)
 
-    for form in formset:
-        form.is_valid() 
-        if not form.cleaned_data.get("DELETE"):
-            product = form.cleaned_data.get("product")
-            quantity = form.cleaned_data.get("quantity", 0)
-            if product and quantity:
-                total += product.price * quantity
+                if product and quantity > 0:
+                    total += product.price * quantity
+                    
 
- 
-    return HttpResponse(f"{total:.2f}")
+                    if hasattr(product, 'dish') and product.dish:
+                        for recipe_item in product.dish.recipe_items.all():
+                            stock_item = recipe_item.ingredient
+                            if stock_item:
+                                required_ingredients[stock_item] += Decimal(recipe_item.amount) * Decimal(quantity)
+                    
+                    elif hasattr(product, 'stock') and product.stock:
+                        required_ingredients[product.stock] += Decimal(quantity)
+
+        
+        for stock_item, needed in required_ingredients.items():
+            if stock_item.quantity < needed:
+                diff = needed - Decimal(stock_item.quantity)
+                errors.append(f"{stock_item.name}: falta {diff}{stock_item.unit}")
+
+    oob_html = render_to_string("partials/status_update.html", {
+        "missing": errors,
+        "current_total": f"{total:.2f}"
+    })
+
+    return HttpResponse(f"{total:.2f}" + oob_html)
 
 
 def order_list_partial(request):

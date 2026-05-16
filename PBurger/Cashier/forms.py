@@ -1,8 +1,8 @@
 from django import forms
+from django.forms import inlineformset_factory
 
 from Menu.models import Product
 from .models import Order, OrderItem
-from django.forms import inlineformset_factory
 
 
 
@@ -17,8 +17,7 @@ class OrderForm(forms.ModelForm):
             "customer_name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "mae do andy",
-                    "class": "form-control",
+                    "placeholder": "Fulano",
                 }
             )
         }
@@ -46,5 +45,5 @@ OrderItemFormSet = inlineformset_factory(
     Order, OrderItem,
     fields=("product", "quantity"), 
     can_delete=True, 
-    extra=Product.objects.all().count(), 
+    extra=0, 
 )
