@@ -1,18 +1,31 @@
-/* --- Root Variables --- */
-
+/* =========================================
+   1. ROOT VARIABLES (The Engine)
+========================================= */
 :root {
+    /* Colors */
     --bg: #373636;
-    --glass-bg: rgba(255, 255, 255, 0.06);
-    --glass-bg-focus: rgba(255, 255, 255, 0.12);
-    --glass-border: rgba(255, 255, 255, 0.2);
     --text: #ffffff;
     --primary: #0d6efd;
     --danger: #dc3545;
+    
+    /* Glassmorphism System */
+    --glass-bg: rgba(255, 255, 255, 0.05); /* Standardized across navbar & inputs */
+    --glass-bg-focus: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.3);
+    --glass-shadow-md: 0 8px 15px rgba(0, 0, 0, 0.3);
+    --glass-gradient: linear-gradient(to right, rgba(255,255,255,0.3), rgba(255,255,255,1), rgba(255,255,255,0.3));
+    
+    /* Dimensions & Animation */
     --radius-1: 10px;
     --radius-2: 20px;
     --control-h: 42px;
     --transition: all 0.3s ease;
 }
+
+/* =========================================
+   2. GLOBALS & RESETS
+========================================= */
 * {
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important;  /* IE and Edge */
@@ -26,23 +39,9 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: var(--bg);
-
-}
-
-body {
-
     background-color: transparent !important;
 }
 
-main {
-    position: relative;
-    z-index: 1;
-    /* This creates a hard boundary. The top buttons can't affect what's inside here. */
-    contain: layout; 
-}
-
-/* Background Overlay - Simplified to avoid redundancy */
 body::before {
     content: "";
     position: fixed;
@@ -53,210 +52,161 @@ body::before {
     background-attachment: fixed;
     background-repeat: no-repeat;
     z-index: -1;    
-
 }
 
+main {
+    position: relative;
+    z-index: 1;
+    contain: layout; 
+}
 
-.navbar.fixed-top {
-    top: 20px;
-    width: 90%;
-    max-width: 1360px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.05);
+[x-cloak] { 
+    display: none !important; 
+}
+
+/* =========================================
+   3. GLASSMORPHISM CORE CLASSES
+========================================= */
+.glass-effect {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px) saturate(190%);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
-    border-radius: 50px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    isolation: isolate;
-    height: 44px;
-    }
-
-.navbar-nav .nav-link {
-    transition: opacity 0.8s ease;
+    isolation: isolate; 
+    contain: layout style;
 }
-
-.navbar-nav .nav-link:hover {
-    transform: none !important; /* Force no movement */
-}
-
-.navbar-brand {
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    transition: ease-in-out 0.8s;   
-
-}
-
-.navbar-brand:hover{
-    transform: scale3d(1.2, 1.2, 1.2);
-    transition: ease-in-out 0.3s;
-}
-
-
-
-.history-sidebar {
-    height: 100vh;
-    overflow-y: auto;
-    position: fixed;
-    top: 0;
-    margin-top: 200px;
-    margin-bottom: 200px;
-
-}
-/* --- Glass UI Components --- */
 
 .glass-card {
     text-shadow: 1px 2px 4px rgba(0,0,0,0.5);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    box-shadow: var(--glass-shadow-md);
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-2);
     padding: 1rem;
     height: fit-content;
-    color: #ffff;
+    color: var(--text);
     transition: all 0.45s ease-in-out;
     overflow: hidden;
     isolation: isolate; 
+    backface-visibility: hidden;
+    perspective: 1000;
+    transform: translate3d(0,0,0);
 }
 
-
-.glass-card .display:hover{
+.glass-card .display:hover {
     transform: scale(1.05);
     transition: ease-in-out 0.3s;
     z-index: 10;
 }
 
-.ms-1{
-    margin-left: 0!important;
+/* Merged HR Line styling using root gradient */
+.glass-hr, .glass-hr-2 {
+    width: 100%;
+    flex-shrink: 0;
+    height: 1px;
+    display: block;
+    position: relative;
+    z-index: 15;
+    opacity: 0.4;
+    background: var(--glass-gradient);
+}
+.glass-hr-2 {
+    margin: 0.3rem; /* Unique spacing to hr-2 */
+}
+
+/* =========================================
+   4. NAVBAR & SLIDING SYSTEM
+========================================= */
+.navbar.fixed-top {
+    top: 20px;
+    width: 90%;
+    max-width: 1360px;
+    margin: 0 auto;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    box-shadow: var(--glass-shadow-sm);
+    isolation: isolate;
+    height: 44px;
+    transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+
+.navbar.fixed-top.nav-show { top: 20px !important; opacity: 1; }
+.navbar.fixed-top.nav-hide { top: -70px !important; opacity: 0; pointer-events: none; }
+
+.navbar-nav .nav-link { transition: opacity 0.8s ease; }
+.navbar-nav .nav-link:hover { transform: none !important; }
+
+.navbar-brand {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    transition: ease-in-out 0.8s;   
+}
+.navbar-brand:hover {
+    transform: scale3d(1.2, 1.2, 1.2);
+    transition: ease-in-out 0.3s;
+}
+
+.nav-interactive-wrapper { position: relative; z-index: 1050; }
+.nav-trigger-zone { position: fixed; top: 0; left: 0; width: 100vw; height: 25px; z-index: 1060; }
+
+.nav-mini-icon-tab {
+    position: fixed; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60px; height: 28px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-top: none;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    cursor: pointer; z-index: 1055;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .glass-menu {
-    padding-top: 15px; /* Creates the bridge */
-    margin-top: -5px;  /* Pulls the bridge up to touch the name */
-    min-width: 120px !important; /* Forces it to be narrower */
-    padding: 5px 0 !important;   /* Reduces top/bottom air */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
+    padding-top: 15px; margin-top: -5px;
+    min-width: 120px !important;
+    padding: 5px 0 !important;
+    display: flex; flex-direction: column; align-items: center;
+}
+.glass-menu .nav-link {
+    padding: 4px 12px !important; font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center; text-align: center;
 }
 
-.glass-menu  .nav-link {
-    padding: 4px 12px !important; /* Squeezes the links together */
-    font-size: 0.85rem;           /* Makes the text slightly smaller */ 
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centers the content (icon + text) horizontally */
-    text-align: center;
-}
-.glass-card, .btn {
-    backface-visibility: hidden;
-    perspective: 1000;
-    transform: translate3d(0,0,0); /* Force a clean 3D context */
-}
-
-.glass-effect{
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(10px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    isolation: isolate; 
-    contain: layout style;
-    -webkit-backdrop-filter: blur(10px);
-}
-
-
-.glass-hr-2 {
-    width: 100%;
-    flex-shrink: 0;
-    height: 1px;
-    display: block;
-    position: relative;
-    z-index: 15;
-    margin:0.3rem;
-    opacity: 0.4;
-    background: linear-gradient(to right,  rgba(255,255,255,0.3), rgba(255,255,255,2), rgba(255,255,255,0.3));
-}
-.glass-hr {
-    width: 100%;
-    flex-shrink: 0;
-    height: 1px;
-    display: block;
-    position: relative;
-    z-index: 15;
-    opacity: 0.4;
-    background: linear-gradient(to right,  rgba(255,255,255,0.3), rgba(255,255,255,2), rgba(255,255,255,0.3));
-}
-
-
-.glass-card input, 
-.glass-card select {
-    display: block;
-    width: 100%;
-}
-
+/* =========================================
+   5. BUTTONS & CONTROLS
+========================================= */
 .btn-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 10px;
-    /* margin-top: 15px; */
-    isolation: isolate;
-    position: relative;
-    z-index: 10;
+    display: flex; justify-content: space-evenly; align-items: center;
+    gap: 10px; isolation: isolate; position: relative; z-index: 10;
 }
 
 .btn {
     text-transform: lowercase;
-    border-radius: 30px;
-    font-weight: 500;
-
+    border-radius: 30px; font-weight: 500;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    backface-visibility: hidden; perspective: 1000; transform: translate3d(0,0,0);
 }
+.btn:hover { transform: scale(1.08) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.8); outline: 1px solid transparent; }
 
-.btn:hover {
-    transform: scale(1.08) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-    outline: 1px solid transparent;
-}
+.delete-btn { border: 1px solid var(--danger); color: var(--danger); background: transparent; }
+.delete-btn:hover { background-color: var(--danger); color: white; transform: scale(1.2); }
 
-.delete-btn {
+.qty-container .btn { font-size: 1.2rem; transition: all 0.1s ease; border-radius: 30px; }
+.qty-container .btn:active { transform: scale(0.7); background-color: rgba(255,255,255,0.1); }
 
-    border: 1px solid var(--danger);
-    color: var(--danger);
-    background: transparent;
-}
-
-.delete-btn:hover {
-    background-color: var(--danger);
-    color: white;
-    transform: scale(1.2);
-}
-
-.card {
-    background-color: transparent;
-}
-
-
-.ingredient-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 0.75rem;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
+/* =========================================
+   6. FORMS & INPUTS
+========================================= */
 .form-control, .form-select, .glass-card input, .glass-card select {
-    height: var(--control-h);
-    background-color: rgba(255, 255, 255, 0.05) !important;
+    display: block; width: 100%; height: var(--control-h);
+    background-color: var(--glass-bg) !important;
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-1);
     color: var(--text) !important;
     transition: var(--transition);
     padding-left: 12px;
 }
-
 
 .form-control:focus {
     background-color: var(--glass-bg-focus) !important;
@@ -265,280 +215,125 @@ body::before {
     color: black !important;
 }
 
-.form-check-input[type="radio"]{
-    height: 13px;
-    width: 13px !important;
-    padding-left: 0px !important;
-    padding-right:0px !important;
-
-}
-
 .form-select {
     background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="white" d="M225.8,92.2c-4.4-4.4-11.5-4.4-15.9,0L128,174.1L46.1,92.2c-4.4-4.4-11.5-4.4-15.9,0c-4.4,4.4-4.4,11.5,0,15.9l89.9,89.9c4.4,4.4,11.5,4.4,15.9,0l89.9-89.9C230.2,103.7,230.2,96.6,225.8,92.2z"/></svg>');
     background-size: 12px;
 }
-
 .form-select:focus {
-    background-color: rgba(255, 255, 255, 0.1); /* Keep it glass-like */
-    color: rgb(0, 0, 0);
-    border-color: #0dcaf0; /* Match your blue button border */
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+    background-color: rgba(255, 255, 255, 0.1); color: rgb(0, 0, 0);
+    border-color: #0dcaf0; outline: 0; box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
 }
 
-input {
-    /* Adds space to the left and right */
-    padding-left: 13px !important;
-    padding-right: 13px !important;
-}
+.form-check-input[type="radio"] { height: 13px; width: 13px !important; padding: 0 !important; }
 
-/* Optional: Fixes the ugly yellow Autofill background in Chrome */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus {
-    -webkit-text-fill-color: black;
-    transition: background-color 5000s ease-in-out 0s;
+input { padding-left: 13px !important; padding-right: 13px !important; }
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-text-fill-color: black; transition: background-color 5000s ease-in-out 0s;
 }
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield; 
-}
-
-.alert-success {
-    margin:auto;
-    padding-inline: 2rem!important;
-    padding:3px;
-    background-color: #88f336d1;
-
-}
-
-.alert-invalid {
-    padding: 0.5rem 1rem !important;
-    margin: 0 auto;
-    width: fit-content;
-    border:var(--danger);
-    background: var(--danger);
-    color: white;
-    margin-top: 0.5rem;
-    border-radius: 20px;
-    font-size: smaller;
-    
-}
-
-/* Standardizes the height and text alignment for file inputs */
-input[type="file"].form-control {
-    padding: 0 10px;
-    margin-top: 7px;   
-    line-height: 1.5;
-    height: 42px;         
-}
-
-/* Optional: Styles the "Browse" button inside the input to look better with glassmorphism */
-input[type="file"]::file-selector-button {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0px 10px;
-    margin: 7px;
-    transition: 0.5s;
-    margin-left: -2px;
-
-}
-
-input[type="file"]::file-selector-button:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    transform: scale(1.1);
-}
-
-.search-bar{
-    align-items: center;
-    padding-left: 6px;
-    display: flex;
-}
-.search-btn{
-    width:fit-content;
-    align-items: center;
-}
-.form-items{
-    align-items: center;
-    display: flex;
-}
-
-.item-name{
-    margin-left:4%;
-    margin-bottom: 1%;
-}
-
-[x-cloak] { 
-    display: none !important; 
-}
-option {
-    color: #121212;
-    padding: 10px; /* Note: padding on options only works in some browsers */
-}
-
-/* Only apply independent scrolling on desktop (lg breakpoint) */
-@media (min-width: 992px) {
-    .hub-row {
-        height: calc(100vh - 95px) !important;   
-        margin: 0 !important;
-        overflow: hidden; /* This prevents the whole page from scrolling */
-    }
-
-    .scroll-col {
-        height: 100%;
-        overflow-y: auto; /* This enables the individual scroll */
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 20px !important;
-        scrollbar-width: none; 
-        -ms-overflow-style: none;
-    }
-    
-    .scroll-col .glass-card {
-        flex: 1;
-        overflow-y: auto; 
-    }
-    .scroll-col::-webkit-scrollbar {
-    display: none;
-    }
-}
-
-.product-card {
-    border-radius: 12px;
-    transition: transform 0.2s;
-}
-.product-card:hover {
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.15) !important;
-}
-
-.border-white-10 { border: 1px solid rgba(255,255,255,0.1) !important; }
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
 input[type=number]::-webkit-inner-spin-button { opacity: 1; }
 
-.qty-container .btn {
-    font-size: 1.2rem;
-    transition: all 0.1s ease;
-    border-radius: 30px;
+input[type="file"].form-control { padding: 0 10px; margin-top: 7px; line-height: 1.5; height: 42px; }
+input[type="file"]::file-selector-button {
+    background-color: rgba(255, 255, 255, 0.2); color: white;
+    border: none; border-radius: 4px; padding: 0px 10px; margin: 7px 7px 7px -2px; transition: 0.5s;
+}
+input[type="file"]::file-selector-button:hover { background-color: rgba(255, 255, 255, 0.4); transform: scale(1.1); }
+
+option { color: #121212; padding: 10px; }
+
+/* =========================================
+   7. LAYOUT GRIDS & STRUCTURES
+========================================= */
+.pos-dashboard-grid {
+    display: grid;
+    grid-template-areas: "customer-info checkout-info" "product-list product-list";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0px 30px;
 }
 
-.qty-container .btn:active {
-    transform: scale(0.7);
-    background-color: rgba(255,255,255,0.1);
+.area-customer { grid-area: customer-info; }
+.area-checkout { grid-area: checkout-info; }
+.area-products { 
+    grid-area: product-list; 
+    padding-top: 1rem; padding-inline: 2rem; 
+    max-height: 60vh; overflow-y: auto !important; display: block; 
 }
 
-.fade-out-message {
-    animation: fadeOut 5s forwards; /* Stays invisible after 5 seconds */
+.product-card-container {
+    display: block; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px;
+}
+.product-card { border-radius: 12px; transition: transform 0.2s; }
+.product-card:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.15) !important; }
+
+.search-bar { align-items: center; padding-left: 6px; display: flex; }
+.search-btn { width: fit-content; align-items: center; }
+.form-items { align-items: center; display: flex; }
+.item-name { margin-left: 4%; margin-bottom: 1%; }
+
+.card { background-color: transparent; }
+.border-white-10 { border: 1px solid rgba(255,255,255,0.1) !important; }
+
+/* Desktop Only Scroll */
+@media (min-width: 992px) {
+    .hub-row { height: calc(100vh - 95px) !important; margin: 0 !important; overflow: hidden; }
+    .scroll-col {
+        height: 100%; overflow-y: auto; display: flex; flex-direction: column;
+        padding-bottom: 20px !important; scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .scroll-col .glass-card { flex: 1; overflow-y: auto; }
+    .scroll-col::-webkit-scrollbar { display: none; }
 }
 
+/* =========================================
+   8. ALERTS & MESSAGES
+========================================= */
+.alert-success { margin: auto; padding-inline: 2rem !important; padding: 3px; background-color: #88f336d1; }
+.alert-invalid {
+    padding: 0.5rem 1rem !important; margin: 0.5rem auto 0 auto; width: fit-content;
+    border: var(--danger); background: var(--danger); color: white;
+    border-radius: var(--radius-2); font-size: smaller;
+}
+
+/* =========================================
+   9. ANIMATIONS & STATES
+========================================= */
+.ingredient-row { display: flex; gap: 10px; align-items: center; margin-bottom: 0.75rem; animation: fadeIn 0.5s ease; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-out-message { animation: fadeOut 5s forwards; }
 @keyframes fadeOut {
     0% { opacity: 1; }
-    80% { opacity: 1; } /* Stay fully visible for 4 seconds */
-    100% { opacity: 0; visibility: hidden; } /* Fade out in the last second */
+    80% { opacity: 1; } 
+    100% { opacity: 0; visibility: hidden; } 
 }
 
-
-.htmx-swapping {
-    opacity: 0.2;
-    transition: opacity 3s ease-out;
-}
-
-.htmx-added {
-    opacity: 0;
-}
-
-.htmx-settling {
-    opacity: 1;
-    transition: opacity 1s ease-in;
-}
-
+.animate-new-item { animation: slideIn 2s ease-out forwards; }
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-new-item {
-    animation: slideIn 2s ease-out forwards;
-    /* border: 1px solid rgba(255, 255, 255, 0.552); */
-}
+/* HTMX Transitions */
+.htmx-swapping { opacity: 0.2; transition: opacity 3s ease-out; }
+.htmx-added { opacity: 0; }
+.htmx-settling { opacity: 1; transition: opacity 1s ease-in; }
 
 #loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* background-color:#5d5d5d; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Higher than everything else */
-    transition: opacity 0.5s ease-in;
-    animation: fadeIn 0.5s ease-in-out;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 9999; transition: opacity 0.5s ease-in; animation: fadeIn 0.5s ease-in-out;
 }
 
-.loader{
-    font-size: 220px;
-}
-
-
-
-/* A simple spinning circle */
-/* .loader {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1.6s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-} */
-
-.pos-dashboard-grid {
-    display: grid;
-    /* Two columns at the top, and the bottom spans both */
-    grid-template-areas: 
-        "customer-info checkout-info"
-        "product-list product-list";
-    grid-template-columns: 1fr 1fr; /* Two equal halves for the top */
-    grid-template-rows: auto 1fr ;    /* Top adjusts to content, bottom takes remaining space */
-    gap:0px 30px;
-    /* height: 105%; */
-}
-
-/* Assign sections to the areas */
-.area-customer { grid-area: customer-info; }
-.area-checkout { grid-area: checkout-info; }
-.area-products { grid-area: product-list; }
-
-/* For the actual product grid inside the area */
-.product-card-container {
-    display: block;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-}
-
-.area-products {
-    grid-area: product-list;
-    /* Ensures the container stays within the dashboard bounds */
-    padding-top: 1rem;
-    max-height: 60vh; 
-    overflow-y: auto!important;
-    padding-inline: 2rem;
-    display:block;  
-}
-
-
+/* =========================================
+   10. ONE-OFF SPECIFICS (Consider moving to HTML inline styles)
+========================================= */
+.history-sidebar { height: 100vh; overflow-y: auto; position: fixed; top: 0; margin-top: 200px; margin-bottom: 200px; }
+.loader { font-size: 220px; }
+.ms-1 { margin-left: 0 !important; }
