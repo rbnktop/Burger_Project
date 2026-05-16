@@ -106,3 +106,6 @@ class Recipe(models.Model):
 
     def __str__(self):
         return f"{self.amount}{self.ingredient.unit} {self.ingredient.name}"  # type: ignore
+
+
+        
