@@ -27,8 +27,8 @@ INSTALLED_APPS = [
     "django_extensions",
     
     "Inventory.apps.InventoryConfig",
-    "Cashier.apps.CashierConfig",
-    "Greeting.apps.GreetingConfig",
+    "Sales.apps.SalesConfig",
+    "Common.apps.CommonConfig",
     "Menu.apps.MenuConfig",
 ]
 
@@ -44,7 +44,7 @@ MIDDLEWARE = [
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
-ROOT_URLCONF = "Burger.urls"
+ROOT_URLCONF = "Core.urls"
 
 TEMPLATES = [
     {
@@ -61,7 +61,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "Burger.wsgi.application"
+WSGI_APPLICATION = "Core.wsgi.application"
 
 
 DATABASES = {

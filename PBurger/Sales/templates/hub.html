@@ -11,7 +11,7 @@
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 2; overflow: hidden; padding-bottom: 0rem;">
                 <h6 class="text-white m-2"><i class="bi bi-bar-chart-steps"></i> Pedidos</h6>
                 <hr class="glass-hr-2">
-                <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
+                <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'sales:order-list' %}" hx-trigger="load">
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 1; overflow: hidden; padding-bottom: 0rem;">
                 <h6 class="text-white m-0 p-2"><i class="bi bi-box-seam"></i> Estoque</h6>
                 <hr class="glass-hr-2">
-                <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
+                <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'sales:stock-list' %}" hx-trigger="load">
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
         <!-- ================= RIGHT COLUMN  ================= -->
         <div class="col-12 col-lg-9">
             <form id="order-form" 
-                  hx-post="{% url 'cashier:process-order' %}" 
+                  hx-post="{% url 'sales:process-order' %}" 
                   hx-target="#order-form-container"
                   class="glass-card glass-effect d-flex flex-column" 
                   style="height: 90vh;">

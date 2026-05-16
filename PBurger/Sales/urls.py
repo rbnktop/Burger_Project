@@ -8,7 +8,7 @@ from .views import (
     process_order,
 )
 
-app_name = "cashier"
+app_name = "sales"
 
 urlpatterns = [
     path("", hub_view, name="hub"),

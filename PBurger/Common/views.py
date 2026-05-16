@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from Inventory.models import Stock
-from Cashier.models import Order
+from Sales.models import Order
 from Menu.models import Product
 
 

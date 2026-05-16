@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("Cashier", "0003_alter_orderitem_product"),
+        ("Sales", "0003_alter_orderitem_product"),
         ("Inventory", "0002_remove_recipe_dish_and_more"),
     ]
 
