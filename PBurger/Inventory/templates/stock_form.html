@@ -17,7 +17,7 @@
             <div class="row mb-4">
                 <div class="col d-flex flex-column">
                     <span class="item-name">Nome</span>{{ form.name }}
-                    {% if form.errors.name %}
+                    {% if form.errors.name %} 
                         <div class="alert alert-danger alert-invalid ">
                             {% for error in form.errors.name %}
                                 {{ error }}
