@@ -46,6 +46,8 @@ def process_order(request):
     to see if the order is available for production based on the ingredients in stock. 
     """
     products = Product.objects.all().order_by("-total_sold")
+    initial_data = [{"product": p.id, "quantity": 0} for p in products]  # type: ignore
+
     formset_class = OrderItemFormSet
     
     # 2. Force extra to match your live product count on EVERY page load

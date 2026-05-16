@@ -4,7 +4,7 @@
 {% load static %}
 
 
-<div class="mx-auto d-flex" style="margin-bottom: 40rem;margin-top: 15rem;">
+<div class="mx-auto d-flex">
     <img src="{% static 'images/mage.gif' %}">
 </div>
 
@@ -76,7 +76,7 @@ For the last time">Всё напоминает о тебе
         
         <!-- HTMX Magic is right here -->
         <div hx-get="{% url 'greeting:history_sidebar' %}" 
-                hx-trigger="load, every 10s" 
+                hx-trigger="load, every 15s" 
                 hx-swap="innerHTML">
             
             <!-- This shows briefly while loading -->
