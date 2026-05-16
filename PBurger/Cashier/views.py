@@ -8,7 +8,7 @@ from Menu.models import Product
 
 from .models import Order, OrderItem
 from .forms import OrderForm, OrderItemFormSet
-from .utils import check_order
+from .services import check_order
 
 
 
@@ -25,7 +25,7 @@ def hub_view(request):
         {
             "form": form,
             "formset": formset,
-            "products": products,
+            "products": Product.objects.all().order_by("-total_sold"),
         },
     )
 

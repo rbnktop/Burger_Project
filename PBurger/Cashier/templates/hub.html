@@ -10,7 +10,7 @@
                                         <!-- Orders -->
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 2; overflow: hidden;">
                 <h6 class="text-white m-2"><i class="bi bi-bar-chart-steps"></i> Pedidos</h6>
-                <hr class="glass-hr">
+                <hr class="glass-hr-2">
                 <div id="order-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:order-list' %}" hx-trigger="load">
                 </div>
             </div>
@@ -18,7 +18,7 @@
                                         <!-- Stock -->
             <div class="glass-card glass-effect d-flex flex-column" style="flex: 1; overflow: hidden;">
                 <h6 class="text-white m-0 p-2"><i class="bi bi-box-seam"></i> Estoque</h6>
-                <hr class="glass-hr">
+                <hr class="glass-hr-2">
                 <div id="stock-list-content" class="flex-grow-1 overflow-auto p-2" hx-get="{% url 'cashier:stock-list' %}" hx-trigger="load">
                 </div>
             </div>
@@ -46,8 +46,7 @@
                         {{ form.customer_name }}
                         <br>
                         {{ form.customer_name }}
-                        <br>
-                        {{ form.customer_name }}
+
 
 
                     </div>
@@ -89,9 +88,9 @@
                     <!-- end right -->
                 </div>
                 <!-- end top -->
-                <!-- <hr class="glass-hr"> -->
+                <!-- <hr class="glass-hr-2"> -->
                 <!-- bottom -->
-                <div class="flex-grow-1 overflow-auto pt-2 pe-2 ">
+                <div class="flex-grow-1 area-products pt-2 pe-2 ">
                     <div id="order-form-container">
                         {% include "partials/order_form.html" %}
                     </div>

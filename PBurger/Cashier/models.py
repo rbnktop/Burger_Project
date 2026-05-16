@@ -35,7 +35,8 @@ class Order(models.Model):
         # total=Sum(F('quantity') * F('product__price'))
         # )
 
-        self.total_price = Decimal(0) # Reset it first!
+        self.total_price = Decimal(0)
+
         for item in self.items.all():  #type:ignore
             self.total_price += (item.product.price * item.quantity) # Sum them up
         self.save()
@@ -49,6 +50,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.IntegerField()
+
 
     def __str__(self):
         return f"{self.quantity}x {self.product.name}"
