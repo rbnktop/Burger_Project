@@ -1,6 +1,7 @@
 
 
 
+
 {% if products %}
     {% include "partials/order_form.html" %}
 {% endif %}
@@ -22,43 +23,34 @@
     <br>
     {{ form.customer_name }}
 
-
 </div>
-
-
-<div id="info-container" hx-swap-oob="true" class="glass-card area-checkout d-flex flex-column justify-content-evenly border-start border-secondary p-3">
-    
+<div id="info-container" hx-swap-oob="true" 
+class=" area-checkout d-flex flex-column justify-content-between p-2 "
+style="height:100%;"
+>
     <div class="d-flex w-100 justify-content-between align-items-center gap-3">
-        
-        <div class="glass-card animate-new-item flex-grow-1">
+        <div class="glass-card animate-new-item w-50">
+
             {% if status %}
-                <div class="fade-out-message alert alert-success m-0 py-2">
+                <div class="fade-out-message m-0 py-1">
                     Pedido {{ new_order.id }} confirmado! <i class="bi bi-check"></i>
                 </div>
-            {% else %}
-                <div class="fade-out-message m-0 py-2 small">
-                    <i class="bi bi-info-circle"></i> Pedido falho!
-                    <ul class="mb-0 ps-3">
-                        {% for item in missing_items %}
-                            <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
             {% endif %}
-        </div>
 
+        </div>
         <div id="order-total" class="h2 fw-bold m-0 display-4" style="color:#85bb65;">
-            <i class="bi bi-currency-dollar"></i>
+            <i class="bi bi-currency-dollar"></i><span id="order-value">{{ current_total }}</span>
         </div>
     </div>
-
+    
     <div class="d-flex justify-content-center mt-2">
-        <div class="btn-container">
-        <button type="submit" class="btn btn-primary fw-bold w-100 py-2">Confirmar</button>
-        </div>   
+        <div class="btn-container w-100">
+            <button type="submit" id="confirm" class="btn btn-primary fw-bold w-100 py-2" {% if missing %}disabled{% endif %}>
+                Confirmar
+            </button>
+        </div>
     </div>
 </div>
-
                    
 
 {% if new_order %}
