@@ -1,9 +1,11 @@
+[project]
+name = "burgery"
+
 [tool.semantic_release]
 
 version_variables = [
-    "common/__init__.py:__version__"
+    "./__init__.py:__version__"
 ]
-
 version_toml = [
     "pyproject.toml:project.version"
 ]
@@ -24,6 +26,7 @@ allowed_tags = ["feat", "fix", "perf", "refactor", "chore", "docs", "style", "te
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
 
-[project]
-name = "your-project-name"
-version = "0.0.1"
+
+[tool.semantic_release.publish]
+dist = false                   
+upload_to_vcs_release = false
