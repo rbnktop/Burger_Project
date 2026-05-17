@@ -21,7 +21,7 @@ class Order(models.Model):
     )
 
     status = models.BooleanField(default=False)
-    order_type = models.Choices()
+    # order_type = models.Choices()
 
     history = HistoricalRecords()
     created_at = models.DateTimeField(auto_now_add=True)
