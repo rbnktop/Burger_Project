@@ -72,7 +72,7 @@ class DishForm(BaseProductForm):
         }
 
 
-class OtherForm(BaseProductForm):
+class NonDishForm(BaseProductForm):
     class Meta:
         model = NonDish
         fields = ["product_base_category", "name", "price", "stock", "image", "description"]
@@ -100,3 +100,4 @@ class OtherForm(BaseProductForm):
                 attrs={"class": "form-select text-white border-secondary"}
             ),
         }
+

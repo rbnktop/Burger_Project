@@ -84,7 +84,7 @@ class NonDish(Product):
         self.stock.save()
 
     @property
-    def profit_margin(self):
+    def profit(self):
         """
         Calculates how much you make after production costs.
         """

@@ -6,7 +6,7 @@ from .models import Product, Stock
 
 from .forms import (
     DishForm,
-    OtherForm,
+    NonDishForm,
     RecipeFormSet,
 )
 
@@ -29,7 +29,7 @@ def list_product_view(request):
 def create_product_view(request):
     form = DishForm()
     formset = RecipeFormSet()
-    nondish_form = OtherForm()
+    nondish_form = NonDishForm()
     product_base_category = "None"
 
     if request.method == "POST":
@@ -52,7 +52,7 @@ def create_product_view(request):
                     print("FORMSET ERRORS:", formset.errors)
 
         elif product_base_category == "nondish":
-            nondish_form = OtherForm(request.POST, request.FILES)
+            nondish_form = NonDishForm(request.POST, request.FILES)
 
             if nondish_form.is_valid():
                 nondish_form.save()
@@ -94,7 +94,7 @@ def update_product_view(request, product_id):
 
     form = DishForm(instance=item if product_base_category == "dish" else None)
     formset = RecipeFormSet(instance=item if product_base_category == "dish" else None)
-    nondish_form = OtherForm(instance=item if product_base_category == "nondish" else None)
+    nondish_form = NonDishForm(instance=item if product_base_category == "nondish" else None)
 
     if request.method == "POST":
         posted_category = request.POST.get("product_base_category")
@@ -116,7 +116,7 @@ def update_product_view(request, product_id):
                     print("FORMSET ERRORS:", formset.errors)
 
         elif product_base_category == "nondish":
-            nondish_form = OtherForm(request.POST, request.FILES, instance=item)
+            nondish_form = NonDishForm(request.POST, request.FILES, instance=item)
 
             if nondish_form.is_valid():
                 nondish_form.save()

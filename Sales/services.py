@@ -32,7 +32,7 @@ def check_order(formset):
             elif hasattr(product, 'stock') and product.stock:
                 requirements[product.stock.id] += float(qty)
 
-    # Compare requirements against actual DB stock
+
     for stock_id, needed in requirements.items():
         stock_item = Stock.objects.get(id=stock_id)
         if stock_item.quantity < needed:
