@@ -1,20 +1,79 @@
-# Python
+# ==============================================================================
+# 🐍 Python Core & Environments
+# ==============================================================================
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-.venv/
-venv/
-env/
 
-# Django
-db.sqlite3
-db.sqlite3-journal
-media/
-staticfiles/
-
-# Environment variables
+# Environments
 .env
-.gitignore
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-# VS Code
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ==============================================================================
+# 🧪 Testing, Coverage & Tools
+# ==============================================================================
+.htmlcov/
+.tox/
+.nosetnx/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+nsatest.html
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+
+# ==============================================================================
+# 📦 PyInstaller Standalone Executable Build Artifacts
+# ==============================================================================
+# PyInstaller builds leave a lot of local clutter. Ignore the build folder 
+# and the generated system-specific .spec file.
+*.spec
+
+# ==============================================================================
+# 🛡️ Databases & Sensitive Local Data
+# ==============================================================================
+*.db
+*.sqlite3
+instance/
+.webassets-cache
+
+# ==============================================================================
+# 💻 OS & IDE Cleanups (VS Code / PyCharm / Mac)
+# ==============================================================================
 .vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
