@@ -53,10 +53,10 @@
 
                     <div class="d-flex flex-column text-end">
                         <div style="font-size: 0.65rem;" class="text-white-50">
-                            <span>criado em - </span>{{ item.dish.created_at|date:"d/m/y" }}
+                            <span>criado em - </span>{{ item.created_at|date:"d/m/y" }}
                         </div>
                         <div style="font-size: 0.65rem; margin-top: -2px;" class="text-white-50">
-                            <span>ultima alt - </span>{{ item.dish.updated_at|date:"D H:i" }}
+                            <span>ultima alt - </span>{{ item.updated_at|date:"D H:i" }}
                         </div>
                     </div>
 
@@ -64,8 +64,8 @@
                 <hr class="glass-hr mt-2">
 
                  <div class="btn-container">
-                    <a href="{% url 'stock:editar' item.pk %}" class="btn btn-warning" >editar</a>
-                    <a href="{% url 'stock:apagar' item.pk %}" class="btn btn-danger">remover</a>
+                    <a href="{% url 'menu:editar' item.pk %}" class="btn btn-warning" >editar</a>
+                    <a href="{% url 'menu:apagar' item.pk %}" class="btn btn-danger">remover</a>
                 </div> 
             </div>
         </div>
