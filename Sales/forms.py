@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
 
-from Menu.models import Product
 from .models import Order, OrderItem
 
 

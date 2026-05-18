@@ -39,7 +39,7 @@ class Order(models.Model):
         self.total_price = Decimal(0)
 
         for item in self.items.all():  #type:ignore
-            self.total_price += (item.product.price * item.quantity) # Sum them up
+            self.total_price += (item.product.price * item.quantity)
         self.save()
 
 

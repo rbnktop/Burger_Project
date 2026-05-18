@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import transaction
 from django.template.loader import render_to_string
-
 from decimal import Decimal
 from collections import defaultdict
 
@@ -20,8 +19,6 @@ def hub_view(request):
     initial_data = [{"product": p.id, "quantity": 0} for p in products]  # type: ignore
 
     formset_class = OrderItemFormSet
-    
-    # 2. Force extra to match your live product count on EVERY page load
     formset_class.extra = len(initial_data) #type:ignore
 
     form = OrderForm()
@@ -38,7 +35,6 @@ def hub_view(request):
     )
 
 
-
 def process_order(request):
     """
     series of validations before commiting the order
@@ -49,8 +45,6 @@ def process_order(request):
     initial_data = [{"product": p.id, "quantity": 0} for p in products]  # type: ignore
 
     formset_class = OrderItemFormSet
-    
-    # 2. Force extra to match your live product count on EVERY page load
     formset_class.extra = len(initial_data) #type:ignore
     
     if request.method == "POST":
@@ -110,7 +104,7 @@ def process_order(request):
                 form_errors.append(f"Campo '{field}': {error.as_text()}")
             
             for err in formset.non_form_errors():
-                form_errors.append(err)
+                form_errors.append(f"Erro geral: {err}")
 
             context = {
                 "status": False,
