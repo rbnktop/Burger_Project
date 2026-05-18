@@ -1,6 +1,8 @@
 from .models import Dish, NonDish, Recipe
 from django.forms import inlineformset_factory
 from django import forms
+from .models import Category 
+from typing import cast
 
 
 class BaseProductForm(forms.ModelForm):
@@ -46,9 +48,19 @@ class RecipeForm(forms.ModelForm):
 
 
 class DishForm(BaseProductForm):
+    new_category = forms.CharField(
+        required=False,
+        label= "criar nova",
+        widget=forms.TextInput(
+            attrs={
+                "class":"form-control text-white border-secondary",
+                "placeholder":"Batatas/Lanche",
+                })
+    )
+
     class Meta:
         model = Dish
-        fields = ["product_base_category", "name", "price", "description", "image"]
+        fields = ["product_base_category", "category", "name", "price", "description", "image"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
@@ -71,11 +83,48 @@ class DishForm(BaseProductForm):
             "image": forms.FileInput(),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if "category" in self.fields:
+            category_field = cast(forms.ModelChoiceField, self.fields["category"])
+            category_field.queryset = Category.objects.filter(category_type="DISH")
+            category_field.widget.attrs.update({"class": "form-select text-white border-secondary"})
+            category_field.label = "Categoria"
+
+
+    def save(self, commit=True):
+        # Fat Form Practice: Intercept the save chain to build the category behind the scenes
+        instance = super().save(commit=False)
+        new_cat = self.cleaned_data.get("new_category")
+        
+        if new_cat:
+            from .models import Category
+            category_obj, _ = Category.objects.get_or_create(
+                name=new_cat.strip(),
+                category_type="DISH"
+            )
+            instance.category = category_obj
+            
+        if commit:
+            instance.save()
+        return instance
+
+
 
 class NonDishForm(BaseProductForm):
+    new_category = forms.CharField(
+        required=False,
+        label = "criar nova",
+        widget=forms.TextInput(
+            attrs={
+                "class":"form-control",
+                "placeholder":"Cervejas/Doces"})
+    )
+
     class Meta:
         model = NonDish
-        fields = ["product_base_category", "name", "price", "stock", "image", "description"]
+        fields = ["product_base_category", "category", "name", "price", "stock", "image", "description"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
@@ -101,3 +150,27 @@ class NonDishForm(BaseProductForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if "category" in self.fields:
+            category_field = cast(forms.ModelChoiceField, self.fields["category"])
+            category_field.queryset = Category.objects.filter(category_type="NONDISH")
+            category_field.widget.attrs.update({"class": "form-select text-white border-secondary"})
+            category_field.label = "Categoria"
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        new_cat = self.cleaned_data.get("new_category")
+        
+        if new_cat:
+            from .models import Category
+            category_obj, _ = Category.objects.get_or_create(
+                name=new_cat.strip(),
+                category_type="NONDISH"
+            )
+            instance.category = category_obj
+            
+        if commit:
+            instance.save()
+        return instance

@@ -2,34 +2,32 @@
 {% block title %} Adicionar {% endblock %}
 
 {% block main %}
+<div class="container-fluid py-2" x-data="{ category: '{{ product_base_category }}' }">
+    
+    <form method="POST" enctype="multipart/form-data" novalidate class="d-flex flex-row flex-wrap justify-content-center align-items-start gap-4">
+        {% csrf_token %}
 
-<div class="d-flex justify-content-center" 
-     style="padding-top: 65px;" 
-     x-data="{ category: '{{ product_base_category }}' }">
-    <div class="glass-card glass-effect" style="transform:none; min-width: 450px;">
-        <form method="POST" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-            <div class="row mb-4">
-                <div class="col d-flex flex-column">
-                    <h2>Produto</h2>
-                </div>
-            </div>
-                <hr class="glass-hr" style=" margin: 1rem 0;">
-            <div class="row g-2">
-                <div class="col d-flex flex-column">
-                    {{ common_form.name.label_tag }}{{ common_form.name }}
-                     {% if common_form.errors.name %}
-                        <div class="alert alert-danger alert-invalid ">
-                            {% for error in common_form.errors.name %}
-                                {{ error }}
-                            {% endfor %}
+        <div class="glass-card glass-effect d-flex flex-column" style="min-width: 500px; padding: 25px; transform: none;">
+            
+            <h2 class="text-center">Produto</h2>
+            <hr class="glass-hr mb-1">
+            
+            <div class="d-flex gap-3 mb-2">
+                <div class="flex-grow-1 d-flex flex-column">
+                    <span class="item-name mb-1">Nome:</span>
+                    {{ common_form.name }}
+                    {% if common_form.errors.name %}
+                        <div class="alert alert-danger alert-invalid mt-1">
+                            {% for error in common_form.errors.name %}{{ error }}{% endfor %}
                         </div>
                     {% endif %}
                 </div>
-                <div class="col-3 d-flex flex-column">
-                    {{ common_form.price.label_tag }}{{ common_form.price }}
+                
+                <div class="d-flex flex-column" style="width: 150px;">
+                    <span class="item-name mb-1">Preço:</span>
+                    {{ common_form.price }}
                     {% if common_form.errors.price %}
-                        <div class="alert alert-danger alert-invalid ">
+                        <div class="alert alert-danger alert-invalid mt-1">
                             {% for error in common_form.errors.price %}
                                 <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
                             {% endfor %}
@@ -38,14 +36,16 @@
                 </div>
             </div>
             
-            <div class="col d-flex flex-column mt-3 mb-3">
-                <span class="item-name">Descrição:</span>{{ common_form.description }}
+            <div class="d-flex flex-column mb-3">
+                <span class="item-name mb-1">Descrição:</span>
+                {{ common_form.description }}
             </div>
             
-            <div class="col d-flex flex-column mt-3 mb-3" >
-                <span class="item-name">Imagem:</span>{{ common_form.image }}
+            <div class="d-flex flex-column mb-4">
+                <span class="item-name mb-1">Imagem:</span>
+                {{ common_form.image }}
                 {% if common_form.errors.image %}
-                    <div class="alert alert-danger alert-invalid ">
+                    <div class="alert alert-danger alert-invalid mt-1">
                         {% for error in common_form.errors.image %}
                             <i class="bi bi-exclamation-triangle" title="{{ error }}"></i>
                         {% endfor %}
@@ -53,94 +53,133 @@
                 {% endif %}
             </div>
 
-            <div class="category-toggle pt-2 d-flex justify-content-evenly">
+            <div class="category-toggle py-1 d-flex justify-content-evenly">
+                {% if is_update %}
+                    <input type="hidden" name="product_base_category" value="{{ product_base_category }}">
+                {% endif %}
+
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="product_base_category" 
-                           id="cat_dish" value="dish" x-model="category">
-                    <label class="form-check-label text-white" for="cat_dish">Lanche/Batata</label>
+                           id="cat_dish" value="dish" x-model="category"
+                           {% if is_update %}disabled{% endif %}>
+                    <label class="form-check-label text-white" for="cat_dish"
+                           {% if is_update %}style="opacity: 0.6;"{% endif %}>Receita</label>
                 </div>
+                
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="product_base_category" 
-                           id="cat_nondish" value="nondish" x-model="category">
-                    <label class="form-check-label text-white" for="cat_nondish">Outros</label>
+                           id="cat_nondish" value="nondish" x-model="category"
+                           {% if is_update %}disabled{% endif %}>
+                    <label class="form-check-label text-white" for="cat_nondish"
+                           {% if is_update %}style="opacity: 0.6;"{% endif %}>Outros</label>
                 </div>
             </div>
-            <hr class="glass-hr mb-2 mt-3">
+            
+            <hr class="glass-hr mb-1">
 
-            <div x-show="category === 'dish'" x-cloak
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 transform scale-70"
-                x-transition:enter-end="opacity-100 transform scale-100"
-                x-transition:leave="transition ease-in duration-400"
-                x-transition:leave-start="opacity-100 transform scale-100"
-                x-transition:leave-end="opacity-0 transform scale-70">
-                <div class="d-flex justify-content-between">
-                    <h5 class="text-white">Ingredientes</h5>
+            <div x-show="category === 'nondish'" x-cloak
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 transform translate-y-4"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                 x-transition:leave-end="opacity-0 transform translate-y-4">
+                
+                <fieldset :disabled="category !== 'nondish'">
+                    <div class="row g-2 mb-2 align-items-end">
+                        <div class="col d-flex flex-column">
+                            <label class="text-white mb-1">{{ nondish_form.category.label }}</label>
+                            {{ nondish_form.category }}
+                        </div>
+                        <div class="col d-flex flex-column">
+                            {{ nondish_form.new_category }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column mb-2">
+                        <h5 class="text-white mb-2">Estoque</h5>
+                        {{ nondish_form.stock }}
+                    </div>
+                </fieldset>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-2 d-block mx-auto w-25 py-1 fw-bold">Salvar</button>
+        </div>
+
+
+        <div class="glass-card glass-effect" 
+             style="min-width: 500px; padding: 25px; transform: none;"
+             x-show="category === 'dish'" x-cloak
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 transform -translate-x-8"
+             x-transition:enter-end="opacity-100 transform translate-x-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform translate-x-0"
+             x-transition:leave-end="opacity-0 transform -translate-x-8">
+            
+            <h2 class="text-center mb-2">Detalhes da Receita</h2>
+            <hr class="glass-hr mb-4">
+
+            <fieldset :disabled="category !== 'dish'">
+                <div class="row g-2 mb-4 align-items-end">
+                    <div class="col d-flex flex-column">
+                        <label class="text-white mb-1">{{ dishform.category.label }}</label>
+                        {{ dishform.category }}
+                    </div>
+                    <div class="col d-flex flex-column">
+                        {{ dishform.new_category }}
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white m-0">Ingredientes</h5>
                     <button type="button" class="btn btn-outline-info btn-sm" @click="addNewRow()">+ ingrediente</button>
                 </div>
                 
-                <!-- FIXED: Use fieldset so disabled attribute actually stops form submission for inactive tabs -->
-                <fieldset :disabled="category !== 'dish'">
-                    {{ formset.management_form }}
-                    <div id="ingredient-container" class="mt-4">
-                        {% for recipe_form in formset %}
-                            <div class="ingredient-row row g-2 mb-3 justify-content-center" x-data="{ isDeleted: false }" x-show="!isDeleted">
-                                {{ recipe_form.id }}
-                                <div class="d-none">
-                                    {{ recipe_form.DELETE }}
-                                </div>
-                                <div class="col-6 d-flex flex-column">
-                                    {{ recipe_form.ingredient }}
-                                </div>
-                                <div class="col-2 d-flex flex-column">
-                                    {{ recipe_form.amount }}
-                                </div>
-                                <div class="col-1 ">
-                                <button type="button" class="btn btn-outline-danger delete-btn" 
+                {{ formset.management_form }}
+                
+                <div id="ingredient-container" class="mt-4">
+                    {% for recipe_form in formset %}
+                        <div class="ingredient-row row g-2 mb-3 justify-content-center align-items-end" x-data="{ isDeleted: false }" x-show="!isDeleted">
+                            {{ recipe_form.id }}
+                            <div class="d-none">
+                                {{ recipe_form.DELETE }}
+                            </div>
+                            <div class="col-6 d-flex flex-column">
+                                {{ recipe_form.ingredient }}
+                            </div>
+                            <div class="col-3 d-flex flex-column">
+                                {{ recipe_form.amount }}
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-outline-danger delete-btn w-100" 
                                     @click="
                                         isDeleted = true; 
                                         $el.closest('.ingredient-row').querySelector('input[type=checkbox]').checked = true;
                                     ">
                                     <i class="bi bi-trash3"></i>
                                 </button>
-                                </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                </fieldset>
-            </div>
-
-            <div x-show="category === 'nondish'" x-cloak
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 transform scale-70"
-                x-transition:enter-end="opacity-100 transform scale-100"
-                x-transition:leave="transition ease-in duration-400"
-                x-transition:leave-start="opacity-100 transform scale-100"
-                x-transition:leave-end="opacity-0 transform scale-70">
-                <div class="d-flex flex-column mb-2">
-                    <h5 class="text-white mb-3">Estoque</h5>
-                    <fieldset :disabled="category !== 'nondish'">
-                        {{ nondish_form.stock }}
-                    </fieldset>
+                        </div>
+                    {% endfor %}
                 </div>
-            </div>
+            </fieldset>
+        </div>
 
-            <button type="submit" class="btn btn-success mt-4 d-block mx-auto">salvar</button>
-        </form>
-    </div>
+    </form>
 </div>
 
 <template id="empty-form-template">
-    <div class="ingredient-row row g-2 mb-3 justify-content-center">
+    <div class="ingredient-row row g-2 mb-3 justify-content-center align-items-end">
         {{ formset.empty_form.id }}
         <div class="col-6 d-flex flex-column">
             {{ formset.empty_form.ingredient }}
         </div>
-        <div class="col-2 d-flex flex-column">
+        <div class="col-3 d-flex flex-column">
             {{ formset.empty_form.amount }}
         </div>
-        <div class="col-1 ">
-            <button type="button" class="btn btn-outline-danger" @click="$el.closest('.ingredient-row').remove()" style="height: 42px;">
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-danger w-100" @click="$el.closest('.ingredient-row').remove()" style="height: 38px;">
                 <i class="bi bi-trash3"></i>
             </button>
         </div>
@@ -160,4 +199,5 @@ function addNewRow() {
     totalForms.value = currentFormCount + 1;
 }
 </script>
+
 {% endblock %}

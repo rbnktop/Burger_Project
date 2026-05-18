@@ -12,9 +12,7 @@ from .forms import (
 
 
 def list_product_view(request):
-    products = Product.objects.all().prefetch_related(
-        "dish__recipe_items__ingredient", "nondish__stock"
-    )
+    products = Product.objects.all().prefetch_related("dish__recipe_items__ingredient", "nondish__stock")
 
     query = request.GET.get("q")
 
@@ -27,7 +25,7 @@ def list_product_view(request):
 
 @login_required
 def create_product_view(request):
-    form = DishForm()
+    dishform = DishForm()
     formset = RecipeFormSet()
     nondish_form = NonDishForm()
     product_base_category = "None"
@@ -37,17 +35,17 @@ def create_product_view(request):
         print(f"--- DEBUG product type: {product_base_category} ---")
 
         if product_base_category == "dish":
-            form = DishForm(request.POST, request.FILES)
+            dishform = DishForm(request.POST, request.FILES)
             formset = RecipeFormSet(request.POST)
 
-            if form.is_valid() and formset.is_valid():
-                dish = form.save()
+            if dishform.is_valid() and formset.is_valid():
+                dish = dishform.save()
                 formset.instance = dish
                 formset.save()
                 return redirect("menu:inventario")
             else:
-                if not form.is_valid():
-                    print("FORM ERRORS:", form.errors.as_json())
+                if not dishform.is_valid():
+                    print("FORM ERRORS:", dishform.errors.as_json())
                 if not formset.is_valid():
                     print("FORMSET ERRORS:", formset.errors)
 
@@ -60,14 +58,15 @@ def create_product_view(request):
             else:
                 print("NONDISH ERRORS:", nondish_form.errors)
 
-    common_form = nondish_form if product_base_category == "nondish" else form
+    common_form = nondish_form if product_base_category == "nondish" else dishform
 
     context = {
-        "form": form,
-        "formset": formset,
-        "nondish_form": nondish_form,
         "common_form": common_form,
+        "dishform": dishform,
+        "nondish_form": nondish_form,
+        "formset": formset,
         "product_base_category": product_base_category,
+        "is_update": False,
     }
 
     return render(
@@ -92,7 +91,7 @@ def update_product_view(request, product_id):
         item = product_obj
         product_base_category = "None"
 
-    form = DishForm(instance=item if product_base_category == "dish" else None)
+    dishform = DishForm(instance=item if product_base_category == "dish" else None)
     formset = RecipeFormSet(instance=item if product_base_category == "dish" else None)
     nondish_form = NonDishForm(instance=item if product_base_category == "nondish" else None)
 
@@ -100,18 +99,18 @@ def update_product_view(request, product_id):
         posted_category = request.POST.get("product_base_category")
 
         if product_base_category == "dish":
-            form = DishForm(request.POST, request.FILES, instance=item)
+            dishform = DishForm(request.POST, request.FILES, instance=item)
             formset = RecipeFormSet(request.POST, instance=item)
 
-            if form.is_valid() and formset.is_valid():
-                dish = form.save()
+            if dishform.is_valid() and formset.is_valid():
+                dish = dishform.save()
                 formset.instance = dish
                 formset.save()
                 return redirect("menu:inventario")
 
             else:
-                if not form.is_valid():
-                    print("FORM ERRORS:", form.errors.as_json())
+                if not dishform.is_valid():
+                    print("dishform ERRORS:", dishform.errors.as_json())
                 if not formset.is_valid():
                     print("FORMSET ERRORS:", formset.errors)
 
@@ -125,17 +124,18 @@ def update_product_view(request, product_id):
             else:
                 print("NONDISH ERRORS:", nondish_form.errors)
 
-    common_form = nondish_form if product_base_category == "nondish" else form
+    common_form = nondish_form if product_base_category == "nondish" else dishform
 
     return render(
         request,
         "product_form.html",
         {
-            "form": form,
-            "formset": formset,
-            "nondish_form": nondish_form,
             "common_form": common_form,
+            "dishform": dishform,
+            "nondish_form": nondish_form,
+            "formset": formset,
             "product_base_category": product_base_category,
+            "is_update": True,
         },
     )
 
